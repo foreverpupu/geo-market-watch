@@ -2,3 +2,41 @@ interface:
   display_name: Geo Market Watch
   short_description: Turn geopolitical news links into Chinese watchlists for US, A-share, and HK markets.
   category: analysis
+
+integration:
+  supported_modes:
+    - link_mode
+    - discovery_mode
+  expected_output:
+    format: structured_markdown
+    sections:
+      - event_snapshot
+      - confirmed_facts
+      - market_interpretation
+      - scenario_analysis
+      - key_indicators
+      - watchlist_us_hk_cn
+      - group_summaries
+      - commentary
+      - risk_warning
+  language_defaults:
+    primary: zh-CN
+    bilingual_naming: true
+    entity_format: "中文名（English name）"
+  source_requirements:
+    tier_1:
+      - official_statements
+      - wire_services
+      - company_filings
+    tier_2:
+      - domain_experts
+      - industry_analysts
+    excluded:
+      - emotional_amplifiers
+      - unverified_commentary
+  automation_support:
+    scout_prompt_available: true
+    scheduled_monitoring: true
+    cron_compatible: true
+    timeout_recommended: 300
+    max_search_calls: 3
