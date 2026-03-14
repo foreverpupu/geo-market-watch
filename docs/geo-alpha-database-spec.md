@@ -33,6 +33,17 @@ It stores outputs produced by the v5.5 agent loop, enabling:
 
 This is a **minimal local database** for storing and querying event artifacts.
 
+### Schema Evolution Support
+The `events` table stores both **normalized fields** (score, band, category, etc.) and a **raw_data JSON snapshot** of the full event payload at ingest time.
+
+This dual-storage approach supports:
+- Future schema evolution and migration
+- Historical data recovery
+- Debugging and auditability
+- Backward compatibility
+
+**Note:** Use normalized columns for primary queries. The `raw_data` field is for recovery and future migration, not routine querying.
+
 ---
 
 ## Technology Stack

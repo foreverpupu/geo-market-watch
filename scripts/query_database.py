@@ -71,6 +71,12 @@ Examples:
     )
     
     parser.add_argument(
+        '--high-signal',
+        action='store_true',
+        help='Show high-signal events (score >= 7 or trigger_full_analysis = true)'
+    )
+    
+    parser.add_argument(
         '--json', '-j',
         action='store_true',
         help='Output as JSON'
@@ -94,7 +100,46 @@ Examples:
     try:
         conn = connect_db(args.db)
         
-        if args.stats:
+        if args.high_signal:
+            # Query high-signal events (score >= 7 OR trigger_full_analysis = true)
+            cursor = conn.execute("""
+                SELECT event_id, event_title, region, category, score, band, trigger_full_analysis, status
+                FROM events
+                WHERE score >= 7 OR trigger_full_analysis = 1
+                ORDER BY score DESC, date_detected DESC
+                LIMIT ?
+            """, (args.limit,))
+            events = [dict(row) for row in cursor.fetchall()]
+            
+            if args.json:
+                print(json.dumps(events, indent=2))
+            else:
+                print("=" * 100)
+                print("High-Signal Events (Score >= 7 OR Trigger Full Analysis)")
+                print("=" * 100)
+                print(f"\nTotal: {len(events)} events\n")
+                
+                if events:
+                    # Print table header
+                    print(f"{'Event ID':<12} {'Title':<35} {'Region':<15} {'Category':<20} {'Score':<6} {'Band':<15} {'Trigger':<8} {'Status':<10}")
+                    print("-" * 100)
+                    
+                    for event in events:
+                        event_id_short = event['event_id'][:10] if event['event_id'] else 'N/A'
+                        title = (event['event_title'][:32] + '...') if event['event_title'] and len(event['event_title']) > 35 else (event['event_title'] or 'Unknown')
+                        region = (event['region'][:12] + '...') if event['region'] and len(event['region']) > 15 else (event['region'] or 'Unknown')
+                        category = (event['category'][:17] + '...') if event['category'] and len(event['category']) > 20 else (event['category'] or 'Unknown')
+                        score = str(event['score']) if event['score'] is not None else 'N/A'
+                        band = event['band'] or 'unknown'
+                        trigger = 'YES' if event['trigger_full_analysis'] else 'no'
+                        status = event['status'] or 'unknown'
+                        
+                        print(f"{event_id_short:<12} {title:<35} {region:<15} {category:<20} {score:<6} {band:<15} {trigger:<8} {status:<10}")
+                else:
+                    print("No high-signal events found.")
+                print()
+        
+        elif args.stats:
             stats = get_stats(conn)
             if args.json:
                 print(json.dumps(stats, indent=2))

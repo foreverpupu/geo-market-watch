@@ -61,7 +61,7 @@ def now_iso() -> str:
 
 def insert_event(conn: sqlite3.Connection, event: Dict[str, Any]) -> str:
     """
-    Insert a new event.
+    Insert a new event with raw data snapshot.
     
     Args:
         conn: Database connection
@@ -73,11 +73,15 @@ def insert_event(conn: sqlite3.Connection, event: Dict[str, Any]) -> str:
     event_id = generate_id()
     now = now_iso()
     
+    # Serialize full event payload for future recovery
+    import json
+    raw_data = json.dumps(event, ensure_ascii=False, sort_keys=True)
+    
     conn.execute("""
         INSERT INTO events (
             event_id, event_key, event_title, date_detected, region, category,
-            summary, score, band, trigger_full_analysis, status, created_at, updated_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            summary, score, band, trigger_full_analysis, status, raw_data, created_at, updated_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         event_id,
         event.get('event_key'),
@@ -90,11 +94,74 @@ def insert_event(conn: sqlite3.Connection, event: Dict[str, Any]) -> str:
         event.get('band'),
         1 if event.get('trigger_full_analysis') else 0,
         event.get('status', 'active'),
+        raw_data,
         now,
         now
     ))
     
     return event_id
+
+
+def upsert_event(conn: sqlite3.Connection, event: Dict[str, Any]) -> str:
+    """
+    Upsert an event (insert if new, update if exists).
+    
+    Updates updated_at timestamp on every upsert.
+    
+    Args:
+        conn: Database connection
+        event: Event dict with all required fields
+        
+    Returns:
+        event_id (existing or newly generated)
+    """
+    event_key = event.get('event_key')
+    
+    # Check if event already exists
+    existing = get_event_by_key(conn, event_key) if event_key else None
+    
+    if existing:
+        # Update existing event
+        event_id = existing['event_id']
+        now = now_iso()
+        
+        # Serialize updated event payload
+        import json
+        raw_data = json.dumps(event, ensure_ascii=False, sort_keys=True)
+        
+        conn.execute("""
+            UPDATE events SET
+                event_title = ?,
+                date_detected = ?,
+                region = ?,
+                category = ?,
+                summary = ?,
+                score = ?,
+                band = ?,
+                trigger_full_analysis = ?,
+                status = ?,
+                raw_data = ?,
+                updated_at = ?
+            WHERE event_id = ?
+        """, (
+            event.get('event_title'),
+            event.get('date_detected'),
+            event.get('region'),
+            event.get('category'),
+            event.get('summary'),
+            event.get('score'),
+            event.get('band'),
+            1 if event.get('trigger_full_analysis') else 0,
+            event.get('status', 'active'),
+            raw_data,
+            now,
+            event_id
+        ))
+        
+        return event_id
+    else:
+        # Insert new event
+        return insert_event(conn, event)
 
 
 def get_event(conn: sqlite3.Connection, event_id: str) -> Optional[Dict[str, Any]]:

@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS events (
     band TEXT,
     trigger_full_analysis INTEGER DEFAULT 0,
     status TEXT DEFAULT 'active',
+    raw_data TEXT,
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL
 );
@@ -105,6 +106,7 @@ TABLE_SCHEMAS = {
         "band": "TEXT",
         "trigger_full_analysis": "INTEGER DEFAULT 0",
         "status": "TEXT DEFAULT 'active'",
+        "raw_data": "TEXT",
         "created_at": "TEXT NOT NULL",
         "updated_at": "TEXT NOT NULL"
     },

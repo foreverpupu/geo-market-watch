@@ -234,6 +234,21 @@ python scripts/query_database.py --db data/geo_alpha.db --band full_analysis
 python scripts/query_database.py --db data/geo_alpha.db --stats
 ```
 
+### High-Signal Events
+
+Query events that are escalation-worthy (score >= 7 or trigger_full_analysis = true):
+
+```bash
+python scripts/query_database.py --db data/geo_alpha.db --high-signal
+```
+
+This returns:
+- High-scoring events (score >= 7)
+- Full-analysis trigger events
+- Priority review candidates
+
+Use this for reviewing events that require immediate attention or deep analysis.
+
 ### Output as JSON
 
 ```bash
