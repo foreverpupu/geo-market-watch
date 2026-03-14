@@ -3,6 +3,20 @@ interface:
   short_description: Turn geopolitical news links into Chinese watchlists for US, A-share, and HK markets.
   category: analysis
 
+model_requirements:
+  recommended_class: high-reasoning-llm
+  capabilities_required:
+    - web_search
+    - structured_output
+    - bilingual_processing
+  examples:
+    - gpt-4o
+    - gpt-4.1
+    - claude-3.5-sonnet
+    - claude-3-opus
+    - deepseek-chat
+    - kimi-k2.5
+
 integration:
   supported_modes:
     - link_mode
