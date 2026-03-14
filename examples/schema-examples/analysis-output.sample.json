@@ -1,0 +1,280 @@
+{
+  "analysis_id": "analysis-2026-0001",
+  "generated_at": "2026-03-15T09:15:00Z",
+  "language": "en",
+  "mode": "link_mode",
+  "event": {
+    "event_id": "gmw-2026-0001",
+    "created_at": "2026-03-15T08:30:00Z",
+    "event_timestamp": "2026-03-15T06:10:00Z",
+    "title": "Escalation in Red Sea shipping disruption raises rerouting risks",
+    "summary": "Multiple reports indicate renewed attacks and security incidents affecting commercial shipping in the Red Sea, increasing the likelihood of vessel rerouting, higher insurance costs, and longer transit times for Europe-Asia trade flows.",
+    "event_type": "shipping_disruption",
+    "status": "partially_confirmed",
+    "source_tier": 2,
+    "confidence_level": "medium",
+    "fog_of_war": true,
+    "urgency": "high",
+    "market_relevance_score": 0.84,
+    "escalation_score": 0.88,
+    "geographies": [
+      {
+        "name": "Red Sea",
+        "type": "sea_route"
+      },
+      {
+        "name": "Bab el-Mandeb",
+        "type": "strait"
+      },
+      {
+        "name": "Suez Canal",
+        "type": "canal"
+      }
+    ],
+    "actors": [
+      {
+        "name": "Commercial shipping operators",
+        "actor_type": "shipping_company"
+      },
+      {
+        "name": "Regional armed group",
+        "actor_type": "militia"
+      },
+      {
+        "name": "Egypt",
+        "actor_type": "state",
+        "country": "Egypt"
+      }
+    ],
+    "commodities": [
+      "crude oil",
+      "container freight",
+      "refined products"
+    ],
+    "infrastructure_nodes": [
+      {
+        "name": "Suez Canal",
+        "node_type": "shipping_lane",
+        "country": "Egypt"
+      },
+      {
+        "name": "Bab el-Mandeb",
+        "node_type": "shipping_lane"
+      }
+    ],
+    "market_domains": [
+      "shipping",
+      "ports_logistics",
+      "energy",
+      "equities"
+    ],
+    "sources": [
+      {
+        "source_id": "src-001",
+        "publisher": "Reuters",
+        "source_type": "newswire",
+        "tier": 1,
+        "url": "https://example.com/reuters-red-sea-1",
+        "published_at": "2026-03-15T06:30:00Z",
+        "headline": "Shipping disruption risk rises after renewed incidents in Red Sea"
+      },
+      {
+        "source_id": "src-002",
+        "publisher": "Lloyd's List",
+        "source_type": "industry_report",
+        "tier": 2,
+        "url": "https://example.com/lloyds-red-sea-1",
+        "published_at": "2026-03-15T07:00:00Z",
+        "headline": "Insurers and operators reassess Red Sea exposure"
+      }
+    ],
+    "contradictions": [
+      {
+        "field": "damage_extent",
+        "description": "Some reports claim direct vessel damage, while others only confirm near-miss or security alert activity.",
+        "source_ids": [
+          "src-001",
+          "src-003"
+        ]
+      }
+    ],
+    "tags": [
+      "red-sea",
+      "shipping",
+      "rerouting",
+      "freight-rates"
+    ],
+    "raw_input_refs": [
+      "user-link-001"
+    ]
+  },
+  "confirmed_facts": [
+    {
+      "statement": "Commercial shipping risk in the Red Sea has risen based on multiple reports and operator reassessments.",
+      "confidence_level": "high",
+      "source_ids": [
+        "src-001",
+        "src-002"
+      ]
+    },
+    {
+      "statement": "The exact scale of vessel damage or direct operational impact remains contested in early reporting.",
+      "confidence_level": "medium",
+      "source_ids": [
+        "src-001",
+        "src-003"
+      ]
+    }
+  ],
+  "market_interpretation": [
+    {
+      "statement": "Persistent Red Sea disruption can extend voyage times, increase logistics friction, and create freight and insurance volatility across Europe-Asia trade routes.",
+      "market_domains": [
+        "shipping",
+        "ports_logistics",
+        "energy"
+      ],
+      "confidence_level": "high"
+    },
+    {
+      "statement": "Immediate price reactions may overstate impact unless rerouting persists long enough to affect observable freight and capacity conditions.",
+      "market_domains": [
+        "equities",
+        "shipping"
+      ],
+      "confidence_level": "medium"
+    }
+  ],
+  "scenario_analysis": [
+    {
+      "scenario_name": "Persistent disruption",
+      "description": "Security conditions remain unstable and operators continue to avoid normal Red Sea transit.",
+      "probability_band": "medium",
+      "market_implication": "Shipping-linked names and logistics-sensitive sectors remain in focus, with freight and insurance conditions offering confirmation.",
+      "key_signposts": [
+        "Operator rerouting statements",
+        "Freight strength persists",
+        "Insurance commentary worsens"
+      ]
+    },
+    {
+      "scenario_name": "Rapid normalization",
+      "description": "The incident proves short-lived and normal routing resumes without persistent network stress.",
+      "probability_band": "medium",
+      "market_implication": "Headline-driven moves fade and watchlist items should be downgraded unless new evidence appears.",
+      "key_signposts": [
+        "Security escorts restore confidence",
+        "Transit resumes",
+        "No sustained freight follow-through"
+      ]
+    }
+  ],
+  "watchlist": [
+    {
+      "watchlist_id": "wl-2026-0001",
+      "event_id": "gmw-2026-0001",
+      "ticker": "MAERSK-B.CO",
+      "asset_name": "A.P. Moller - Maersk",
+      "asset_type": "stock",
+      "market": "EU",
+      "exchange": "CPH",
+      "direction_bias": "two_way",
+      "thesis": "Renewed Red Sea disruption can affect container shipping economics through route diversion, longer voyage duration, equipment repositioning stress, and freight pricing volatility. The stock belongs on the watchlist because both pricing power and operational disruption can matter, making follow-through evidence critical.",
+      "physical_mapping_node": {
+        "node_name": "Red Sea / Suez shipping corridor",
+        "node_type": "shipping_lane",
+        "mapping_logic": "The company has direct exposure to Europe-Asia shipping flows that are sensitive to Suez transit conditions, rerouting duration, fuel consumption, schedule reliability, and freight repricing."
+      },
+      "trigger_signal": [
+        {
+          "description": "A sustained increase in freight or insurance costs tied to Red Sea rerouting persists over several trading sessions.",
+          "signal_type": "logistics",
+          "observable": true,
+          "threshold": "Freight or insurance indicators remain elevated for 3-5 days",
+          "time_window": "3-5 days"
+        }
+      ],
+      "invalidation_condition": [
+        {
+          "description": "Security conditions stabilize quickly and operators resume normal Suez transit without meaningful cost escalation.",
+          "condition_type": "normalization"
+        }
+      ],
+      "supporting_indicators": [
+        {
+          "name": "Container freight rate index",
+          "indicator_type": "freight_rate",
+          "unit": "index",
+          "source": "Freight market data provider"
+        }
+      ],
+      "confidence_level": "medium",
+      "time_horizon": "weeks",
+      "priority": "high",
+      "status": "active",
+      "scenario_dependency": "Most relevant under the scenario where Red Sea disruptions persist and rerouting remains operationally meaningful.",
+      "linked_tickers": [
+        "ZIM",
+        "HLAG.DE"
+      ],
+      "notes": "This is a monitoring item rather than a pure directional conviction trade."
+    }
+  ],
+  "risk_flags": [
+    "fog_of_war",
+    "contradictory_reporting",
+    "timing_uncertainty"
+  ],
+  "executive_summary": "The event is market-relevant because shipping disruption risk around the Red Sea can propagate into freight, insurance, route reliability, and selected transport-linked equities. However, early reporting still contains contradictions, so confirmation should rely on observable logistics follow-through rather than headlines alone.",
+  "propagation_chain": [
+    {
+      "step_order": 1,
+      "from_node": "Red Sea security incidents",
+      "relationship": "disrupts",
+      "to_node": "Normal transit confidence",
+      "note": "Operators may reassess route exposure."
+    },
+    {
+      "step_order": 2,
+      "from_node": "Normal transit confidence",
+      "relationship": "reroutes",
+      "to_node": "Longer shipping routes via Cape of Good Hope"
+    },
+    {
+      "step_order": 3,
+      "from_node": "Longer shipping routes via Cape of Good Hope",
+      "relationship": "raises_cost",
+      "to_node": "Freight and insurance conditions"
+    },
+    {
+      "step_order": 4,
+      "from_node": "Freight and insurance conditions",
+      "relationship": "increases_uncertainty",
+      "to_node": "Shipping and logistics equities"
+    }
+  ],
+  "next_monitoring_points": [
+    {
+      "description": "Track whether major operators explicitly confirm continued rerouting over the next several days.",
+      "priority": "high"
+    },
+    {
+      "description": "Monitor freight and insurance indicators for evidence that disruption is becoming economically meaningful.",
+      "priority": "high"
+    },
+    {
+      "description": "Watch for official security or transit normalization announcements from relevant authorities.",
+      "priority": "medium"
+    }
+  ],
+  "source_notes": [
+    "Tier-1 and tier-2 sources support elevated disruption risk, but exact physical damage reporting remains inconsistent.",
+    "The analysis is stronger on logistics risk than on precise incident severity."
+  ],
+  "metadata": {
+    "agent_version": "v6-draft",
+    "schema_version": "1.0.0",
+    "analysis_duration_ms": 4820,
+    "input_source_count": 3
+  }
+}
