@@ -1,0 +1,182 @@
+{
+  "description": "Geo Market Watch v5.5 Sample Intake — 8 events with duplicates and various outcomes",
+  "version": "5.5",
+  "items": [
+    {
+      "source_name": "Reuters",
+      "source_url": "https://www.reuters.com/world/middle-east/red-sea-shipping-2024-01-12",
+      "published_at": "2024-01-12",
+      "headline": "Red Sea shipping disruption",
+      "region": "Middle East",
+      "category": "Maritime disruption",
+      "summary": "Major container lines reroute vessels due to security risks in the Red Sea.",
+      "indicators": {
+        "physical_disruption": 1,
+        "transport_impact": 2,
+        "policy_sanctions": 0,
+        "market_transmission": 1,
+        "escalation_risk": 1
+      },
+      "flags": {
+        "confirmed_supply_disruption": false,
+        "strategic_transport_disruption": true,
+        "major_sanctions_escalation": false,
+        "military_escalation": false
+      }
+    },
+    {
+      "source_name": "Reuters",
+      "source_url": "https://www.reuters.com/world/middle-east/red-sea-shipping-2024-01-12",
+      "published_at": "2024-01-12",
+      "headline": "Red Sea shipping disruption",
+      "region": "Middle East",
+      "category": "Maritime disruption",
+      "summary": "Major container lines reroute vessels due to security risks in the Red Sea.",
+      "indicators": {
+        "physical_disruption": 1,
+        "transport_impact": 2,
+        "policy_sanctions": 0,
+        "market_transmission": 1,
+        "escalation_risk": 1
+      },
+      "flags": {
+        "confirmed_supply_disruption": false,
+        "strategic_transport_disruption": true,
+        "major_sanctions_escalation": false,
+        "military_escalation": false
+      }
+    },
+    {
+      "source_name": "Bloomberg",
+      "source_url": "https://www.bloomberg.com/news/russia-oil-2023-12-15",
+      "published_at": "2023-12-15",
+      "headline": "Russia expands oil export restrictions",
+      "region": "Eastern Europe",
+      "category": "Energy policy",
+      "summary": "Russia expands restrictions affecting global energy exports.",
+      "indicators": {
+        "physical_disruption": 2,
+        "transport_impact": 1,
+        "policy_sanctions": 2,
+        "market_transmission": 2,
+        "escalation_risk": 1
+      },
+      "flags": {
+        "confirmed_supply_disruption": true,
+        "strategic_transport_disruption": false,
+        "major_sanctions_escalation": true,
+        "military_escalation": false
+      }
+    },
+    {
+      "source_name": "Reuters",
+      "source_url": "https://www.reuters.com/business/energy/panama-canal-2023-08-20",
+      "published_at": "2023-08-20",
+      "headline": "Panama Canal drought shipping restrictions",
+      "region": "Central America",
+      "category": "Infrastructure disruption",
+      "summary": "Low water levels force restrictions on canal transit.",
+      "indicators": {
+        "physical_disruption": 2,
+        "transport_impact": 2,
+        "policy_sanctions": 0,
+        "market_transmission": 1,
+        "escalation_risk": 0
+      },
+      "flags": {
+        "confirmed_supply_disruption": false,
+        "strategic_transport_disruption": true,
+        "major_sanctions_escalation": false,
+        "military_escalation": false
+      }
+    },
+    {
+      "source_name": "Financial Times",
+      "source_url": "https://www.ft.com/content/taiwan-drills-2023-04-10",
+      "published_at": "2023-04-10",
+      "headline": "Taiwan military drills escalation",
+      "region": "East Asia",
+      "category": "Conflict escalation",
+      "summary": "Military exercises increase regional tensions.",
+      "indicators": {
+        "physical_disruption": 0,
+        "transport_impact": 1,
+        "policy_sanctions": 0,
+        "market_transmission": 0,
+        "escalation_risk": 1
+      },
+      "flags": {
+        "confirmed_supply_disruption": false,
+        "strategic_transport_disruption": false,
+        "major_sanctions_escalation": false,
+        "military_escalation": true
+      }
+    },
+    {
+      "source_name": "Reuters",
+      "source_url": "https://www.reuters.com/business/energy/niger-uranium-2023-07-30",
+      "published_at": "2023-07-30",
+      "headline": "Niger uranium export disruption",
+      "region": "Africa",
+      "category": "Commodity supply disruption",
+      "summary": "Political instability threatens uranium exports.",
+      "indicators": {
+        "physical_disruption": 3,
+        "transport_impact": 1,
+        "policy_sanctions": 1,
+        "market_transmission": 1,
+        "escalation_risk": 1
+      },
+      "flags": {
+        "confirmed_supply_disruption": true,
+        "strategic_transport_disruption": false,
+        "major_sanctions_escalation": false,
+        "military_escalation": false
+      }
+    },
+    {
+      "source_name": "Bloomberg",
+      "source_url": "https://www.bloomberg.com/news/suez-canal-2024-02-05",
+      "published_at": "2024-02-05",
+      "headline": "Suez Canal temporary blockage",
+      "region": "Middle East",
+      "category": "Maritime disruption",
+      "summary": "Vessel grounding causes temporary canal closure.",
+      "indicators": {
+        "physical_disruption": 2,
+        "transport_impact": 2,
+        "policy_sanctions": 0,
+        "market_transmission": 2,
+        "escalation_risk": 0
+      },
+      "flags": {
+        "confirmed_supply_disruption": false,
+        "strategic_transport_disruption": true,
+        "major_sanctions_escalation": false,
+        "military_escalation": false
+      }
+    },
+    {
+      "source_name": "Reuters",
+      "source_url": "https://www.reuters.com/world/middle-east/iran-sanctions-2024-03-01",
+      "published_at": "2024-03-01",
+      "headline": "Iran sanctions enforcement increase",
+      "region": "Middle East",
+      "category": "Sanctions escalation",
+      "summary": "Stricter enforcement affects oil shipping.",
+      "indicators": {
+        "physical_disruption": 1,
+        "transport_impact": 1,
+        "policy_sanctions": 2,
+        "market_transmission": 1,
+        "escalation_risk": 1
+      },
+      "flags": {
+        "confirmed_supply_disruption": false,
+        "strategic_transport_disruption": false,
+        "major_sanctions_escalation": true,
+        "military_escalation": false
+      }
+    }
+  ]
+}
