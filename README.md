@@ -1,96 +1,238 @@
 # Geo Market Watch 🌍📈
 
-> **Structured geopolitical intelligence for market observation**
+**An LLM-native framework for translating geopolitical events into structured market intelligence.**
 
-[![Schema Validation](https://github.com/foreverpupu/geo-market-watch/actions/workflows/schema-validation.yml/badge.svg)](https://github.com/foreverpupu/geo-market-watch/actions/workflows/schema-validation.yml)
-[![License](https://img.shields.io/badge/license-Non--Commercial-blue.svg)](LICENSE.md)
+Geo Market Watch converts complex geopolitical developments into structured market observations by combining event normalization, propagation mapping, and trigger-based watchlists.
 
----
+Instead of producing narrative commentary, the framework focuses on **actionable structure**:
 
-## What is Geo Market Watch?
+- confirmed facts
+- market interpretation
+- scenario analysis
+- structured watchlists
+- observable triggers
+- explicit invalidation conditions
 
-Geo Market Watch is an **LLM-native intelligence framework** that transforms
-geopolitical events into structured market observation signals.
-
-Instead of producing narrative commentary, the system generates:
-
-- **Confirmed facts** with source attribution
-- **Market interpretation** with propagation logic
-- **Scenario analysis** with escalation triggers
-- **Structured watchlists** with observable signals and invalidation conditions
+The project is designed for analysts, researchers, and developers who want to build **event-driven market intelligence systems** powered by LLMs.
 
 ---
 
-## Why this approach?
+# ⚠️ Repository Scope
 
-Most geopolitical analysis suffers from:
+This repository provides:
 
-| Problem | Geo Market Watch Solution |
-|---------|---------------------------|
-| Mixed facts and speculation | Explicit **fact / interpretation / scenario** separation |
-| Vague market calls | **Physical node mapping** to actual infrastructure |
-| No exit discipline | **Mandatory invalidation conditions** for every position |
-| Inconsistent outputs | **JSON Schema contracts** for machine-readable structure |
+- an analytical framework
+- structured output schemas
+- validation tooling
+- workflow examples
+
+It **does not include a built-in monitoring backend or scheduler**.
+
+The framework is intended to be embedded into automation platforms such as:
+
+- workflow orchestration tools
+- agent frameworks
+- research pipelines
+- internal analytics systems
+
+See [docs/scheduled-monitoring.md](docs/scheduled-monitoring.md) for integration examples.
 
 ---
 
-## System Architecture
+# Why Geo Market Watch?
+
+Most geopolitical analysis tools focus on **text generation**.
+
+Geo Market Watch focuses on **structured intelligence generation**.
+
+Instead of producing commentary like:
+
+> "Tensions in the region may affect markets."
+
+The framework produces structured outputs such as:
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│  INPUT LAYER                                                │
-│  News Links / Feeds / Government Announcements             │
-└─────────────────────────────────────────────────────────────┘
-                              ↓
-┌─────────────────────────────────────────────────────────────┐
-│  SCOUT MODE (Discovery)                                     │
-│  • Rapid scanning and escalation decisions                  │
-│  • Source tier assessment                                   │
-│  • Fog-of-War detection                                     │
-└─────────────────────────────────────────────────────────────┘
-                              ↓
-┌─────────────────────────────────────────────────────────────┐
-│  ANALYSIS ENGINE (SKILL.md)                                 │
-│  • Confirmed facts extraction                               │
-│  • Market interpretation                                    │
-│  • Scenario analysis (A/B/C framework)                      │
-│  • Propagation chain mapping                                │
-└─────────────────────────────────────────────────────────────┘
-                              ↓
-┌─────────────────────────────────────────────────────────────┐
-│  MARKET MAPPING FRAMEWORK                                   │
-│  • Physical bottleneck identification                       │
-│  • Asset-to-node exposure mapping                           │
-│  • Trigger signal definition                                │
-│  • Invalidation condition specification                     │
-└─────────────────────────────────────────────────────────────┘
-                              ↓
-┌─────────────────────────────────────────────────────────────┐
-│  STRUCTURED OUTPUT                                          │
-│  • JSON Schema-compliant analysis                           │
-│  • Machine-readable watchlists                              │
-│  • Observable monitoring points                             │
-└─────────────────────────────────────────────────────────────┘
+Event
+↓
+Market Interpretation
+↓
+Propagation Chain
+↓
+Watchlist
+↓
+Trigger Signals
+↓
+Invalidation Conditions
+```
+
+This allows outputs to be used by:
+
+- research teams
+- trading workflows
+- automated monitoring systems
+- dashboards and alerts
+
+---
+
+# System Architecture
+
+The framework is designed as a multi-stage intelligence pipeline.
+
+```
+News / Feeds / User Input
+↓
+Event Intake
+↓
+Scout Agent
+↓
+Verification & Fog-of-War Layer
+↓
+Market Propagation Mapping
+↓
+Watchlist & Trigger Engine
+↓
+Monitoring / Alerts / Review
+```
+
+Detailed architecture: [docs/architecture.md](docs/architecture.md)
+
+Roadmap for the full intelligence system: [docs/roadmap-v6.md](docs/roadmap-v6.md)
+
+---
+
+# Example Analysis Output
+
+Example structured output (simplified):
+
+```json
+{
+  "event": {
+    "title": "Red Sea shipping disruption risk rises",
+    "event_type": "shipping_disruption"
+  },
+  "confirmed_facts": [
+    "Shipping risk in the Red Sea has increased",
+    "Operators are reassessing transit exposure"
+  ],
+  "market_interpretation": [
+    "Potential rerouting increases shipping duration and cost"
+  ],
+  "watchlist": [
+    {
+      "ticker": "MAERSK-B.CO",
+      "trigger": "Freight indicators remain elevated for several days",
+      "invalidation": "Transit conditions normalize quickly"
+    }
+  ]
+}
+```
+
+Full example files: [examples/schema-examples/](examples/schema-examples/)
+
+---
+
+# Repository Structure
+
+```
+geo-market-watch/
+├── README.md
+├── LICENSE.md
+├── CONTRIBUTING.md
+├── CHANGELOG.md
+│
+├── SKILL.md
+│
+├── docs/
+│   ├── methodology.md
+│   ├── architecture.md
+│   ├── roadmap-v6.md
+│   ├── source-tiering.md
+│   └── scheduled-monitoring.md
+│
+├── schemas/
+│   ├── event-object.json
+│   ├── watchlist-item.json
+│   └── analysis-output.json
+│
+├── examples/
+│   └── schema-examples/
+│
+├── tests/
+│   └── schema_validation/
+│
+└── .github/workflows/
 ```
 
 ---
 
-## Quick Start
+# Core Data Schemas
 
-### 1. Clone the repository
+The framework relies on JSON schemas to define the intelligence data contract.
+
+## Event Object
+
+Defines normalized geopolitical events.
+
+**File:** [schemas/event-object.json](schemas/event-object.json)
+
+Contains:
+- actors
+- geographies
+- sources
+- event type
+- confidence level
+- contradictions
+
+---
+
+## Watchlist Item
+
+Defines structured market observation targets.
+
+**File:** [schemas/watchlist-item.json](schemas/watchlist-item.json)
+
+Each item contains:
+- asset / ticker
+- thesis
+- physical mapping node
+- trigger signals
+- invalidation conditions
+- time horizon
+
+---
+
+## Analysis Output
+
+Defines the complete analysis artifact.
+
+**File:** [schemas/analysis-output.json](schemas/analysis-output.json)
+
+Includes:
+- event object
+- confirmed facts
+- market interpretation
+- scenario analysis
+- watchlist
+- propagation chain
+
+---
+
+# Quick Start
+
+Clone the repository:
 
 ```bash
 git clone https://github.com/foreverpupu/geo-market-watch.git
 cd geo-market-watch
 ```
 
-### 2. Install validation dependencies
+Install schema validation dependencies:
 
 ```bash
 pip install -r tests/schema_validation/requirements.txt
 ```
 
-### 3. Run schema validation
+Run schema validation:
 
 ```bash
 python tests/schema_validation/validate_examples.py
@@ -99,88 +241,23 @@ python tests/schema_validation/validate_examples.py
 Expected output:
 
 ```
-Geo Market Watch Schema Validation
-========================================
-
-Validating: examples/schema-examples/event-object.sample.json
-Against:    schemas/event-object.json
-[PASS]
-
-Validating: examples/schema-examples/watchlist-item.sample.json
-Against:    schemas/watchlist-item.json
-[PASS]
-
-Validating: examples/schema-examples/analysis-output.sample.json
-Against:    schemas/analysis-output.json
-[PASS]
-
-========================================
 Passed: 3/3
 Failed: 0/3
 ```
 
 ---
 
-## Example Analysis
-
-### Input
-
-News link about Red Sea shipping disruption.
-
-### Output Structure
-
-```json
-{
-  "analysis_id": "analysis-2026-0001",
-  "event": {
-    "event_type": "shipping_disruption",
-    "fog_of_war": true,
-    "market_relevance_score": 0.84
-  },
-  "confirmed_facts": [
-    {
-      "statement": "Commercial shipping risk in the Red Sea has risen",
-      "confidence_level": "high"
-    }
-  ],
-  "scenario_analysis": [
-    {
-      "scenario_name": "Persistent disruption",
-      "probability_band": "medium",
-      "market_implication": "Shipping-linked names remain in focus"
-    }
-  ],
-  "watchlist": [
-    {
-      "ticker": "MAERSK-B.CO",
-      "direction_bias": "two_way",
-      "trigger_signal": [...],
-      "invalidation_condition": [...]
-    }
-  ],
-  "propagation_chain": [
-    {"step": 1, "from": "Red Sea incidents", "to": "Transit confidence", "relationship": "disrupts"},
-    {"step": 2, "from": "Transit confidence", "to": "Longer routes", "relationship": "reroutes"},
-    {"step": 3, "from": "Longer routes", "to": "Freight costs", "relationship": "raises_cost"}
-  ]
-}
-```
-
-See full example: [`examples/schema-examples/analysis-output.sample.json`](examples/schema-examples/analysis-output.sample.json)
-
----
-
-## Core Methodology
+# Methodology
 
 The Geo Market Watch methodology is based on several analytical principles:
 
-### Event-Driven Analysis
+## Event-Driven Analysis
 
 The system centers analysis around **events**, not articles.
 
 ---
 
-### Fact vs Interpretation Separation
+## Fact vs Interpretation Separation
 
 Outputs explicitly separate:
 - **confirmed facts**
@@ -189,7 +266,7 @@ Outputs explicitly separate:
 
 ---
 
-### Propagation Mapping
+## Propagation Mapping
 
 Geopolitical shocks are translated into economic propagation chains.
 
@@ -207,7 +284,7 @@ Logistics equity exposure
 
 ---
 
-### Trigger-Based Monitoring
+## Trigger-Based Monitoring
 
 Each watchlist item must include:
 - **observable trigger signals**
@@ -217,7 +294,7 @@ This prevents vague analysis and encourages disciplined monitoring.
 
 ---
 
-## Validation
+# Validation
 
 The repository includes schema validation tooling.
 
@@ -236,7 +313,7 @@ CI automatically runs validation on every pull request.
 
 ---
 
-## Contributing
+# Contributing
 
 Contributions are welcome.
 
@@ -250,7 +327,7 @@ Please read [CONTRIBUTING.md](CONTRIBUTING.md) before submitting changes.
 
 ---
 
-## Roadmap
+# Roadmap
 
 See [docs/roadmap-v6.md](docs/roadmap-v6.md)
 
@@ -263,7 +340,7 @@ See [docs/roadmap-v6.md](docs/roadmap-v6.md)
 
 ---
 
-## License
+# License
 
 This repository is released under a **Non-Commercial License**.
 
@@ -279,7 +356,7 @@ See [LICENSE.md](LICENSE.md) for full details.
 
 ---
 
-## Acknowledgment
+# Acknowledgment
 
 Geo Market Watch is an experimental framework exploring how LLMs can support structured geopolitical intelligence.
 
