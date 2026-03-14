@@ -1,107 +1,196 @@
-# Geo Market Watch
+# Geo Market Watch 🌍📈
 
-Turn geopolitical news links into structured market watchlists across US stocks, A-shares, and Hong Kong stocks.
+**将地缘政治新闻，一键转化为带风控的美股/A股/港股交易观察池。**
 
-## Overview
+在处理地缘政治（战争、制裁、航道封锁）等突发事件时，市场最不缺的是新闻，最缺的是**"剥离情绪后的物理节点映射"**。Geo Market Watch 是一个内置了"对冲基金研究纪律"的事件驱动型（Event-Driven）AI 分析框架。
 
-Geo Market Watch is a research-oriented Skill for transforming geopolitical news into structured market watchlists rather than generic summaries.
+---
 
-It separates confirmed facts, market interpretation, and scenario analysis, then maps the event into aggressive, balanced, and defensive watchlists with trigger signals, invalidation conditions, short commentary, and risk warnings.
+## ⏱️ 30秒看懂 Geo Market Watch
 
-This project is designed for wars, strikes, sanctions, chokepoints, commodity disruptions, shipping shocks, export controls, and other geopolitical events.
+它不是一个普通的"新闻摘要机器人"，而是一个**投资映射引擎**。
 
-## What problem does it solve?
+* **📥 输入什么**：一条或多条杂乱的地缘突发新闻链接（或 Twitter 专家长文截图）。
+* **📤 输出什么**：一份横跨美、港、A 股的结构化交易观察池，包含【已确认事实】、【情景推演】以及带有【触发信号】与【失效条件】的具体标的。
+* **💡 核心差异点**：
+  * **自带去噪**：自动过滤自媒体的"核弹级"、"崩盘"等情绪词汇，隔离政客修辞。
+  * **拒绝强行算命**：遇到冲突初期信息混乱时，触发 `Fog of War（战争迷雾）` 规则，明确指出"争议点"和下一步观测变量，而不是给出一个错误的确定性结论。
 
-Geopolitical news is noisy, emotional, and often mixes facts with interpretation.
+---
 
-This Skill helps convert messy news flow into a repeatable market research workflow by:
+## 🎯 适合谁用？
 
-- separating confirmed facts from interpretation
-- filtering low-trust and hype-heavy sources
-- handling contested facts during fog-of-war periods
-- mapping events into observable market signals
-- generating structured watchlists across three markets
+* **买方/卖方研究员**：快速梳理晨会材料，统一团队事件分析口径。
+* **事件驱动型交易者**：第一时间把"宏大叙事"翻译成具体的"物理基建瓶颈"（如具体到特定航道、特定船型、特定矿产）。
+* **主题投资者**：持续跟踪原油、黄金、航运、军工、核心供应链等受地缘高度影响的板块。
 
-## Core capabilities
+---
 
-- Source authentication and anti-hype filtering
-- Confirmed facts / market interpretation / scenario separation
-- Fog of War handling for contested facts
-- Macro-aware event transmission mapping
-- Watchlist generation across US / A-share / Hong Kong markets
-- Trigger signal and invalidation condition design
-- Data fallback when key public data is delayed or unavailable
+## 📸 真实输出示例 (晨会简报版)
 
-## Output structure
+*当输入"美军打击伊朗哈尔克岛，但避开石油设施"的新闻后，系统输出的片段截取：*
 
-The Skill produces a structured report with these sections:
+> **2. 已确认事实**
+> * **[官方]** 美方将"保留油井"与"保障霍尔木兹海峡自由航行"直接绑定作为红线。
+> * **[专家]** 哈尔克岛处理伊朗约 90% 的原油出口，不可替代的物理节点在于其 VLCC 泊位。
+> * **[争议悬置]** 关于另外5个备用终端能否有效承接原油分流，**仍存在争议**。下一步需紧盯高频原油运输追踪数据（如 Kpler）。
+> 
+> **6. 三地观察池 (节选)**
+> | 市场 | 代码 | 映射逻辑 (物理节点) | 触发信号 | 失效条件 (Mandatory) |
+> |---|---|---|---|---|
+> | **美股** | FRO | 纯正 VLCC 龙头。事件导致中东航运效率下降，推高 VLCC 现货运价 | 股价连续3日跑赢标普500 | 海峡局势缓和，中东航线运费现货价明显回落 |
+> | **港股** | 0883.HK | 纯上游开采，对油价上涨具备极强的利润弹性 | Brent 原油连续 2 日站稳强压位 | OPEC+ 宣布大规模增产以平抑油价 |
 
-1. Event snapshot
-2. Confirmed facts
-3. Market interpretation
-4. Scenario analysis
-5. Key indicators to watch
-6. Three-market watchlist
-7. Aggressive / Balanced / Defensive summaries
-8. Short commentary
-9. Risk warning
+---
 
-## Design principles
+## 🚀 快速上手：Prompt 唤醒指令 (SOP)
 
-- Facts are not interpretation
-- Official rhetoric is not the same as confirmed market impact
-- Contested facts must remain contested until resolved
-- Data gaps must be acknowledged explicitly
-- Quality of mapping matters more than filling lists mechanically
+你可以直接将新闻链接配合以下任意一条 Prompt 发送给配置好该 Skill 的 AI：
 
-## Example use cases
+**示例 1：晨会生产力版（最常用）**
+> 请基于以下新闻链接，生成一版适合晨会使用的中文简报，包括事件快照、市场主线、三地观察池、今日最该看的 3 个信号，以及 150 字以内总结：[粘贴链接]
 
-- Sanctions affecting commodity exports
-- Shipping disruptions in strategic chokepoints
-- Strikes on energy infrastructure
-- Export controls on critical minerals
-- Regional escalation affecting logistics and inflation expectations
+**示例 2：多条新闻交叉合并**
+> 请综合以下 3 个新闻链接，判断这是风险溢价、供给冲击还是长期系统扰动，并输出一份中文的三地市场观察池，按进攻型、平衡型、防守型分组：[链接1] [链接2] [链接3]
 
-## How to use
+**示例 3：中东能源冲击专项**
+> 请基于以下新闻链接，重点从油价、航运、黄金、军工四条主线分析对三地市场的影响，输出观察池，并说明当前更像 A / B / C 哪种情景：[粘贴链接]
 
-Provide one or more geopolitical news links and ask for a structured Chinese market watchlist.
+**示例 4：强调"风控与失效"**
+> 请基于以下新闻链接生成观察池，但把重点放在"哪些逻辑可能失效"。输出中请为每个方向单列：触发信号、失效条件、容易误判的地方：[粘贴链接]
 
-Example prompt:
+---
 
-> Analyze these links and generate a Chinese market watchlist across US stocks, A-shares, and Hong Kong stocks, including trigger signals, invalidation conditions, short commentary, and risk warning.
+## 🧠 核心方法论 (Methodology)
 
-## Limitations
+本框架的稳健性来源于底层的三大硬性纪律：
 
-- This is a research workflow, not investment advice.
-- It depends on public information and may face data lag.
-- Some freight, insurance, and logistics data may be unavailable behind paywalls.
-- During fog-of-war periods, some facts may remain contested.
-- Outputs should be reviewed critically in fast-moving situations.
+1. **信源分层 (Source Tiering)**：`[已确认事实]` 仅采信官方/通讯社/公司通告等 Tier 1 信源；专家分析归入 Tier 2 的 `[市场解读]`。
+2. **物理翻译 (Alpha Translation)**：强迫模型向下穿透，将政治事件翻译成"出口量、市占率、特定船型、管道运力"等物理敞口。
+3. **强制失效 (Mandatory Invalidation)**：给买入逻辑的同时，强制给出退场条件。防止在事件逻辑证伪后继续"站岗"。
 
-## Repository structure
+> 🤖 **自动化进阶**：如果你希望将它变成一个每天早晨自动扫描并推送的雷达，请参阅 [自动化运行指南 (Automation Guide)](docs/Automation_Guide.md)。
 
-- `SKILL.md` — main skill instructions
-- `README.md` — project overview
-- `examples/` — sample inputs and outputs
-- `docs/` — methodology, source tiering, and validation notes
-- `CHANGELOG.md` — version history
-- `LICENSE.md` — custom non-commercial terms
+---
 
-## Versioning
+## 📁 项目结构
 
-This project evolves through iterative improvements in:
-- source authentication
-- anti-hype filtering
-- fog-of-war handling
-- market mapping discipline
-- watchlist construction rules
+```
+geo-market-watch/
+├── SKILL.md                    # 核心技能定义（主入口）
+├── README.md                   # 本文件
+├── CHANGELOG.md                # 版本更新日志
+├── LICENSE.md                  # MIT 许可证
+├── agents/
+│   └── openai.yaml             # OpenAI 代理配置
+├── docs/
+│   ├── methodology.md          # 完整方法论文档
+│   ├── source-tiering.md       # 信源分级框架
+│   ├── validation-checklist.md # 技能验证清单
+│   └── Automation_Guide.md     # 自动化运行指南
+├── examples/
+│   ├── example-inputs.md       # 10个测试用例
+│   └── example-output.md       # 示例输出
+└── references/
+    ├── output-template.md      # 输出格式模板
+    ├── watchlist-rules.md      # 选股规则
+    ├── sample-prompts.md       # 示例提示词
+    └── discovery-rules.md      # 自动发现规则
+```
 
-See `CHANGELOG.md` for details.
+---
 
-## License
+## 🔧 安装与使用
 
-This repository is provided under a **Non-Commercial License**. 
-You are allowed to use, view, and modify this repository for personal and non-commercial purposes. 
-Commercial use, redistribution, and re-packaging are strictly prohibited.
+### 作为 OpenClaw Skill 安装
 
-Please see the `LICENSE.md` file for more details.
+```bash
+# 克隆到技能目录
+cd ~/.openclaw/workspace/skills
+git clone https://github.com/foreverpupu/geo-market-watch.git
+
+# 或使用 clawhub（如果已发布）
+clawhub install geo-market-watch
+```
+
+### 配置 Cron 自动扫描
+
+```bash
+openclaw cron add \
+  --name "Geo Market Watch Morning Scan" \
+  --cron "0 8 * * *" \
+  --tz "Asia/Shanghai" \
+  --session isolated \
+  --light-context \
+  --timeout 300000 \
+  --message "Task: 扫描过去 24 小时的全球地缘市场事件...[完整prompt]" \
+  --announce \
+  --channel qqbot \
+  --to "qqbot:c2c:YOUR_QQ_ID"
+```
+
+---
+
+## 🛡️ 核心原则
+
+### 1. 三层分离
+- **[已确认事实 / Confirmed Facts]**：仅 Tier 1 信源
+- **[市场解读 / Market Interpretation]**：Tier 2 分析
+- **[情景推演 / Scenario Analysis]**：条件推理
+
+### 2. 战争迷雾规则 (Fog of War)
+当关键事实存在争议时：
+- 明确指出争议点
+- 不强行给出确定性结论
+- 列出下一步验证变量
+
+### 3. 数据回退政策
+当关键数据不可用时：
+- 明确标注 `数据滞后/缺失`
+- 使用公开可验证的代理指标
+- 绝不编造精确数字
+
+---
+
+## 📊 输出格式
+
+标准输出包含 9 个部分：
+
+1. **事件快照** - 一句话总结
+2. **已确认事实** - Tier 1 信源确认的事实
+3. **市场解读** - 市场影响分析
+4. **情景推演** - A/B/C 三种情景
+5. **关键观察指标** - 需要跟踪的数据点
+6. **三地观察池** - 美股/A股/港股标的
+7. **分组总结** - 进攻/平衡/防守型
+8. **短评** - 核心观点
+9. **风险提示** - 免责声明
+
+---
+
+## 🤝 贡献
+
+欢迎通过 Issue 或 PR 贡献：
+- 补充新的测试用例
+- 完善方法论文档
+- 优化 prompt 效果
+- 报告 bug 或建议
+
+---
+
+## 📄 许可证
+
+MIT License - 详见 [LICENSE.md](LICENSE.md)
+
+---
+
+## 🙏 致谢
+
+本框架的设计灵感来源于：
+- 对冲基金事件驱动研究流程
+- 地缘政治风险分析最佳实践
+- 结构化投资研究方法论
+
+---
+
+**免责声明**：本工具仅供研究和学习使用，不构成投资建议。市场有风险，投资需谨慎。
