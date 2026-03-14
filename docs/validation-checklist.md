@@ -89,7 +89,7 @@ At the top of `SKILL.md`, confirm the frontmatter is present and valid:
 
 ```yaml
 ---
-name: geo-market-watch-v5-2
+name: geo-market-watch
 description: ...
 ---
 ```
