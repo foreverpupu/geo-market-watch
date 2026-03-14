@@ -360,19 +360,23 @@ See [docs/roadmap-v6.md](docs/roadmap-v6.md)
 
 ---
 
-# License
+## License
 
-This repository is released under a **Non-Commercial License**.
+Geo Market Watch is released under a **custom non-commercial research license**.
 
-**Permitted:**
-- personal research use
-- non-commercial modification
+You are free to:
 
-**Not permitted:**
-- commercial redistribution
-- commercial integration without permission
+- Use the framework for personal research
+- Modify the framework for private use
+- Apply the methodology for investment analysis
 
-See [LICENSE.md](LICENSE.md) for full details.
+You may NOT:
+
+- Use the project in commercial products
+- Repackage or resell the framework
+- Distribute modified versions for commercial purposes
+
+See [LICENSE.md](LICENSE.md) for full terms.
 
 ---
 
