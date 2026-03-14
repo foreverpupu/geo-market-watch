@@ -2,153 +2,237 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://geo-market-watch/schemas/watchlist-item.json",
   "title": "Geo Market Watch Watchlist Item",
-  "description": "Structured watchlist entry with thesis, triggers, and invalidation.",
+  "description": "Structured watchlist item generated from geopolitical-to-market mapping.",
   "type": "object",
   "additionalProperties": false,
   "required": [
-    "watchlist_item_id",
+    "watchlist_id",
     "event_id",
-    "ticker",
-    "name",
+    "asset_name",
+    "asset_type",
     "market",
-    "asset_class",
-    "thesis_summary",
-    "physical_node_mapping",
+    "direction_bias",
+    "thesis",
+    "physical_mapping_node",
     "trigger_signal",
     "invalidation_condition",
-    "confidence_level"
+    "confidence_level",
+    "time_horizon",
+    "status"
   ],
   "properties": {
-    "watchlist_item_id": {
+    "watchlist_id": {
       "type": "string",
-      "pattern": "^gmw-wi-[0-9]{4}-[0-9]{4,}$",
-      "description": "Globally unique watchlist item identifier."
+      "pattern": "^wl-[0-9]{4}-[0-9]{4,}$",
+      "description": "Unique watchlist item identifier."
     },
     "event_id": {
       "type": "string",
       "pattern": "^gmw-[0-9]{4}-[0-9]{4,}$",
-      "description": "Reference to the parent event."
+      "description": "Reference to the originating event."
     },
     "ticker": {
       "type": "string",
       "minLength": 1,
       "maxLength": 30,
-      "description": "Trading symbol or identifier."
+      "description": "Tradable ticker or symbol when applicable."
     },
-    "name": {
-      "type": "object",
-      "description": "Bilingual name representation.",
-      "properties": {
-        "zh": { "type": "string", "description": "Chinese name" },
-        "en": { "type": "string", "description": "English name" }
-      }
+    "asset_name": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 200,
+      "description": "Human-readable asset or instrument name."
+    },
+    "asset_type": {
+      "type": "string",
+      "enum": [
+        "stock",
+        "etf",
+        "index",
+        "commodity",
+        "currency",
+        "bond",
+        "sector",
+        "basket",
+        "other"
+      ]
     },
     "market": {
       "type": "string",
-      "enum": ["US", "HK", "CN", "EU", "JP", "UK", "OTHER"],
-      "description": "Primary listing market."
+      "enum": [
+        "US",
+        "CN",
+        "HK",
+        "EU",
+        "JP",
+        "KR",
+        "TW",
+        "IN",
+        "GLOBAL",
+        "OTHER"
+      ]
     },
-    "asset_class": {
+    "exchange": {
       "type": "string",
-      "enum": ["equity", "etf", "commodity", "bond", "fx", "derivative", "index"],
-      "description": "Asset classification."
+      "minLength": 1,
+      "maxLength": 50
     },
-    "style_bucket": {
+    "direction_bias": {
       "type": "string",
-      "enum": ["aggressive", "balanced", "defensive", "hedge"],
-      "description": "Risk/return profile category."
+      "enum": [
+        "bullish",
+        "bearish",
+        "two_way",
+        "monitor_only"
+      ],
+      "description": "Directional bias implied by the thesis."
     },
-    "thesis_summary": {
+    "thesis": {
       "type": "string",
       "minLength": 20,
-      "maxLength": 2000,
-      "description": "Concise investment thesis linking the event to this asset."
+      "maxLength": 3000,
+      "description": "Why this asset belongs on the watchlist."
     },
-    "physical_node_mapping": {
+    "physical_mapping_node": {
       "type": "object",
-      "description": "How the asset maps to physical infrastructure or supply chain nodes.",
+      "additionalProperties": false,
+      "required": [
+        "node_name",
+        "node_type",
+        "mapping_logic"
+      ],
       "properties": {
+        "node_name": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 200
+        },
         "node_type": {
           "type": "string",
-          "enum": ["terminal", "pipeline", "shipping", "mining", "refining", "logistics", "manufacturing", "other"]
+          "enum": [
+            "shipping_lane",
+            "port",
+            "pipeline",
+            "mine",
+            "refinery",
+            "commodity_flow",
+            "supply_chain_stage",
+            "policy_node",
+            "substitution_path",
+            "other"
+          ]
         },
-        "exposure_description": { "type": "string", "maxLength": 1000 },
-        "quantifiable_metric": { "type": "string", "maxLength": 500 }
+        "mapping_logic": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 1500
+        }
       }
     },
     "trigger_signal": {
-      "$ref": "#/$defs/triggerSignal",
-      "description": "Observable condition that confirms the thesis."
+      "type": "array",
+      "description": "Observable conditions that strengthen or confirm the thesis.",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/triggerSignal"
+      }
     },
     "invalidation_condition": {
-      "$ref": "#/$defs/invalidationCondition",
-      "description": "Condition that would break the investment thesis."
-    },
-    "key_indicators": {
       "type": "array",
-      "description": "Observable metrics to monitor for this position.",
+      "description": "Conditions under which the thesis weakens or should be removed.",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/invalidationCondition"
+      }
+    },
+    "supporting_indicators": {
+      "type": "array",
+      "description": "Optional quantitative or qualitative indicators relevant to tracking the thesis.",
       "items": {
         "$ref": "#/$defs/indicator"
       }
     },
     "confidence_level": {
       "type": "string",
-      "enum": ["low", "medium", "high"],
-      "description": "Confidence in this watchlist item."
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ]
     },
     "time_horizon": {
       "type": "string",
-      "enum": ["immediate", "short_term", "medium_term", "long_term"],
-      "description": "Expected duration of the trade thesis."
+      "enum": [
+        "intraday",
+        "days",
+        "weeks",
+        "months",
+        "multi_quarter"
+      ]
     },
-    "position_type": {
+    "priority": {
       "type": "string",
-      "enum": ["direct_beneficiary", "indirect_beneficiary", "hedge", "proxy", "contrarian"],
-      "description": "Nature of the exposure."
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ]
     },
-    "linked_tickers": {
-      "type": "array",
-      "description": "Optional related assets for pairs, substitutes, or basket logic.",
-      "items": {
-        "type": "string",
-        "minLength": 1,
-        "maxLength": 30
-      },
-      "uniqueItems": true
-    },
-    "notes": {
+    "status": {
       "type": "string",
-      "maxLength": 2000
+      "enum": [
+        "active",
+        "triggered",
+        "invalidated",
+        "resolved",
+        "archived"
+      ]
+    },
+    "scenario_dependency": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 1000,
+      "description": "Optional note describing which scenario this item depends on."
     }
   },
   "$defs": {
     "triggerSignal": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["description", "signal_type", "observable"],
+      "required": [
+        "signal_id",
+        "description",
+        "signal_category",
+        "observable"
+      ],
       "properties": {
+        "signal_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
         "description": {
           "type": "string",
           "minLength": 10,
           "maxLength": 1000
         },
-        "signal_type": {
+        "signal_category": {
           "type": "string",
           "enum": [
+            "price_action",
+            "volume",
             "policy",
-            "price",
             "logistics",
             "production",
             "inventory",
             "official_statement",
-            "military",
+            "geopolitical",
             "macro",
             "other"
           ]
         },
         "observable": {
-          "type": "boolean",
-          "description": "Whether the signal is externally observable and monitorable."
+          "type": "boolean"
         },
         "threshold": {
           "type": "string",
@@ -165,34 +249,45 @@
     "invalidationCondition": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["description", "condition_type"],
+      "required": [
+        "condition_id",
+        "description",
+        "severity"
+      ],
       "properties": {
+        "condition_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
         "description": {
           "type": "string",
           "minLength": 10,
           "maxLength": 1000
         },
-        "condition_type": {
+        "severity": {
           "type": "string",
           "enum": [
-            "ceasefire",
-            "normalization",
-            "policy_reversal",
-            "supply_restoration",
-            "demand_deterioration",
-            "thesis_failure",
-            "timing_failure",
-            "other"
+            "partial",
+            "full"
           ]
+        },
+        "time_window": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
         }
       }
     },
     "indicator": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["name", "indicator_type"],
+      "required": [
+        "indicator_name",
+        "indicator_type"
+      ],
       "properties": {
-        "name": {
+        "indicator_name": {
           "type": "string",
           "minLength": 2,
           "maxLength": 200
@@ -200,13 +295,14 @@
         "indicator_type": {
           "type": "string",
           "enum": [
-            "price_series",
-            "freight_rate",
+            "price",
+            "volume",
+            "spread",
+            "freight",
             "inventory",
-            "throughput",
-            "policy_tracker",
-            "satellite_signal",
-            "news_count",
+            "production",
+            "policy",
+            "sentiment",
             "other"
           ]
         },
