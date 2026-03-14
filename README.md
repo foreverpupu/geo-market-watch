@@ -78,30 +78,15 @@
 
 ---
 
-## 📁 项目结构
+## 📁 Key Components
 
-```
-geo-market-watch/
-├── SKILL.md                    # 核心技能定义（主入口）
-├── README.md                   # 本文件
-├── CHANGELOG.md                # 版本更新日志
-├── LICENSE.md                  # 非商业许可证
-├── agents/
-│   └── openai.yaml             # OpenAI 代理配置
-├── docs/
-│   ├── methodology.md          # 完整方法论文档
-│   ├── source-tiering.md       # 信源分级框架
-│   ├── validation-checklist.md # 技能验证清单
-│   ├── scheduled-monitoring.md # 定时监控与自动化指南
-├── examples/
-│   ├── example-inputs.md       # 10个测试用例
-│   └── example-output.md       # 示例输出
-└── references/
-    ├── output-template.md      # 输出格式模板
-    ├── watchlist-rules.md      # 选股规则
-    ├── sample-prompts.md       # 示例提示词
-    └── discovery-rules.md      # 自动发现规则
-```
+| 目录/文件 | 说明 |
+|-----------|------|
+| `SKILL.md` | 核心分析引擎（主入口） |
+| `agents/` | Agent 集成元数据 |
+| `docs/` | 方法论与验证框架 |
+| `references/` | 领域规则库 |
+| `examples/` | 示例输入与输出 |
 
 ---
 
