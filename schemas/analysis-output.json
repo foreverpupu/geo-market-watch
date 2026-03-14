@@ -1,150 +1,264 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://github.com/foreverpupu/geo-market-watch/schemas/analysis-output.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://geo-market-watch/schemas/analysis-output.json",
   "title": "Geo Market Watch Analysis Output",
-  "description": "Complete structured output from the Geo Market Watch analysis engine",
+  "description": "Top-level structured output for deep geopolitical market analysis.",
   "type": "object",
-  "required": ["analysis_id", "timestamp", "event", "confirmed_facts", "market_interpretation", "scenario_analysis", "watchlist"],
+  "additionalProperties": false,
+  "required": [
+    "analysis_id",
+    "generated_at",
+    "language",
+    "mode",
+    "event",
+    "confirmed_facts",
+    "market_interpretation",
+    "scenario_analysis",
+    "watchlist",
+    "risk_flags"
+  ],
   "properties": {
     "analysis_id": {
       "type": "string",
-      "description": "Unique identifier for this analysis"
+      "pattern": "^analysis-[0-9]{4}-[0-9]{4,}$"
     },
-    "timestamp": {
+    "generated_at": {
       "type": "string",
-      "format": "date-time",
-      "description": "When the analysis was generated"
+      "format": "date-time"
+    },
+    "language": {
+      "type": "string",
+      "enum": ["zh-CN", "en", "bilingual"]
+    },
+    "mode": {
+      "type": "string",
+      "enum": ["link_mode", "discovery_mode"]
     },
     "event": {
-      "$ref": "event-object.json",
-      "description": "The event being analyzed"
-    },
-    "event_snapshot": {
-      "type": "string",
-      "description": "One-sentence summary of the event"
+      "$ref": "event-object.json"
     },
     "confirmed_facts": {
-      "type": "object",
-      "description": "Tier 1 verified facts only",
-      "properties": {
-        "facts": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "statement": { "type": "string" },
-              "source_tier": { "type": "integer", "enum": [1] },
-              "source_tag": { "type": "string" }
-            }
-          }
-        },
-        "fog_of_war_notes": { "type": "string" }
+      "type": "array",
+      "description": "Facts believed to be confirmed enough for inclusion in the confirmed facts section.",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/fact"
       }
     },
     "market_interpretation": {
-      "type": "object",
-      "description": "Market impact analysis",
-      "properties": {
-        "macro_backdrop": { "type": "string" },
-        "transmission_path": { "type": "string" },
-        "affected_sectors": {
-          "type": "array",
-          "items": { "type": "string" }
-        },
-        "risk_premium_assessment": { "type": "string" }
+      "type": "array",
+      "description": "Core market interpretations derived from the event and available evidence.",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/interpretation"
       }
     },
     "scenario_analysis": {
-      "type": "object",
-      "description": "A/B/C scenario framework",
-      "properties": {
-        "base_case": {
-          "type": "string",
-          "enum": ["A", "B", "C"]
-        },
-        "scenarios": {
-          "type": "object",
-          "properties": {
-            "A": {
-              "type": "object",
-              "properties": {
-                "name": { "type": "string" },
-                "condition": { "type": "string" },
-                "market_impact": { "type": "string" },
-                "escalation_trigger": { "type": "string" }
-              }
-            },
-            "B": {
-              "type": "object",
-              "properties": {
-                "name": { "type": "string" },
-                "condition": { "type": "string" },
-                "market_impact": { "type": "string" },
-                "escalation_trigger": { "type": "string" }
-              }
-            },
-            "C": {
-              "type": "object",
-              "properties": {
-                "name": { "type": "string" },
-                "condition": { "type": "string" },
-                "market_impact": { "type": "string" },
-                "de_escalation_trigger": { "type": "string" }
-              }
-            }
-          }
-        }
-      }
-    },
-    "key_indicators": {
       "type": "array",
-      "description": "Observable signals to monitor",
+      "description": "Scenario tree with directional implications and confidence.",
+      "minItems": 1,
       "items": {
-        "type": "object",
-        "properties": {
-          "indicator": { "type": "string" },
-          "current_status": { "type": "string" },
-          "data_availability": { "type": "string" }
-        }
+        "$ref": "#/$defs/scenario"
       }
     },
     "watchlist": {
-      "type": "object",
-      "description": "Structured watchlists by market and style",
-      "properties": {
-        "aggressive": {
-          "type": "array",
-          "items": { "$ref": "watchlist-item.json" }
-        },
-        "balanced": {
-          "type": "array",
-          "items": { "$ref": "watchlist-item.json" }
-        },
-        "defensive": {
-          "type": "array",
-          "items": { "$ref": "watchlist-item.json" }
-        }
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "watchlist-item.json"
       }
     },
-    "commentary": {
-      "type": "string",
-      "description": "Short synthesis and prioritization"
+    "risk_flags": {
+      "type": "array",
+      "description": "High-level flags that communicate analysis caveats or system concerns.",
+      "items": {
+        "type": "string",
+        "enum": [
+          "fog_of_war",
+          "single_source_risk",
+          "contradictory_reporting",
+          "weak_market_mapping",
+          "low_confidence_watchlist",
+          "headline_only",
+          "timing_uncertainty",
+          "other"
+        ]
+      },
+      "uniqueItems": true
     },
-    "risk_warning": {
+    "executive_summary": {
       "type": "string",
-      "description": "Disclaimer and risk notice"
+      "minLength": 20,
+      "maxLength": 3000
+    },
+    "propagation_chain": {
+      "type": "array",
+      "description": "Ordered chain showing how the event propagates into market consequences.",
+      "items": {
+        "$ref": "#/$defs/propagationStep"
+      }
+    },
+    "next_monitoring_points": {
+      "type": "array",
+      "description": "What the system or analyst should monitor next.",
+      "items": {
+        "$ref": "#/$defs/monitoringPoint"
+      }
+    },
+    "source_notes": {
+      "type": "array",
+      "description": "Optional notes on source quality, conflicts, or missing information.",
+      "items": {
+        "type": "string",
+        "minLength": 5,
+        "maxLength": 1000
+      }
     },
     "metadata": {
       "type": "object",
-      "description": "Analysis metadata",
+      "additionalProperties": false,
       "properties": {
-        "analysis_mode": {
+        "agent_version": {
           "type": "string",
-          "enum": ["link", "discovery"]
+          "minLength": 1,
+          "maxLength": 50
         },
-        "model_used": { "type": "string" },
-        "temperature": { "type": "number" },
-        "processing_time_ms": { "type": "integer" }
+        "schema_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 50
+        },
+        "analysis_duration_ms": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "input_source_count": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    }
+  },
+  "$defs": {
+    "fact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["statement", "confidence_level"],
+      "properties": {
+        "statement": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 1000
+        },
+        "confidence_level": {
+          "type": "string",
+          "enum": ["low", "medium", "high"]
+        },
+        "source_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "interpretation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["statement", "confidence_level"],
+      "properties": {
+        "statement": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 2000
+        },
+        "confidence_level": {
+          "type": "string",
+          "enum": ["low", "medium", "high"]
+        },
+        "market_domain": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 100
+        }
+      }
+    },
+    "scenario": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scenario_id", "name", "probability", "market_implication"],
+      "properties": {
+        "scenario_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 50
+        },
+        "name": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 200
+        },
+        "probability": {
+          "type": "string",
+          "enum": ["low", "medium", "high", "base_case"]
+        },
+        "market_implication": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 1500
+        },
+        "escalation_trigger": {
+          "type": "string",
+          "maxLength": 1000
+        },
+        "de_escalation_trigger": {
+          "type": "string",
+          "maxLength": 1000
+        }
+      }
+    },
+    "propagationStep": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["step_number", "node_type", "description"],
+      "properties": {
+        "step_number": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "node_type": {
+          "type": "string",
+          "enum": ["event", "commodity", "logistics", "policy", "sentiment", "market"]
+        },
+        "description": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 500
+        }
+      }
+    },
+    "monitoringPoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["indicator", "rationale"],
+      "properties": {
+        "indicator": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 200
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 1000
+        },
+        "expected_frequency": {
+          "type": "string",
+          "enum": ["realtime", "daily", "weekly", "event_driven"]
+        }
       }
     }
   }
