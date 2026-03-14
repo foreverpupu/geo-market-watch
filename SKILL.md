@@ -40,6 +40,18 @@ If several events clear the threshold:
   - produce one full report for the top event and a short ranked monitor list for the rest, or
   - produce a compact multi-event dashboard only if the user explicitly asks for a sweep
 
+### Scheduled Monitoring / Scout Prompt
+For automated scheduled monitoring (e.g., daily morning scan), use the Scout Prompt in [agents/scout-prompt.txt](agents/scout-prompt.txt) or see [docs/scheduled-monitoring.md](docs/scheduled-monitoring.md).
+
+The Scout Prompt is designed for:
+- **Strict execution limits**: max 3 web_search calls, 5-minute timeout
+- **Focused scanning**: only Reuters, Bloomberg, and mainstream financial sources
+- **Four main tracks**: energy disruption, shipping crisis, metal sanctions, East Asia supply chain
+- **Dual-mode output**: either upgrade recommendation card OR monitoring watchlist
+- **Bilingual naming**: 中文名（English name） for key entities
+
+Use Scout Prompt for cron jobs, ChatGPT Tasks, Make.com, Coze, or other automation platforms.
+
 ## Source authentication and anti-hype filter
 Before interpreting the event, classify all user-provided links and web findings into these source tiers:
 
