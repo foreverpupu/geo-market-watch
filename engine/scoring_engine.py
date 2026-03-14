@@ -24,42 +24,70 @@ DIMENSION_MAX = {
 }
 
 
-def validate_indicators(indicators: Dict[str, int]) -> None:
+def normalize_indicators(indicators: Dict[str, Any]) -> Dict[str, int]:
     """
-    Validate that indicators don't exceed their maximum values.
+    Normalize indicators to ensure all required fields exist with valid values.
     
+    - If indicators object is missing, use all-zero defaults
+    - If some indicator fields are missing, fill them with 0
+    - If a field has invalid type or exceeds documented max, raise a clear error
+    
+    Args:
+        indicators: Raw indicators dict (may be incomplete or None)
+        
+    Returns:
+        Normalized indicators dict with all required fields
+        
     Raises:
-        ValueError: If any indicator is out of range or missing required keys.
+        ValueError: If any indicator has invalid type or exceeds maximum
     """
+    # If indicators is None or not a dict, start with empty dict
+    if indicators is None or not isinstance(indicators, dict):
+        indicators = {}
+    
+    normalized = {}
+    
     for dimension, max_score in DIMENSION_MAX.items():
-        if dimension not in indicators:
-            raise ValueError(f"Missing required indicator: {dimension}")
+        # Get value, default to 0 if missing
+        value = indicators.get(dimension, 0)
         
-        score = indicators[dimension]
-        if not isinstance(score, int):
-            raise ValueError(f"Indicator {dimension} must be an integer, got {type(score)}")
-        
-        if score < 0:
-            raise ValueError(f"Indicator {dimension} cannot be negative: {score}")
-        
-        if score > max_score:
+        # Validate type
+        if not isinstance(value, (int, float)):
             raise ValueError(
-                f"Indicator {dimension} exceeds maximum ({max_score}): {score}"
+                f"Indicator '{dimension}' must be a number, got {type(value).__name__}: {value}"
             )
+        
+        # Convert to int
+        value = int(value)
+        
+        # Validate range
+        if value < 0:
+            raise ValueError(
+                f"Indicator '{dimension}' cannot be negative: {value}"
+            )
+        
+        if value > max_score:
+            raise ValueError(
+                f"Indicator '{dimension}' exceeds maximum ({max_score}): {value}"
+            )
+        
+        normalized[dimension] = value
+    
+    return normalized
 
 
-def calculate_score(indicators: Dict[str, int]) -> int:
+def calculate_score(indicators: Dict[str, Any]) -> int:
     """
     Calculate total signal score from indicators.
     
     Args:
-        indicators: Dict with keys matching DIMENSION_MAX
+        indicators: Dict with keys matching DIMENSION_MAX (may be incomplete)
         
     Returns:
         Total score (0-10)
     """
-    validate_indicators(indicators)
-    return sum(indicators.values())
+    normalized = normalize_indicators(indicators)
+    return sum(normalized.values())
 
 
 def get_band(score: int) -> str:
@@ -99,6 +127,9 @@ def score_event(event_card: Dict[str, Any]) -> Dict[str, Any]:
                     "escalation_risk": int (0-1)
                 }
             }
+        
+        Note: indicators field is optional. If missing or incomplete, 
+        missing fields default to 0.
     
     Returns:
         Dict with:
@@ -108,10 +139,8 @@ def score_event(event_card: Dict[str, Any]) -> Dict[str, Any]:
                 "band": str
             }
     """
-    if "indicators" not in event_card:
-        raise ValueError("Event card must contain 'indicators' key")
-    
-    indicators = event_card["indicators"]
+    # Get indicators, default to empty dict if missing
+    indicators = event_card.get("indicators", {})
     score = calculate_score(indicators)
     band = get_band(score)
     

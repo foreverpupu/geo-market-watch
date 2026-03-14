@@ -10,16 +10,50 @@ from typing import Dict, Any, List
 from datetime import datetime
 
 
+def slugify(text: str) -> str:
+    """
+    Convert text to slug format for use in event keys.
+    
+    - Lowercase
+    - Replace spaces with hyphens
+    - Remove special characters
+    """
+    # Convert to lowercase and replace spaces with hyphens
+    slug = text.lower().strip().replace(" ", "-")
+    # Keep only alphanumeric and hyphens
+    slug = ''.join(c for c in slug if c.isalnum() or c == '-')
+    # Remove multiple consecutive hyphens
+    while '--' in slug:
+        slug = slug.replace('--', '-')
+    # Trim hyphens from ends
+    slug = slug.strip('-')
+    return slug
+
+
 def generate_event_key(item: Dict[str, Any]) -> str:
     """
     Generate a unique key for deduplication.
     
-    Uses headline + date for stable identification.
+    Format: region|category|headline-slug
+    
+    Note: Does NOT include date to allow tracking the same event across time.
+    Date is preserved separately in date_detected field.
     """
-    headline = item.get("headline", "")
-    date = item.get("published_at", "")
-    key_string = f"{headline}|{date}"
-    return hashlib.md5(key_string.encode()).hexdigest()[:12]
+    region = slugify(item.get("region", "unknown"))
+    category = slugify(item.get("category", "unclassified"))
+    headline_slug = slugify(item.get("headline", ""))
+    
+    # Format: region|category|headline-slug
+    event_key = f"{region}|{category}|{headline_slug}"
+    
+    # If headline is empty, use hash of original headline
+    if not headline_slug:
+        import hashlib
+        original_headline = item.get("headline", "")
+        hash_suffix = hashlib.md5(original_headline.encode()).hexdigest()[:8]
+        event_key = f"{region}|{category}|{hash_suffix}"
+    
+    return event_key
 
 
 def normalize_intake_item(item: Dict[str, Any]) -> Dict[str, Any]:

@@ -47,6 +47,32 @@ def process_event(event: Dict[str, Any]) -> Dict[str, Any]:
     return event
 
 
+def ensure_directories(intake_path: str, dedupe_memory_path: str, output_dir: str = None):
+    """
+    Ensure all required directories exist.
+    
+    Creates parent directories for:
+    - intake file (if path provided)
+    - dedupe memory file
+    - output directory (if provided)
+    """
+    # Ensure intake file parent directory exists
+    if intake_path:
+        intake_parent = Path(intake_path).parent
+        if intake_parent:
+            intake_parent.mkdir(parents=True, exist_ok=True)
+    
+    # Ensure dedupe memory parent directory exists
+    if dedupe_memory_path:
+        dedupe_parent = Path(dedupe_memory_path).parent
+        if dedupe_parent:
+            dedupe_parent.mkdir(parents=True, exist_ok=True)
+    
+    # Ensure output directory exists
+    if output_dir:
+        Path(output_dir).mkdir(parents=True, exist_ok=True)
+
+
 def run_agent_loop(
     intake_path: str,
     dedupe_memory_path: str,
@@ -54,24 +80,28 @@ def run_agent_loop(
 ) -> Dict[str, Any]:
     """
     Run the full agent loop.
-    
+
     Processing flow:
-    1. Load raw intake file
-    2. Normalize intake items
-    3. Load dedupe memory
-    4. Split new vs duplicate events
-    5. For each new event: compute score, trigger, render notification
-    6. Update dedupe memory
-    7. Return run summary
-    
+    1. Ensure required directories exist
+    2. Load raw intake file
+    3. Normalize intake items
+    4. Load dedupe memory
+    5. Split new vs duplicate events
+    6. For each new event: compute score, trigger, render notification
+    7. Update dedupe memory
+    8. Return run summary
+
     Args:
         intake_path: Path to intake JSON file
         dedupe_memory_path: Path to dedupe memory JSON file
         output_dir: Optional directory to write notification files
-        
+
     Returns:
         Run summary dict
     """
+    # Step 0: Ensure directories exist
+    ensure_directories(intake_path, dedupe_memory_path, output_dir)
+
     # Step 1 & 2: Load and normalize intake
     raw_items = load_intake_file(intake_path)
     normalized_events = normalize_intake_batch(raw_items)
