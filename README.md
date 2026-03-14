@@ -4,6 +4,11 @@
 
 在处理地缘政治（战争、制裁、航道封锁）等突发事件时，市场最不缺的是新闻，最缺的是**"剥离情绪后的物理节点映射"**。Geo Market Watch 是一个内置了"对冲基金研究纪律"的事件驱动型（Event-Driven）AI 分析框架。
 
+> **📋 仓库范围说明**
+> 本仓库提供的是**分析框架和工作流示例**（Analysis Framework & Workflow），包括 SKILL.md、方法论文档、验证清单和自动化配置指南。
+> 
+> 本仓库**不包含**后台挂机程序、定时调度系统或监控服务。如需自动化监控，请自行配置定时任务系统（如 OpenClaw Cron、ChatGPT Tasks、Make.com 等），并参考 [docs/scheduled-monitoring.md](docs/scheduled-monitoring.md) 的指南。
+
 ---
 
 ## ⏱️ 30秒看懂 Geo Market Watch
