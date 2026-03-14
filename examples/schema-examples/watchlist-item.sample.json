@@ -1,0 +1,66 @@
+{
+  "watchlist_id": "wl-2026-0001",
+  "event_id": "gmw-2026-0001",
+  "ticker": "MAERSK-B.CO",
+  "asset_name": "A.P. Moller - Maersk",
+  "asset_type": "stock",
+  "market": "EU",
+  "exchange": "CPH",
+  "direction_bias": "two_way",
+  "thesis": "Renewed Red Sea disruption can affect container shipping economics through route diversion, longer voyage duration, equipment repositioning stress, and freight pricing volatility. The stock belongs on the watchlist because both pricing power and operational disruption can matter, making follow-through evidence critical.",
+  "physical_mapping_node": {
+    "node_name": "Red Sea / Suez shipping corridor",
+    "node_type": "shipping_lane",
+    "mapping_logic": "The company has direct exposure to Europe-Asia shipping flows that are sensitive to Suez transit conditions, rerouting duration, fuel consumption, schedule reliability, and freight repricing."
+  },
+  "trigger_signal": [
+    {
+      "description": "A sustained increase in freight or insurance costs tied to Red Sea rerouting persists over several trading sessions.",
+      "signal_type": "logistics",
+      "observable": true,
+      "threshold": "Freight or insurance indicators remain elevated for 3-5 days",
+      "time_window": "3-5 days"
+    },
+    {
+      "description": "Major operators publicly confirm longer rerouting duration or network disruption affecting schedule reliability.",
+      "signal_type": "official_statement",
+      "observable": true,
+      "threshold": "Two or more operator confirmations",
+      "time_window": "within 1 week"
+    }
+  ],
+  "invalidation_condition": [
+    {
+      "description": "Security conditions stabilize quickly and operators resume normal Suez transit without meaningful cost escalation.",
+      "condition_type": "normalization"
+    },
+    {
+      "description": "Disruption headlines do not translate into observable freight, insurance, or network stress indicators.",
+      "condition_type": "thesis_failure"
+    }
+  ],
+  "supporting_indicators": [
+    {
+      "name": "Container freight rate index",
+      "indicator_type": "freight_rate",
+      "unit": "index",
+      "source": "Freight market data provider"
+    },
+    {
+      "name": "Marine war risk insurance commentary",
+      "indicator_type": "policy_tracker",
+      "unit": "qualitative",
+      "source": "Insurance market reporting"
+    }
+  ],
+  "confidence_level": "medium",
+  "time_horizon": "weeks",
+  "priority": "high",
+  "status": "active",
+  "scenario_dependency": "Most relevant under the scenario where Red Sea disruptions persist and rerouting remains operationally meaningful.",
+  "linked_tickers": [
+    "ZIM",
+    "HLAG.DE"
+  ],
+  "notes": "This is a monitoring item rather than a pure directional conviction trade. Confirmation through observable shipping indicators is required."
+}
