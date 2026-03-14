@@ -1,19 +1,44 @@
 ---
 name: geo-market-watch
-description: analyze one or more geopolitical news links and convert them into a chinese market watchlist across us stocks, a-shares, and hong kong stocks. use when the user provides news links about wars, strikes, sanctions, chokepoints, commodity disruptions, shipping shocks, export controls, or other geopolitical events and wants a fixed table, watchlist names, trigger signals, scenario analysis, and short investment commentary rather than generic summarization.
+description: analyze geopolitical market shocks from either user-provided links or proactive web discovery, then convert them into a chinese market watchlist across us stocks, a-shares, and hong kong stocks. use when the user provides news links about wars, strikes, sanctions, chokepoints, commodity disruptions, shipping shocks, export controls, or other geopolitical events, or when chatgpt is asked to monitor, scan, surface, triage, or periodically discover important geopolitical developments that may matter for markets and then produce a fixed table, watchlist names, trigger signals, scenario analysis, and short investment commentary rather than generic summarization.
 ---
 
-Turn geopolitical news links into a reusable three-market investment map.
+Turn geopolitical developments into a reusable three-market investment map.
 
 ## Core behavior
-- Treat one or more news links as the required starting input.
-- If links are missing, explicitly state that full-workflow confidence is reduced, ask for links, and do not pretend the same level of verification was possible.
+- Support two input modes:
+  1. **Link mode**: the user provides one or more news links.
+  2. **Discovery mode**: ChatGPT is explicitly asked to monitor, scan, triage, or periodically surface important geopolitical events for market relevance.
+- In Link mode, open and assess the user links first.
+- In Discovery mode, do not wait for user-provided links. Search the web, identify candidate events, rank them, and only then run the full market-watch workflow on the highest-priority event(s).
 - Write the final answer in Chinese by default.
-- Default goal: transform geopolitical news into a practical investment watchlist, not a generic summary.
+- When mentioning important entities in Chinese output, use bilingual naming on first mention: 中文名（English name） for places, people, institutions, ports, straits, companies, commodities infrastructure, and securities when helpful for disambiguation.
+- Default goal: transform geopolitical developments into a practical investment watchlist, not a generic summary.
 - Always separate and label these three layers in the final answer:
   1. [已确认事实 / Confirmed Facts]
   2. [市场解读 / Market Interpretation]
   3. [情景推演 / Scenario Analysis]
+
+## Discovery mode rules
+Use [references/discovery-rules.md](references/discovery-rules.md).
+
+In Discovery mode, first decide whether an event is important enough to escalate into the full workflow. Prefer events that are:
+- fresh
+- cross-verified
+- physically consequential
+- tied to identifiable commodities, logistics, export controls, infrastructure, sanctions, mobilization, or strategic chokepoints
+- likely to change risk premium, supply expectations, or sector leadership within days to weeks
+
+If no event clears the threshold:
+- explicitly say that no item currently warrants a full watchlist refresh
+- still provide a short monitor list of 3 to 5 developing situations and what would make them actionable
+- do not force a full 9-section report for weak signals
+
+If several events clear the threshold:
+- rank them by market relevance first, not media volume
+- either
+  - produce one full report for the top event and a short ranked monitor list for the rest, or
+  - produce a compact multi-event dashboard only if the user explicitly asks for a sweep
 
 ## Source authentication and anti-hype filter
 Before interpreting the event, classify all user-provided links and web findings into these source tiers:
@@ -72,16 +97,18 @@ Prefer concrete, quantifiable, and physical mapping, such as:
 
 ## Workflow
 Follow these steps in order:
-1. Open and understand all user-provided links.
-2. Apply the Source Authentication and Anti-Hype Filter.
-3. Identify the core event, date, geography, affected assets, and any physical bottlenecks or supply-chain choke points.
-4. Verify freshness on the web for the event itself and all time-sensitive market facts.
-5. Briefly assess the macro regime in no more than 2 to 3 sentences, focusing only on rate direction, inflation backdrop, and growth sensitivity.
-6. Build a scenario tree and name the current base case.
-7. Trace the transmission path: event -> commodities / logistics / policy / sentiment -> sectors -> watchlist.
-8. Build three style buckets: aggressive, balanced, defensive.
-9. For each chosen security, provide why it belongs, one concrete trigger signal, and one concrete invalidation condition.
-10. End by formatting the output strictly according to the 9 sections defined in [references/output-template.md](references/output-template.md), concluding with the Short Commentary and Risk Warning.
+1. Determine whether the request is Link mode or Discovery mode.
+2. In Link mode, open and understand all user-provided links.
+3. In Discovery mode, scan for candidate events, score them with [references/discovery-rules.md](references/discovery-rules.md), and select the best escalation target.
+4. Apply the Source Authentication and Anti-Hype Filter.
+5. Identify the core event, date, geography, affected assets, and any physical bottlenecks or supply-chain choke points.
+6. Verify freshness on the web for the event itself and all time-sensitive market facts.
+7. Briefly assess the macro regime in no more than 2 to 3 sentences, focusing only on rate direction, inflation backdrop, and growth sensitivity.
+8. Build a scenario tree and name the current base case.
+9. Trace the transmission path: event -> commodities / logistics / policy / sentiment -> sectors -> watchlist.
+10. Build three style buckets: aggressive, balanced, defensive.
+11. For each chosen security, provide why it belongs, one concrete trigger signal, and one concrete invalidation condition.
+12. End by formatting the output strictly according to the 9 sections defined in [references/output-template.md](references/output-template.md), concluding with the Short Commentary and Risk Warning.
 
 ## Scenario framework
 Use this default progression unless a better event-specific framing is clearly superior:
@@ -132,11 +159,13 @@ Avoid vague phrases such as:
 - Be concise, structured, and analytical.
 - Prefer tables and lists first, then 2 to 4 short paragraphs of commentary.
 - Use exact dates when they reduce ambiguity.
-- Do not give absolute trading instructions.
+- Keep entity naming consistent after first mention. After 中文名（English name） appears once, later references may use the Chinese short form if there is no ambiguity.
 - Make uncertainty visible.
+- Do not give absolute trading instructions.
 - Do not present scenario assumptions as confirmed facts.
 
 ## References
 - Use [references/output-template.md](references/output-template.md) for the exact section order and headings.
 - Use [references/watchlist-rules.md](references/watchlist-rules.md) for basket logic and naming discipline.
+- Use [references/discovery-rules.md](references/discovery-rules.md) for proactive scanning, event scoring, and escalation thresholds.
 - Use [references/sample-prompts.md](references/sample-prompts.md) for example requests and expected behavior.
