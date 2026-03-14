@@ -162,51 +162,237 @@
       "type": "array",
       "description": "High-level market domains impacted by the event.",
       "items": {
-        "type": "string"
+        "type": "string",
+        "enum": [
+          "energy",
+          "metals_mining",
+          "shipping",
+          "ports_logistics",
+          "semiconductors",
+          "defense",
+          "agriculture",
+          "chemicals",
+          "utilities",
+          "industrials",
+          "consumer",
+          "fx_rates",
+          "rates_credit",
+          "equities",
+          "etfs",
+          "other"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "sources": {
+      "type": "array",
+      "description": "Underlying sources used to construct the event object.",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/source"
       }
+    },
+    "contradictions": {
+      "type": "array",
+      "description": "List of major factual contradictions between sources.",
+      "items": {
+        "$ref": "#/$defs/contradiction"
+      }
+    },
+    "tags": {
+      "type": "array",
+      "description": "Optional freeform tags for routing, indexing, or filtering.",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 50
+      },
+      "uniqueItems": true
+    },
+    "raw_input_refs": {
+      "type": "array",
+      "description": "References to raw user input, feed URLs, document IDs, or internal object IDs.",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 500
+      },
+      "uniqueItems": true
     }
   },
   "$defs": {
     "geography": {
       "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "type"],
       "properties": {
-        "name": { "type": "string" },
+        "name": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 120
+        },
         "type": {
           "type": "string",
-          "enum": ["country", "region", "chokepoint", "port", "route"]
+          "enum": [
+            "country",
+            "region",
+            "city",
+            "port",
+            "strait",
+            "canal",
+            "sea_route",
+            "mine",
+            "pipeline",
+            "refinery",
+            "industrial_zone",
+            "other"
+          ]
         },
-        "coordinates": {
-          "type": "object",
-          "properties": {
-            "latitude": { "type": "number" },
-            "longitude": { "type": "number" }
-          }
+        "iso_code": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 10
         }
       }
     },
     "actor": {
       "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "actor_type"],
       "properties": {
-        "name": { "type": "string" },
-        "type": {
+        "name": {
           "type": "string",
-          "enum": ["state", "corporate", "organization", "non_state_actor"]
+          "minLength": 2,
+          "maxLength": 200
         },
-        "role": {
+        "actor_type": {
           "type": "string",
-          "enum": ["aggressor", "target", "mediator", "observer", "beneficiary"]
+          "enum": [
+            "state",
+            "company",
+            "militia",
+            "international_organization",
+            "regulator",
+            "port_operator",
+            "shipping_company",
+            "commodity_producer",
+            "union",
+            "other"
+          ]
+        },
+        "country": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 100
         }
       }
     },
     "infrastructureNode": {
       "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "node_type"],
       "properties": {
-        "name": { "type": "string" },
-        "type": {
+        "name": {
           "type": "string",
-          "enum": ["port", "pipeline", "terminal", "refinery", "mine", "factory", "route"]
+          "minLength": 2,
+          "maxLength": 200
         },
-        "location": { "type": "string" }
+        "node_type": {
+          "type": "string",
+          "enum": [
+            "port",
+            "terminal",
+            "pipeline",
+            "mine",
+            "rail",
+            "refinery",
+            "power_plant",
+            "smelter",
+            "industrial_park",
+            "shipping_lane",
+            "other"
+          ]
+        },
+        "country": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 100
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_id", "publisher", "source_type", "tier", "url", "published_at"],
+      "properties": {
+        "source_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "publisher": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "source_type": {
+          "type": "string",
+          "enum": [
+            "newswire",
+            "newspaper",
+            "government",
+            "company_statement",
+            "exchange_filing",
+            "social_media",
+            "ngo",
+            "industry_report",
+            "satellite_or_osint",
+            "other"
+          ]
+        },
+        "tier": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "published_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "headline": {
+          "type": "string",
+          "maxLength": 500
+        }
+      }
+    },
+    "contradiction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["field", "description"],
+      "properties": {
+        "field": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "description": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 1000
+        },
+        "source_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "uniqueItems": true
+        }
       }
     }
   }
