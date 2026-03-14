@@ -69,14 +69,78 @@ Scout monitoring continues.
 
 **EVENT CARD**
 
-**Event:**
-Red Sea shipping disruption
+| Field | Value |
+|-------|-------|
+| **Event Title** | Red Sea shipping disruption |
+| **Date** | 2024-01-15 |
+| **Region** | Middle East / Red Sea |
+| **Category** | Maritime disruption, Conflict escalation |
 
-**Risk Level:**
-Medium
+**Source:**
+Reuters - https://www.reuters.com/world/middle-east/red-sea-shipping
 
-**Affected Markets:**
-Shipping, Freight rates
+**Event Summary:**
+Houthi attacks force major shipping lines to avoid Red Sea routes, causing significant trade disruption.
 
-**Next Check:**
-24 hours
+**Market Exposure:**
+- Container shipping
+- Oil tanker routes
+- Freight rates
+
+**Signal Indicators:**
+
+| Indicator | Status |
+|-----------|--------|
+| Trade route disruption | Yes |
+| Insurance premium spike | Unknown |
+| Naval intervention | Pending |
+
+**Signal Strength:** 6 / 10
+
+**Monitoring Window:** 24 hours
+
+---
+
+# Event Card Format
+
+Standardized output format for Scout Mode:
+
+```
+EVENT CARD
+
+Event Title    [Descriptive name]
+Date           [YYYY-MM-DD]
+Region         [Geographic location]
+Category       [Event type tags]
+
+Source         [URL or reference]
+
+Event Summary  [2-3 sentence description]
+
+Market Exposure
+• [Sector 1]
+• [Sector 2]
+• [Sector 3]
+
+Signal Indicators
+| Indicator | Status |
+|-----------|--------|
+| [Metric 1] | [Yes/No/Unknown] |
+| [Metric 2] | [Yes/No/Unknown] |
+
+Signal Strength [0-10 score]
+
+Monitoring Window [Time to next check]
+```
+
+---
+
+# Rules
+
+**Do not:**
+
+- speculate
+- predict prices
+- produce trading advice
+
+**Scout Mode only detects signals.**
