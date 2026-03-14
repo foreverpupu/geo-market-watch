@@ -1,0 +1,4 @@
+interface:
+  display_name: Geo Market Watch
+  short_description: Turn geopolitical news links into Chinese watchlists for US, A-share, and HK markets.
+  category: analysis
