@@ -3,6 +3,50 @@
 All notable changes to Geo Market Watch will be documented in this file.
 For a deep dive into the AI design philosophy and research logic behind these updates, please refer to our [Design Notes](docs/design-notes.md).
 
+## [v6.0] - 2026-03-15
+### Geo Alpha Database
+
+This release introduces the first **minimal event database layer** for Geo Market Watch.
+
+#### New Database Components
+- **SQLite database** — Local-first, zero infrastructure storage
+- **6 tables** — events, sources, indicators, flags, notifications, watchlist
+- **CRUD operations** — Full create, read, update, delete support
+- **Query engine** — Search by region, category, band, date
+- **Statistics** — Event counts, distributions, metrics
+
+#### New Engine Files
+- `engine/database_models.py` — Schema definitions
+- `engine/database.py` — Database operations
+- `engine/artifact_ingest.py` — Ingest v5.5 outputs into DB
+
+#### New Scripts
+- `scripts/init_database.py` — Initialize database
+- `scripts/seed_database.py` — Seed with sample events
+- `scripts/query_database.py` — Query and display events
+- `scripts/ingest_artifacts.py` — Ingest agent loop outputs
+
+#### New Data
+- `data/db-seed-events.json` — 5 sample events for testing
+- `data/geo_alpha.db` — SQLite database file
+
+#### New Documentation
+- `docs/geo-alpha-database-spec.md`
+- `docs/database-query-examples.md`
+- `docs/benchmark-v6.md`
+
+#### Improvements
+- Persistent event storage
+- Historical event tracking
+- Searchable event archive
+- Foundation for future dashboard
+
+#### Notes
+This release is **intentionally minimal**.
+It does not include a production database service, web dashboard, or hosted API.
+
+---
+
 ## [v5.5] - 2026-03-15
 ### Minimal Agent Loop
 

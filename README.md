@@ -25,18 +25,27 @@ The project is designed for analysts, researchers, and developers who want to bu
 
 ## Framework Overview
 
-Geo Market Watch now operates as a **two-stage analysis system**.
+Geo Market Watch now operates as a **three-stage analysis system**.
 
 **Stage 1 — Scout Mode**  
 Early detection of geopolitical signals.
 
-**Stage 2 — Full Analysis Mode**  
+**Stage 2 — Agent Loop**  
+Process, deduplicate, score, and route events.
+
+**Stage 3 — Full Analysis Mode**  
 Complete 9-module analysis framework.
 
 **Scout Mode performs:**
 - event detection 
 - signal scoring 
 - escalation checks 
+
+**Agent Loop performs:**
+- intake normalization
+- event deduplication
+- score + trigger evaluation
+- notification / handoff
 
 **Full Analysis Mode performs:**
 1. Confirmed Facts 
@@ -100,6 +109,56 @@ It is intentionally:
 - Multi-agent orchestration
 
 See [docs/minimal-agent-architecture.md](docs/minimal-agent-architecture.md) for details.
+
+---
+
+## Geo Alpha Database
+
+Starting in v6, Geo Market Watch includes **Geo Alpha Database** — a minimal SQLite-based event storage layer.
+
+**Purpose:**
+- Store processed events from the agent loop
+- Enable historical event tracking
+- Support simple search and filtering
+- Provide foundation for future dashboard and analytics
+
+**Features:**
+- SQLite database (zero infrastructure)
+- 6 tables: events, sources, indicators, flags, notifications, watchlist
+- Full CRUD operations
+- Query by region, category, band, date
+- Statistics and reporting
+
+**What this enables:**
+- Persistent event history
+- Benchmarkable datasets
+- Future dashboard compatibility
+- Alpha pattern mining (future)
+
+**What this does NOT include:**
+- Production database service
+- Web dashboard
+- Live hosted API
+- Multi-user backend
+- Vector/graph database
+
+**Quickstart:**
+
+```bash
+# Initialize database
+python scripts/init_database.py --db data/geo_alpha.db
+
+# Seed with sample events
+python scripts/seed_database.py --db data/geo_alpha.db --seed data/db-seed-events.json
+
+# Query events
+python scripts/query_database.py --db data/geo_alpha.db --list
+
+# Show statistics
+python scripts/query_database.py --db data/geo_alpha.db --stats
+```
+
+See [docs/geo-alpha-database-spec.md](docs/geo-alpha-database-spec.md) for details.
 
 ---
 
@@ -266,7 +325,9 @@ geo-market-watch/
 ├── data/
 │   ├── benchmark-events.json
 │   ├── intake-sample.json
-│   └── dedupe-memory.sample.json
+│   ├── dedupe-memory.sample.json
+│   ├── db-seed-events.json
+│   └── geo_alpha.db
 │
 ├── docs/
 │   ├── scout-mode-example.md
@@ -277,9 +338,12 @@ geo-market-watch/
 │   ├── event-database-design.md
 │   ├── minimal-agent-architecture.md
 │   ├── notification-spec.md
+│   ├── geo-alpha-database-spec.md
+│   ├── database-query-examples.md
 │   ├── benchmark-v5.md
 │   ├── benchmark-v5.4.md
 │   ├── benchmark-v5.5.md
+│   ├── benchmark-v6.md
 │   └── scheduled-monitoring.md
 │
 ├── engine/
@@ -288,19 +352,27 @@ geo-market-watch/
 │   ├── intake_normalizer.py
 │   ├── dedupe_memory.py
 │   ├── notifier.py
-│   └── agent_loop.py
+│   ├── agent_loop.py
+│   ├── database_models.py
+│   ├── database.py
+│   └── artifact_ingest.py
 │
 ├── examples/
 │   ├── intake-input.example.json
 │   ├── notify-monitor.example.md
-│   └── notify-full-analysis.example.md
+│   ├── notify-full-analysis.example.md
+│   └── database-query-output.example.md
 │
 ├── prompts/
 │   └── scout-mode.md
 │
 ├── scripts/
 │   ├── run_benchmark.py
-│   └── run_agent_loop.py
+│   ├── run_agent_loop.py
+│   ├── init_database.py
+│   ├── seed_database.py
+│   ├── query_database.py
+│   └── ingest_artifacts.py
 │
 ├── CHANGELOG.md
 ├── README.md
@@ -345,6 +417,12 @@ Key framework documents:
 
 **Notification Specification**  
 [docs/notification-spec.md](docs/notification-spec.md)
+
+**Geo Alpha Database Spec**  
+[docs/geo-alpha-database-spec.md](docs/geo-alpha-database-spec.md)
+
+**Database Query Examples**  
+[docs/database-query-examples.md](docs/database-query-examples.md)
 
 **Engine Documentation**  
 [engine/README.md](engine/README.md)

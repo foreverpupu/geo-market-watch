@@ -1,0 +1,141 @@
+{
+  "description": "Geo Market Watch v6 — Database Seed Events",
+  "version": "6.0",
+  "events": [
+    {
+      "event_key": "GMW-2024-001",
+      "event_title": "Red Sea shipping disruption",
+      "date_detected": "2024-01-12",
+      "region": "Middle East",
+      "category": "Maritime disruption",
+      "summary": "Major container lines reroute vessels due to security risks in the Red Sea.",
+      "source_name": "Reuters",
+      "source_url": "https://www.reuters.com/world/middle-east/red-sea-shipping",
+      "score": 5,
+      "band": "monitor",
+      "trigger_full_analysis": true,
+      "status": "active",
+      "indicators": {
+        "physical_disruption": 1,
+        "transport_impact": 2,
+        "policy_sanctions": 0,
+        "market_transmission": 1,
+        "escalation_risk": 1
+      },
+      "flags": {
+        "confirmed_supply_disruption": false,
+        "strategic_transport_disruption": true,
+        "major_sanctions_escalation": false,
+        "military_escalation": false
+      }
+    },
+    {
+      "event_key": "GMW-2024-002",
+      "event_title": "Russia expands oil export restrictions",
+      "date_detected": "2023-12-15",
+      "region": "Eastern Europe",
+      "category": "Energy policy",
+      "summary": "Russia expands restrictions affecting global energy exports.",
+      "source_name": "Bloomberg",
+      "source_url": "https://www.bloomberg.com/news/russia-oil",
+      "score": 8,
+      "band": "full_analysis",
+      "trigger_full_analysis": true,
+      "status": "active",
+      "indicators": {
+        "physical_disruption": 2,
+        "transport_impact": 1,
+        "policy_sanctions": 2,
+        "market_transmission": 2,
+        "escalation_risk": 1
+      },
+      "flags": {
+        "confirmed_supply_disruption": true,
+        "strategic_transport_disruption": false,
+        "major_sanctions_escalation": true,
+        "military_escalation": false
+      }
+    },
+    {
+      "event_key": "GMW-2023-003",
+      "event_title": "Panama Canal drought restrictions",
+      "date_detected": "2023-08-20",
+      "region": "Central America",
+      "category": "Infrastructure disruption",
+      "summary": "Low water levels force restrictions on canal transit.",
+      "source_name": "Reuters",
+      "source_url": "https://www.reuters.com/business/energy/panama-canal",
+      "score": 5,
+      "band": "monitor",
+      "trigger_full_analysis": true,
+      "status": "active",
+      "indicators": {
+        "physical_disruption": 2,
+        "transport_impact": 2,
+        "policy_sanctions": 0,
+        "market_transmission": 1,
+        "escalation_risk": 0
+      },
+      "flags": {
+        "confirmed_supply_disruption": false,
+        "strategic_transport_disruption": true,
+        "major_sanctions_escalation": false,
+        "military_escalation": false
+      }
+    },
+    {
+      "event_key": "GMW-2023-004",
+      "event_title": "Taiwan military drills escalation",
+      "date_detected": "2023-04-10",
+      "region": "East Asia",
+      "category": "Conflict escalation",
+      "summary": "Military exercises increase regional tensions.",
+      "source_name": "Financial Times",
+      "source_url": "https://www.ft.com/content/taiwan-drills",
+      "score": 2,
+      "band": "noise",
+      "trigger_full_analysis": true,
+      "status": "active",
+      "indicators": {
+        "physical_disruption": 0,
+        "transport_impact": 1,
+        "policy_sanctions": 0,
+        "market_transmission": 0,
+        "escalation_risk": 1
+      },
+      "flags": {
+        "confirmed_supply_disruption": false,
+        "strategic_transport_disruption": false,
+        "major_sanctions_escalation": false,
+        "military_escalation": true
+      }
+    },
+    {
+      "event_key": "GMW-2023-005",
+      "event_title": "Niger uranium export disruption",
+      "date_detected": "2023-07-30",
+      "region": "Africa",
+      "category": "Commodity supply disruption",
+      "summary": "Political instability threatens uranium exports.",
+      "source_name": "Reuters",
+      "source_url": "https://www.reuters.com/business/energy/niger-uranium",
+      "score": 7,
+      "band": "full_analysis",
+      "trigger_full_analysis": true,
+      "status": "active",
+      "indicators": {
+        "physical_disruption": 3,
+        "transport_impact": 1,
+        "policy_sanctions": 1,
+        "market_transmission": 1,
+        "escalation_risk": 1
+      },
+      "flags": {
+        "confirmed_supply_disruption": true,
+        "strategic_transport_disruption": false,
+        "major_sanctions_escalation": false,
+        "military_escalation": false
+      }
+    }
+  ]
+}
