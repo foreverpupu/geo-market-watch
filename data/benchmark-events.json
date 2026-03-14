@@ -1,0 +1,174 @@
+{
+  "description": "Geo Market Watch v5.4 Benchmark Dataset - Real geopolitical events for engine validation",
+  "version": "5.4",
+  "events": [
+    {
+      "event_id": "GMW-2024-001",
+      "event_title": "Red Sea shipping disruption",
+      "date_detected": "2024-01-12",
+      "region": "Middle East",
+      "category": "Maritime disruption",
+      "source": "https://www.reuters.com/world/middle-east/red-sea-shipping",
+      "indicators": {
+        "physical_disruption": 1,
+        "transport_impact": 2,
+        "policy_sanctions": 0,
+        "market_transmission": 1,
+        "escalation_risk": 1
+      },
+      "flags": {
+        "confirmed_supply_disruption": false,
+        "strategic_transport_disruption": false,
+        "major_sanctions_escalation": false,
+        "military_escalation": false
+      },
+      "expected_score": 5,
+      "expected_band": "monitor",
+      "expected_trigger": false
+    },
+    {
+      "event_id": "GMW-2024-002",
+      "event_title": "Russia oil export restrictions expansion",
+      "date_detected": "2023-12-15",
+      "region": "Eastern Europe",
+      "category": "Energy policy",
+      "source": "https://www.reuters.com/business/energy/russia-oil-exports",
+      "indicators": {
+        "physical_disruption": 2,
+        "transport_impact": 1,
+        "policy_sanctions": 2,
+        "market_transmission": 2,
+        "escalation_risk": 1
+      },
+      "flags": {
+        "confirmed_supply_disruption": true,
+        "strategic_transport_disruption": false,
+        "major_sanctions_escalation": true,
+        "military_escalation": false
+      },
+      "expected_score": 8,
+      "expected_band": "full_analysis",
+      "expected_trigger": true
+    },
+    {
+      "event_id": "GMW-2023-003",
+      "event_title": "Panama Canal drought restrictions",
+      "date_detected": "2023-08-20",
+      "region": "Central America",
+      "category": "Infrastructure disruption",
+      "source": "https://www.reuters.com/business/energy/panama-canal-drought",
+      "indicators": {
+        "physical_disruption": 2,
+        "transport_impact": 2,
+        "policy_sanctions": 0,
+        "market_transmission": 1,
+        "escalation_risk": 0
+      },
+      "flags": {
+        "confirmed_supply_disruption": false,
+        "strategic_transport_disruption": true,
+        "major_sanctions_escalation": false,
+        "military_escalation": false
+      },
+      "expected_score": 5,
+      "expected_band": "monitor",
+      "expected_trigger": true
+    },
+    {
+      "event_id": "GMW-2023-004",
+      "event_title": "Taiwan military drills escalation",
+      "date_detected": "2023-04-10",
+      "region": "East Asia",
+      "category": "Conflict escalation",
+      "source": "https://www.reuters.com/world/asia-pacific/taiwan-military-drills",
+      "indicators": {
+        "physical_disruption": 0,
+        "transport_impact": 1,
+        "policy_sanctions": 0,
+        "market_transmission": 0,
+        "escalation_risk": 1
+      },
+      "flags": {
+        "confirmed_supply_disruption": false,
+        "strategic_transport_disruption": false,
+        "major_sanctions_escalation": false,
+        "military_escalation": true
+      },
+      "expected_score": 2,
+      "expected_band": "noise",
+      "expected_trigger": true
+    },
+    {
+      "event_id": "GMW-2023-005",
+      "event_title": "Niger uranium export disruption",
+      "date_detected": "2023-07-30",
+      "region": "Africa",
+      "category": "Commodity supply disruption",
+      "source": "https://www.reuters.com/business/energy/niger-uranium",
+      "indicators": {
+        "physical_disruption": 3,
+        "transport_impact": 1,
+        "policy_sanctions": 1,
+        "market_transmission": 1,
+        "escalation_risk": 1
+      },
+      "flags": {
+        "confirmed_supply_disruption": true,
+        "strategic_transport_disruption": false,
+        "major_sanctions_escalation": false,
+        "military_escalation": false
+      },
+      "expected_score": 7,
+      "expected_band": "full_analysis",
+      "expected_trigger": true
+    },
+    {
+      "event_id": "GMW-2024-006",
+      "event_title": "Suez Canal temporary blockage",
+      "date_detected": "2024-02-05",
+      "region": "Middle East",
+      "category": "Maritime disruption",
+      "source": "https://www.reuters.com/world/middle-east/suez-canal",
+      "indicators": {
+        "physical_disruption": 2,
+        "transport_impact": 2,
+        "policy_sanctions": 0,
+        "market_transmission": 2,
+        "escalation_risk": 0
+      },
+      "flags": {
+        "confirmed_supply_disruption": false,
+        "strategic_transport_disruption": true,
+        "major_sanctions_escalation": false,
+        "military_escalation": false
+      },
+      "expected_score": 6,
+      "expected_band": "monitor",
+      "expected_trigger": true
+    },
+    {
+      "event_id": "GMW-2024-007",
+      "event_title": "Iran sanctions enforcement increase",
+      "date_detected": "2024-03-01",
+      "region": "Middle East",
+      "category": "Sanctions escalation",
+      "source": "https://www.reuters.com/world/middle-east/iran-sanctions",
+      "indicators": {
+        "physical_disruption": 1,
+        "transport_impact": 1,
+        "policy_sanctions": 2,
+        "market_transmission": 1,
+        "escalation_risk": 1
+      },
+      "flags": {
+        "confirmed_supply_disruption": false,
+        "strategic_transport_disruption": false,
+        "major_sanctions_escalation": true,
+        "military_escalation": false
+      },
+      "expected_score": 6,
+      "expected_band": "monitor",
+      "expected_trigger": true
+    }
+  ]
+}
