@@ -74,7 +74,7 @@
 2. **物理翻译 (Alpha Translation)**：强迫模型向下穿透，将政治事件翻译成"出口量、市占率、特定船型、管道运力"等物理敞口。
 3. **强制失效 (Mandatory Invalidation)**：给买入逻辑的同时，强制给出退场条件。防止在事件逻辑证伪后继续"站岗"。
 
-> 🤖 **自动化进阶**：如果你希望将它变成一个每天早晨自动扫描并推送的雷达，请参阅 [自动化运行指南 (Automation Guide)](docs/Automation_Guide.md)。
+> 🤖 **自动化进阶**：如果你希望将它变成一个每天早晨自动扫描并推送的雷达，请参阅 [定时监控与自动化指南 (Scheduled Monitoring)](docs/scheduled-monitoring.md)。
 
 ---
 
@@ -92,7 +92,7 @@ geo-market-watch/
 │   ├── methodology.md          # 完整方法论文档
 │   ├── source-tiering.md       # 信源分级框架
 │   ├── validation-checklist.md # 技能验证清单
-│   └── Automation_Guide.md     # 自动化运行指南
+│   ├── scheduled-monitoring.md # 定时监控与自动化指南
 ├── examples/
 │   ├── example-inputs.md       # 10个测试用例
 │   └── example-output.md       # 示例输出

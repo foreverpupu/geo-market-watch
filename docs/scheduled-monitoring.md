@@ -209,7 +209,7 @@ openclaw cron add --name "GW Evening" --cron "0 16 * * *" ...
 
 - [SKILL.md](../SKILL.md) - 核心技能定义（分析模式）
 - [docs/methodology.md](methodology.md) - 完整方法论
-- [docs/Automation_Guide.md](Automation_Guide.md) - OpenClaw 自动化指南
+- [docs/Automation_Guide.md](Automation_Guide.md) - OpenClaw 自动化配置参考
 - [examples/example-inputs.md](../examples/example-inputs.md) - 测试用例
 
 ---
