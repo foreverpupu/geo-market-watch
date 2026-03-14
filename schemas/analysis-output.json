@@ -1,0 +1,151 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/foreverpupu/geo-market-watch/schemas/analysis-output.json",
+  "title": "Geo Market Watch Analysis Output",
+  "description": "Complete structured output from the Geo Market Watch analysis engine",
+  "type": "object",
+  "required": ["analysis_id", "timestamp", "event", "confirmed_facts", "market_interpretation", "scenario_analysis", "watchlist"],
+  "properties": {
+    "analysis_id": {
+      "type": "string",
+      "description": "Unique identifier for this analysis"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the analysis was generated"
+    },
+    "event": {
+      "$ref": "event-object.json",
+      "description": "The event being analyzed"
+    },
+    "event_snapshot": {
+      "type": "string",
+      "description": "One-sentence summary of the event"
+    },
+    "confirmed_facts": {
+      "type": "object",
+      "description": "Tier 1 verified facts only",
+      "properties": {
+        "facts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "statement": { "type": "string" },
+              "source_tier": { "type": "integer", "enum": [1] },
+              "source_tag": { "type": "string" }
+            }
+          }
+        },
+        "fog_of_war_notes": { "type": "string" }
+      }
+    },
+    "market_interpretation": {
+      "type": "object",
+      "description": "Market impact analysis",
+      "properties": {
+        "macro_backdrop": { "type": "string" },
+        "transmission_path": { "type": "string" },
+        "affected_sectors": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "risk_premium_assessment": { "type": "string" }
+      }
+    },
+    "scenario_analysis": {
+      "type": "object",
+      "description": "A/B/C scenario framework",
+      "properties": {
+        "base_case": {
+          "type": "string",
+          "enum": ["A", "B", "C"]
+        },
+        "scenarios": {
+          "type": "object",
+          "properties": {
+            "A": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "condition": { "type": "string" },
+                "market_impact": { "type": "string" },
+                "escalation_trigger": { "type": "string" }
+              }
+            },
+            "B": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "condition": { "type": "string" },
+                "market_impact": { "type": "string" },
+                "escalation_trigger": { "type": "string" }
+              }
+            },
+            "C": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "condition": { "type": "string" },
+                "market_impact": { "type": "string" },
+                "de_escalation_trigger": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "key_indicators": {
+      "type": "array",
+      "description": "Observable signals to monitor",
+      "items": {
+        "type": "object",
+        "properties": {
+          "indicator": { "type": "string" },
+          "current_status": { "type": "string" },
+          "data_availability": { "type": "string" }
+        }
+      }
+    },
+    "watchlist": {
+      "type": "object",
+      "description": "Structured watchlists by market and style",
+      "properties": {
+        "aggressive": {
+          "type": "array",
+          "items": { "$ref": "watchlist-item.json" }
+        },
+        "balanced": {
+          "type": "array",
+          "items": { "$ref": "watchlist-item.json" }
+        },
+        "defensive": {
+          "type": "array",
+          "items": { "$ref": "watchlist-item.json" }
+        }
+      }
+    },
+    "commentary": {
+      "type": "string",
+      "description": "Short synthesis and prioritization"
+    },
+    "risk_warning": {
+      "type": "string",
+      "description": "Disclaimer and risk notice"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Analysis metadata",
+      "properties": {
+        "analysis_mode": {
+          "type": "string",
+          "enum": ["link", "discovery"]
+        },
+        "model_used": { "type": "string" },
+        "temperature": { "type": "number" },
+        "processing_time_ms": { "type": "integer" }
+      }
+    }
+  }
+}

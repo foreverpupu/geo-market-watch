@@ -1,0 +1,88 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/foreverpupu/geo-market-watch/schemas/watchlist-item.json",
+  "title": "Geo Market Watch Watchlist Item",
+  "description": "Structured watchlist entry with thesis, triggers, and invalidation",
+  "type": "object",
+  "required": ["ticker", "market", "thesis", "trigger_signal", "invalidation_condition"],
+  "properties": {
+    "ticker": {
+      "type": "string",
+      "description": "Stock or ETF ticker symbol"
+    },
+    "name": {
+      "type": "object",
+      "description": "Bilingual name representation",
+      "properties": {
+        "zh": { "type": "string", "description": "Chinese name" },
+        "en": { "type": "string", "description": "English name" }
+      }
+    },
+    "market": {
+      "type": "string",
+      "enum": ["US", "HK", "CN"],
+      "description": "Market region: US (US stocks/ETFs), HK (Hong Kong), CN (A-shares)"
+    },
+    "style_bucket": {
+      "type": "string",
+      "enum": ["aggressive", "balanced", "defensive"],
+      "description": "Risk/return profile category"
+    },
+    "thesis": {
+      "type": "string",
+      "description": "Investment thesis explaining why this asset is relevant to the event"
+    },
+    "physical_node_mapping": {
+      "type": "object",
+      "description": "How the asset maps to physical infrastructure or supply chain nodes",
+      "properties": {
+        "node_type": {
+          "type": "string",
+          "enum": ["terminal", "pipeline", "shipping", "mining", "refining", "logistics"]
+        },
+        "exposure_description": { "type": "string" },
+        "quantifiable_metric": { "type": "string" }
+      }
+    },
+    "trigger_signal": {
+      "type": "object",
+      "description": "Observable condition that confirms the thesis",
+      "properties": {
+        "description": { "type": "string" },
+        "metric": { "type": "string" },
+        "threshold": { "type": "string" },
+        "timeframe": { "type": "string" }
+      }
+    },
+    "invalidation_condition": {
+      "type": "object",
+      "description": "Condition that would break the investment thesis",
+      "properties": {
+        "description": { "type": "string" },
+        "metric": { "type": "string" },
+        "threshold": { "type": "string" }
+      }
+    },
+    "time_horizon": {
+      "type": "string",
+      "enum": ["immediate", "short_term", "medium_term", "long_term"],
+      "description": "Expected duration of the trade thesis"
+    },
+    "confidence_level": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Confidence in this watchlist item (0.0 to 1.0)"
+    },
+    "asset_type": {
+      "type": "string",
+      "enum": ["beneficiary", "hedge", "proxy"],
+      "description": "Whether this is a direct beneficiary, hedge, or proxy exposure"
+    },
+    "related_event_ids": {
+      "type": "array",
+      "description": "Event IDs that this watchlist item relates to",
+      "items": { "type": "string" }
+    }
+  }
+}
