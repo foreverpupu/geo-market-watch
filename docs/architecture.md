@@ -12,20 +12,67 @@ market intelligence signals.
 
 The Geo Market Watch system consists of six logical layers.
 
-```
-News Sources / Inputs
-↓
-Event Intake Layer
-↓
-Scout Agent Layer
-↓
-Verification & Fog-of-War Layer
-↓
-Market Propagation Graph
-↓
-Watchlist & Trigger Engine
-↓
-Memory / Review Layer
+```mermaid
+flowchart TB
+    subgraph Input["Input Layer"]
+        A1["News Articles"]
+        A2["Government / Policy Updates"]
+        A3["Shipping / Commodity Signals"]
+        A4["User-Provided Links"]
+    end
+
+    subgraph Intake["Event Intake"]
+        B1["Source Collection"]
+        B2["Deduplication"]
+        B3["Event Normalization"]
+    end
+
+    subgraph Scout["Scout & Escalation"]
+        C1["Scout Agent"]
+        C2["Escalation Engine"]
+    end
+
+    subgraph Verify["Verification Layer"]
+        D1["Source Tiering"]
+        D2["Contradiction Detection"]
+        D3["Fog-of-War Handling"]
+    end
+
+    subgraph Mapping["Market Mapping"]
+        E1["Propagation Graph"]
+        E2["Sector / Asset Translation"]
+        E3["Physical Node Mapping"]
+    end
+
+    subgraph Output["Output Layer"]
+        F1["Watchlist Generation"]
+        F2["Trigger Signals"]
+        F3["Invalidation Conditions"]
+        F4["Structured Analysis Output"]
+    end
+
+    subgraph Memory["Memory & Review"]
+        G1["Historical Storage"]
+        G2["Outcome Review"]
+        G3["Signal Quality Feedback"]
+    end
+
+    subgraph Delivery["Delivery / Integration"]
+        H1["Reports"]
+        H2["JSON / API"]
+        H3["Alerts / Dashboards"]
+    end
+
+    Input --> Intake
+    Intake --> Scout
+    Scout --> Verify
+    Verify --> Mapping
+    Mapping --> Output
+    Output --> Delivery
+    Output --> Memory
+    Memory --> Scout
+    Memory --> Verify
+    Memory --> Mapping
 ```
 
 Each layer performs a specialized function in the intelligence pipeline.

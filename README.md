@@ -74,7 +74,7 @@ This allows outputs to be used by:
 
 ---
 
-# System Architecture
+## System Architecture
 
 The framework is designed as a multi-stage intelligence pipeline.
 
