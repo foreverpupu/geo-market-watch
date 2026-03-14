@@ -180,7 +180,11 @@ openclaw cron add \
 
 ## 📄 许可证
 
-MIT License - 详见 [LICENSE.md](LICENSE.md)
+This repository is provided under a **Non-Commercial License**.
+You are allowed to use, view, and modify this repository for personal and non-commercial purposes.
+Commercial use, redistribution, and re-packaging are strictly prohibited.
+
+Please see the [LICENSE.md](LICENSE.md) file for more details.
 
 ---
 

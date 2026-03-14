@@ -5,7 +5,8 @@
 This repository is provided under the following terms:
 
 - You are free to view, learn from, and use this repository for **personal** or **non-commercial research purposes**.
-- You are allowed to **fork**, **clone**, and **modify** the code for personal learning, evaluation, or experimentation. However, any commercial use or redistribution is **strictly prohibited**.
+- You are allowed to **fork**, **clone**, and **modify** the code for personal learning, evaluation, or experimentation. 
+ However, any commercial use or redistribution is **strictly prohibited**.
 - You are not allowed to use, copy, distribute, or incorporate any part of this repository into a **commercial product**, **paid service**, or any form of **paid delivery**.
 - You are not allowed to **repackage** or **sell** this repository or any of its contents under another name.
 - You must retain the **original author attribution** and **license notice** in any redistributed form of the repository, whether modified or unmodified.
