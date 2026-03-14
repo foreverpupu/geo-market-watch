@@ -80,7 +80,7 @@ geo-market-watch/
 ├── SKILL.md                    # 核心技能定义（主入口）
 ├── README.md                   # 本文件
 ├── CHANGELOG.md                # 版本更新日志
-├── LICENSE.md                  # MIT 许可证
+├── LICENSE.md                  # 非商业许可证
 ├── agents/
 │   └── openai.yaml             # OpenAI 代理配置
 ├── docs/
