@@ -3,6 +3,39 @@
 All notable changes to Geo Market Watch will be documented in this file.
 For a deep dive into the AI design philosophy and research logic behind these updates, please refer to our [Design Notes](docs/design-notes.md).
 
+## [v5.5] - 2026-03-15
+### Minimal Agent Loop
+
+This release introduces the **first end-to-end runnable agent loop** in Geo Market Watch.
+
+#### New Engine Components
+- **Intake normalizer** — converts raw items to Event Card format
+- **Deduplication memory** — JSON-based duplicate filtering
+- **Notifier** — generates monitor/handoff notifications
+- **Agent loop orchestrator** — runs complete 4-node pipeline
+
+#### New Scripts
+- `scripts/run_agent_loop.py` — CLI entry point
+
+#### New Data
+- `data/intake-sample.json` — 8 sample events with duplicates
+
+#### New Documentation
+- `docs/minimal-agent-architecture.md`
+- `docs/notification-spec.md`
+- `docs/benchmark-v5.5.md`
+
+#### Improvements
+- Connects intake, dedupe, scoring, trigger, and notification into one local workflow
+- Enables repeatable local runs without external services
+- Establishes the first minimal agent handoff path into Full Analysis Mode
+
+#### Notes
+This release is **intentionally narrow**.
+It does not yet include live ingestion, fuzzy dedupe, persistence, or hosted automation.
+
+---
+
 ## [v5.4] - 2026-03-15
 ### Automated Signal Scoring
 

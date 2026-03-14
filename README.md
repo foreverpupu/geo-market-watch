@@ -51,24 +51,45 @@ Complete 9-module analysis framework.
 
 ---
 
+## Quickstart — Minimal Agent Loop
+
+Run the complete v5.5 agent loop:
+
+```bash
+python scripts/run_agent_loop.py \
+  --input data/intake-sample.json \
+  --memory data/dedupe-memory.json \
+  --output outputs/
+```
+
+This will:
+1. Normalize incoming event items
+2. Remove duplicates
+3. Compute score and trigger results
+4. Generate local notification files
+
+---
+
 ## Execution Layer
 
 Starting in v5.4, Geo Market Watch includes a **minimal executable engine**.
 
-**Included components:**
+**v5.5 adds the complete agent loop:**
 
-- **Scoring engine** — converts event indicators into signal scores (0-10)
+- **Intake normalizer** — converts raw items to Event Card format
+- **Deduplication memory** — prevents duplicate processing
+- **Scoring engine** — converts indicators into signal scores (0-10)
 - **Trigger engine** — decides whether to escalate to Full Analysis Mode
-- **Benchmark dataset** — 7 real-world events for validation
-- **Benchmark runner** — automated test and validation script
+- **Notifier** — generates monitor/handoff notifications
+- **Agent loop** — orchestrates the complete 4-node pipeline
 
-This allows the framework to convert structured event inputs into:
+This allows the framework to run an end-to-end workflow:
 
-- signal score
-- decision band  
-- escalation trigger
+```
+Raw Intake → Normalization → Deduplication → Scoring → Trigger → Notification
+```
 
-See [engine/README.md](engine/README.md) for implementation details.
+See [docs/minimal-agent-architecture.md](docs/minimal-agent-architecture.md) for details.
 
 ---
 
@@ -215,23 +236,33 @@ geo-market-watch/
 │   ├── scoring-engine-spec.md
 │   ├── full-analysis-trigger.md
 │   ├── event-database-design.md
+│   ├── minimal-agent-architecture.md
+│   ├── notification-spec.md
 │   ├── benchmark-v5.md
 │   ├── benchmark-v5.4.md
+│   ├── benchmark-v5.5.md
 │   └── scheduled-monitoring.md
 │
 ├── data/
-│   └── benchmark-events.json
+│   ├── benchmark-events.json
+│   └── intake-sample.json
 │
 ├── engine/
+│   ├── intake_normalizer.py
+│   ├── dedupe_memory.py
 │   ├── scoring_engine.py
 │   ├── trigger_engine.py
+│   ├── notifier.py
+│   ├── agent_loop.py
 │   └── README.md
 │
 ├── scripts/
-│   └── run_benchmark.py
+│   ├── run_benchmark.py
+│   └── run_agent_loop.py
 │
 ├── agents/
-│   └── openai.yaml
+│   ├── openai.yaml
+│   └── minimal-agent-config.example.json
 │
 ├── SKILL.md
 ├── CHANGELOG.md
@@ -268,6 +299,15 @@ Key framework documents:
 
 **Benchmark Validation (v5.4)**  
 [docs/benchmark-v5.4.md](docs/benchmark-v5.4.md)
+
+**Agent Loop Benchmark (v5.5)**  
+[docs/benchmark-v5.5.md](docs/benchmark-v5.5.md)
+
+**Minimal Agent Architecture**  
+[docs/minimal-agent-architecture.md](docs/minimal-agent-architecture.md)
+
+**Notification Specification**  
+[docs/notification-spec.md](docs/notification-spec.md)
 
 **Engine Documentation**  
 [engine/README.md](engine/README.md)

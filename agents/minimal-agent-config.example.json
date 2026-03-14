@@ -1,0 +1,17 @@
+{
+  "description": "Geo Market Watch v5.5 — Minimal Agent Configuration Example",
+  "version": "5.5",
+  "config": {
+    "input_path": "data/intake-sample.json",
+    "dedupe_memory_path": "data/dedupe-memory.json",
+    "output_dir": "outputs"
+  },
+  "notes": [
+    "This is an example configuration for running the minimal agent loop.",
+    "Copy this file and modify paths for your use case.",
+    "The agent loop can be invoked via CLI or imported as a module.",
+    "No external services or APIs are required."
+  ],
+  "cli_example": "python scripts/run_agent_loop.py --input data/intake-sample.json --memory data/dedupe-memory.json --output outputs/",
+  "programmatic_example": "from engine.agent_loop import run_agent_loop; summary = run_agent_loop('data/intake-sample.json', 'data/dedupe-memory.json', 'outputs/')"
+}
