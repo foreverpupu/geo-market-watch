@@ -67,14 +67,61 @@
       "type": "object",
       "description": "Information about the event source",
       "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "official_government",
+            "wire_service",
+            "financial_data_provider",
+            "industry_analyst",
+            "expert_commentary",
+            "social_media",
+            "other"
+          ]
+        },
         "tier": {
           "type": "integer",
-          "enum": [1, 2, 3],
-          "description": "Source reliability tier (1=highest, 3=lowest)"
+          "minimum": 1,
+          "maximum": 4
         },
-        "name": { "type": "string" },
-        "url": { "type": "string", "format": "uri" },
-        "publication_date": { "type": "string", "format": "date-time" }
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "published_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "headline": {
+          "type": "string",
+          "maxLength": 500
+        }
+      }
+    },
+    "contradiction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["field", "description"],
+      "properties": {
+        "field": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "description": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 1000
+        },
+        "source_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "uniqueItems": true
+        }
       }
     },
     "confidence": {
