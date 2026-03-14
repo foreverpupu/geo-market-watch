@@ -74,11 +74,36 @@ Overall Pass Rate: 100.0%
 
 ---
 
+## Detailed Results
+
+| Event ID | Event Title | Score | Band | Trigger | Expected Band | Expected Trigger | Match |
+|---------|-------------|------:|------|---------|---------------|------------------|-------|
+| GMW-2024-001 | Red Sea shipping disruption | 5 | monitor | no | monitor | no | ✓ pass |
+| GMW-2024-002 | Russia oil export restrictions | 8 | full_analysis | yes | full_analysis | yes | ✓ pass |
+| GMW-2023-003 | Panama Canal drought | 5 | monitor | yes | monitor | yes | ✓ pass |
+| GMW-2023-004 | Taiwan military drills | 2 | noise | yes | noise | yes | ✓ pass |
+| GMW-2023-005 | Niger uranium disruption | 7 | full_analysis | yes | full_analysis | yes | ✓ pass |
+| GMW-2024-006 | Suez Canal blockage | 6 | monitor | yes | monitor | yes | ✓ pass |
+| GMW-2024-007 | Iran sanctions increase | 6 | monitor | yes | monitor | yes | ✓ pass |
+
+---
+
 ## Validation Results
 
 **Date:** 2026-03-15  
 **Version:** v5.4  
-**Commit:** TBD
+**Commit:** 2a6c8cf
+
+### Summary
+
+| Metric | Value |
+|--------|-------|
+| **Total events** | 7 |
+| **Total passes** | 14 |
+| **Total fails** | 0 |
+| **Accuracy** | 100% |
+
+### By Engine
 
 | Engine | Tests | Passed | Failed | Pass Rate |
 |--------|-------|--------|--------|-----------|

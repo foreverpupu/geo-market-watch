@@ -1,8 +1,34 @@
-# Geo Market Watch Engine
+# Engine Module
 
-This directory contains the minimal executable engines for the Geo Market Watch framework.
+This module contains the **first executable components** of Geo Market Watch.
 
-These engines transform the documented methodology into machine-executable workflows.
+**Included:**
+
+- `scoring_engine.py` — calculates signal scores from structured event inputs
+- `trigger_engine.py` — decides whether an event should escalate into Full Analysis Mode
+
+This release introduces **deterministic execution logic** without external dependencies.
+
+---
+
+## ⚠️ Current Limitations
+
+This is **not yet** a full autonomous agent system.
+
+**What it does NOT include:**
+- ❌ Automatic extraction from raw articles
+- ❌ Event deduplication
+- ❌ Live news ingestion pipeline
+- ❌ Database persistence layer
+- ❌ Multi-agent orchestration
+
+**What it DOES include:**
+- ✅ Deterministic scoring from structured inputs
+- ✅ Explicit trigger rules
+- ✅ Validation and error handling
+- ✅ Reproducible benchmark testing
+
+**Status:** The engine accepts pre-structured Event Card objects and converts them into scores and trigger decisions. Article parsing and automated ingestion are planned for future releases.
 
 ---
 

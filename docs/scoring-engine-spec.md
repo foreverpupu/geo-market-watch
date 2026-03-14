@@ -114,3 +114,39 @@ python scripts/run_benchmark.py
 ```
 
 Expected: 100% pass rate on all test events.
+
+---
+
+## Current Limitations
+
+**This is v5.4 — the first executable layer, not a complete autonomous system.**
+
+### What is NOT yet implemented:
+
+- **Automatic extraction from raw articles** — The engine requires pre-structured Event Card inputs. It cannot parse news articles or extract indicators automatically.
+
+- **Event deduplication** — Multiple reports of the same event are treated as separate inputs. No merging or duplicate detection.
+
+- **Ingestion pipeline** — No live connection to news feeds, RSS, or APIs. Events must be provided manually or by external systems.
+
+- **Persistence layer** — No database storage. All data exists in memory during execution.
+
+- **Multi-agent orchestration** — Single-threaded execution. No coordination between multiple analysis agents.
+
+### What IS implemented:
+
+- ✅ Deterministic scoring from structured inputs
+- ✅ Explicit trigger rules with clear escalation criteria
+- ✅ Input validation with descriptive error messages
+- ✅ Reproducible benchmark testing with 100% pass rate
+- ✅ Zero external dependencies (no APIs, no LLM calls)
+
+### Roadmap:
+
+Future releases will address these limitations:
+- v5.5+: Article parsing and automatic indicator extraction
+- v5.6+: Event deduplication and entity resolution
+- v6.0+: Live ingestion pipeline and database persistence
+- v6.5+: Multi-agent orchestration and autonomous monitoring
+
+**Status:** The engine is ready for integration into larger systems, but remains a focused, reliable component rather than a complete end-to-end solution.
