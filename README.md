@@ -78,20 +78,34 @@ This allows outputs to be used by:
 
 The framework is designed as a multi-stage intelligence pipeline.
 
-```
-News / Feeds / User Input
-↓
-Event Intake
-↓
-Scout Agent
-↓
-Verification & Fog-of-War Layer
-↓
-Market Propagation Mapping
-↓
-Watchlist & Trigger Engine
-↓
-Monitoring / Alerts / Review
+```mermaid
+flowchart TD
+    A["News Feeds / User Input / External Sources"] --> B["Event Intake Layer"]
+    B --> C["Scout Agent"]
+    C --> D{"Escalate?"}
+
+    D -- "No" --> E["Archive / Low-Priority Monitoring"]
+    D -- "Yes" --> F["Verification & Fog-of-War Layer"]
+
+    F --> G["Normalized Event Object"]
+    G --> H["Market Propagation Mapping"]
+
+    H --> I["Watchlist & Trigger Engine"]
+    I --> J["Structured Analysis Output"]
+
+    J --> K["Human-Readable Report"]
+    J --> L["JSON Output / API Payload"]
+
+    L --> M["Automation / Alerts / Dashboards"]
+    K --> M
+
+    J --> N["Memory / Review Layer"]
+    N --> O["Historical Evaluation"]
+    O --> P["Signal Quality Improvement"]
+
+    P -. feedback .-> C
+    P -. feedback .-> F
+    P -. feedback .-> H
 ```
 
 Detailed architecture: [docs/architecture.md](docs/architecture.md)
