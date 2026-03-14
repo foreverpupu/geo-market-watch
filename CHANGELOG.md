@@ -1,107 +1,40 @@
 # Changelog
 
-All notable changes to **Geo Market Watch** will be documented in this file.
+All notable changes to Geo Market Watch will be documented in this file.
+For a deep dive into the AI design philosophy and research logic behind these updates, please refer to our [Design Notes](docs/design-notes.md).
 
-The project evolves through iterative improvements in:
-- source authentication
-- anti-hype filtering
-- fact / interpretation / scenario separation
-- fog-of-war handling
-- watchlist construction discipline
-- trigger and invalidation design
-
----
-
-## [v5.2.1] - 2026-03-14
-
+## [v5.2.1] - 2026-03-15
 ### Added
-- Added bilingual compatibility labels for key output sections to reduce encoding-related ambiguity in external tools:
- - `[已确认事实 / Confirmed Facts]`
- - `[市场解读 / Market Interpretation]`
- - `[情景推演 / Scenario Analysis]`
-- Added README-style validation guidance for manual inspection after packaging.
-- Added clearer compatibility wording for disputed facts and missing data labels in public-facing outputs.
-
-### Changed
-- Improved output template resilience for copy/paste and cross-platform display.
-- Refined user-facing wording around contested facts and data lag handling.
-- Made key structural labels more robust for external sharing, screenshots, and reposting.
-
-### Why it matters
-This release focuses on packaging reliability and readability across different tools, editors, and display environments, without changing the core analytical workflow.
-
----
+- **Documentation**: Added `scheduled-monitoring.md` (Scout Mode) to provide guidance on pairing the skill with automated scheduling tasks.
+### Fixed
+- **Encoding Compatibility**: Fixed potential UTF-8 encoding issues when the main prompt calls external templates by enforcing bilingual tags (e.g., `[已确认事实 / Confirmed Facts]`).
+- **Workflow Logic**: Fixed a workflow breakpoint at Step 10 to ensure the model strictly outputs all 9 required modules.
+> *Why it matters: Improves packaging reliability, output completeness, and compatibility with scheduled monitoring workflows.*
 
 ## [v5.2] - 2026-03-14
-
 ### Added
-- Added **Fog of War Rule**:
- - when a material fact remains disputed across credible sources, explicitly state that it remains contested (`仍存在争议`)
- - do not collapse conflicting reports into a false certainty
-- Added stronger handling for disputed damage reports, early conflict claims, and incomplete first-wave reporting.
-
+- **Fog of War Rule**: Explicitly integrated contested-fact handling into the `[已确认事实 / Confirmed Facts]` module.
 ### Changed
-- Strengthened fact-layer discipline in the `Confirmed Facts` section.
-- Improved guidance for situations where early official, media, and secondary-source reporting diverge.
-- Clarified that unresolved disputes should remain visible rather than being silently harmonized.
+- **Data Fallback**: Specified concrete public proxies (e.g., relative strength of shipping equities, sector ETFs) when high-frequency logistics or insurance data is paywalled.
+> *Why it matters: Prevents LLMs from hallucinating false certainties or fabricating data during the chaotic first 48 hours of a geopolitical event.*
 
-### Why it matters
-Geopolitical events often emerge under incomplete, conflicting, and politically distorted information conditions. This release improves analytical discipline during fast-moving "fog of war" situations.
-
----
-
-## [v5.1] - 2026-03-14
-
+## [v5.1] - 2026-03-10
 ### Added
-- Added **source-level tags** inside the confirmed-facts section, including:
- - `[官方]`
- - `[通讯社]`
- - `[公司文件]`
- - `[交易所/ETF发行方]`
- - `[官方机构/航运通告]`
-- Added clearer separation between:
- - confirmed facts
- - market interpretation
- - scenario analysis
-- Added more explicit guidance for handling user-provided low-trust, thin, broken, or emotional links.
-
+- **Source Authentication & Anti-Hype Filter**: Established strict Tier 1 (facts) and Tier 2 (analysis) isolation.
+- **Source-Level Tags**: Mandated visual source tags (e.g., `[官方]`, `[通讯社]`) in the output.
 ### Changed
-- Refined **Tier 1 / Tier 2** definitions for stronger execution stability.
-- Improved anti-hype filtering so that strong tone alone does not automatically disqualify a source if it still provides:
- - verifiable variables
- - explicit boundaries
- - source support
- - fact / interpretation separation
-- Strengthened handling of official rhetoric, threats, and political language so they are not automatically treated as confirmed market impact.
-- Improved output structure with clearer source anchoring and more disciplined evidence separation.
+- **Rhetoric Isolation**: Explicitly instructed the model to separate official political rhetoric/threats from actual market facts.
+> *Why it matters: Protects the output analysis from being skewed by emotional media reporting, viral tone, or political posturing.*
 
-### Why it matters
-This release makes the workflow more trustworthy and more usable for sharing, discussion, and investment research communication.
-
----
-
-## [v5.0] - 2026-03-14
-
+## [v4.0] - 2026-02-20
 ### Added
-- Introduced **Source Authentication & Anti-Hype Filter**.
-- Added source tiering logic:
- - Tier 1: factual anchors
- - Tier 2: structural analysis
- - emotional amplifiers / low-trust noise
-- Added **Market Exposure Translation** logic to map geopolitical rhetoric into:
- - export volumes
- - infrastructure bottlenecks
- - vessel classes
- - pipeline dependencies
- - revenue exposure
- - backup routes
-- Added stronger requirements for public-data fallback when freight, insurance, or logistics data is unavailable.
+- **Node-Specific Targeting**: Prioritized mapping events to specific physical bottlenecks (e.g., VLCC terminals, specific pipelines) rather than broad industry ETFs.
+- **Physical Bottleneck Logic**: Expanded the requirement to translate political events into quantifiable market exposure (e.g., export volumes, supply share).
+> *Why it matters: Moves the workflow closer to physical-system analysis rather than broad thematic storytelling.*
 
-### Changed
-- Reworked the workflow from "news summary" into a more disciplined event-driven market mapping process.
-- Upgraded invalidation logic from optional guidance into a core requirement.
-- Improved asymmetrical market-depth handling across US / A-share / Hong Kong markets.
-- Refined watchlist construction rules toward more direct and node-specific proxies.
-
-### Why it matters
-This was the major turning point where Geo Market Watch evolved from a structured summary tool into a more research-oriented, source-aware market workflow.
+## [v3.0] - 2026-01-15
+### Added
+- **Mandatory Invalidation**: Required every ticker in the watchlist to include a concrete invalidation condition.
+- **Trigger Signals**: Standardized the inclusion of observable, event-linked trigger signals.
+- **Three-Market Standardization**: Formalized the asymmetric watchlist construction across US, A-shares, and HK markets.
+> *Why it matters: Enforces strict trading discipline, ensuring users know exactly what conditions invalidate the current base case so they are not trapped by outdated narratives.*
