@@ -5,6 +5,7 @@ interface:
 
 model_requirements:
   recommended_class: high-reasoning-llm
+  recommended_temperature: 0.2
   capabilities_required:
     - web_search
     - structured_output
