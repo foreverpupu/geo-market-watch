@@ -60,6 +60,31 @@ Complete 9-module analysis framework.
 
 ---
 
+## Quickstart — Geo Alpha Database
+
+Initialize and query the database:
+
+```bash
+# Initialize database
+python scripts/init_database.py --db data/geo_alpha.db
+
+# Seed with sample events
+python scripts/seed_database.py \
+  --db data/geo_alpha.db \
+  --seed data/db-seed-events.json
+
+# Query recent events
+python scripts/query_database.py --db data/geo_alpha.db --list
+
+# Filter by region
+python scripts/query_database.py --db data/geo_alpha.db --region "Middle East"
+
+# Show statistics
+python scripts/query_database.py --db data/geo_alpha.db --stats
+```
+
+---
+
 ## Quickstart — Minimal Agent Loop
 
 Run the complete v5.5 agent loop:
