@@ -1,6 +1,12 @@
-# Geo Market Watch 🌍📈
+<p align="center">
+  <img src="assets/banner.svg" alt="Geo Market Watch Banner" width="100%">
+</p>
 
-**An LLM-native framework for translating geopolitical events into structured market intelligence.**
+<h1 align="center">Geo Market Watch 🌍📈</h1>
+
+<p align="center">
+  <strong>An LLM-native framework for translating geopolitical events into structured market intelligence.</strong>
+</p>
 
 Geo Market Watch converts complex geopolitical developments into structured market observations by combining event normalization, propagation mapping, and trigger-based watchlists.
 
