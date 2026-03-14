@@ -3,6 +3,38 @@
 All notable changes to Geo Market Watch will be documented in this file.
 For a deep dive into the AI design philosophy and research logic behind these updates, please refer to our [Design Notes](docs/design-notes.md).
 
+## [v5.3] - 2026-03-15
+### Scout Mode Edition
+
+Major framework expansion introducing early-signal detection and structured event tracking.
+
+#### New Components
+- **Scout Mode workflow** — Lightweight early detection system
+- **Event Card schema** — Standardized event summary format
+- **Signal scoring framework** — 5-dimension numerical scoring (0-10)
+- **Full analysis trigger rules** — Clear escalation criteria
+- **Event database design** — SQL/document store schema
+- **Benchmark comparison framework** — v3 vs v5 quality validation
+
+#### Documentation
+Added:
+- `docs/event-card-schema.md`
+- `docs/signal-scoring.md`
+- `docs/full-analysis-trigger.md`
+- `docs/event-database-design.md`
+- `docs/benchmark-v5.md`
+
+#### Prompts
+Added:
+- `prompts/scout-mode.md`
+
+#### Improvements
+- Clarified monitoring workflow
+- Structured early event detection
+- Prepared system for automated scoring
+
+> **Note:** This release transitions the project from a **prompt-only framework** to a **structured geopolitical monitoring system**.
+
 ## [v5.2.1] - 2026-03-15
 ### Added
 - **Documentation**: Added `scheduled-monitoring.md` (Scout Mode) to provide guidance on pairing the skill with automated scheduling tasks.

@@ -23,6 +23,34 @@ The project is designed for analysts, researchers, and developers who want to bu
 
 ---
 
+## Framework Overview
+
+Geo Market Watch now operates as a **two-stage analysis system**.
+
+**Stage 1 — Scout Mode**  
+Early detection of geopolitical signals.
+
+**Stage 2 — Full Analysis Mode**  
+Complete 9-module analysis framework.
+
+**Scout Mode performs:**
+- event detection 
+- signal scoring 
+- escalation checks 
+
+**Full Analysis Mode performs:**
+1. Confirmed Facts 
+2. Market Interpretation 
+3. Scenario Analysis 
+4. Supply Chain Translation 
+5. Sector Exposure 
+6. Watchlist 
+7. Trigger Signals 
+8. Invalidation Conditions 
+9. Monitoring Plan
+
+---
+
 # ⚠️ Repository Scope
 
 This repository provides:
@@ -151,37 +179,58 @@ Full example files: [examples/schema-examples/](examples/schema-examples/)
 
 ---
 
-# Repository Structure
+## Project Structure
 
 ```
 geo-market-watch/
-├── README.md
-├── LICENSE.md
-├── CONTRIBUTING.md
-├── CHANGELOG.md
 │
-├── SKILL.md
+├── prompts/
+│   └── scout-mode.md
 │
 ├── docs/
-│   ├── methodology.md
-│   ├── architecture.md
-│   ├── roadmap-v6.md
-│   ├── source-tiering.md
+│   ├── scout-mode-example.md
+│   ├── event-card-schema.md
+│   ├── signal-scoring.md
+│   ├── full-analysis-trigger.md
+│   ├── event-database-design.md
+│   ├── benchmark-v5.md
 │   └── scheduled-monitoring.md
 │
-├── schemas/
-│   ├── event-object.json
-│   ├── watchlist-item.json
-│   └── analysis-output.json
+├── agents/
+│   └── openai.yaml
 │
-├── examples/
-│   └── schema-examples/
-│
-├── tests/
-│   └── schema_validation/
-│
-└── .github/workflows/
+├── SKILL.md
+├── CHANGELOG.md
+├── LICENSE.md
+└── README.md
 ```
+
+---
+
+## Documentation
+
+Key framework documents:
+
+**Scout Mode**  
+[docs/scout-mode-example.md](docs/scout-mode-example.md)
+
+**Event Card Schema**  
+[docs/event-card-schema.md](docs/event-card-schema.md)
+
+**Signal Scoring Framework**  
+[docs/signal-scoring.md](docs/signal-scoring.md)
+
+**Full Analysis Triggers**  
+[docs/full-analysis-trigger.md](docs/full-analysis-trigger.md)
+
+**Event Database Design**  
+[docs/event-database-design.md](docs/event-database-design.md)
+
+**Benchmark Comparison**  
+[docs/benchmark-v5.md](docs/benchmark-v5.md)
+
+**Scheduled Monitoring Guide**  
+[docs/scheduled-monitoring.md](docs/scheduled-monitoring.md)
 
 ---
 
@@ -360,23 +409,50 @@ See [docs/roadmap-v6.md](docs/roadmap-v6.md)
 
 ---
 
+## Example Workflow
+
+**Input**
+
+News headline:
+
+> "Houthi attacks force shipping firms to reroute vessels"
+
+**Scout Mode Output**
+
+Event Card generated
+
+Signal Score: **6**
+
+Status: **Monitoring**
+
+If score ≥7:
+
+**Full Analysis Mode** is triggered.
+
+Full analysis produces:
+- sector exposure 
+- trade watchlist 
+- invalidation conditions
+
+---
+
 ## License
 
 Geo Market Watch is released under a **custom non-commercial research license**.
 
-You are free to:
+You may:
 
-- Use the framework for personal research
-- Modify the framework for private use
-- Apply the methodology for investment analysis
+- Use the framework for personal research 
+- Modify the framework for private use 
+- Apply the methodology for investment analysis 
 
 You may NOT:
 
-- Use the project in commercial products
-- Repackage or resell the framework
-- Distribute modified versions for commercial purposes
+- Use the project in commercial products 
+- Repackage or resell the framework 
+- Distribute modified versions for commercial purposes 
 
-See [LICENSE.md](LICENSE.md) for full terms.
+See `LICENSE.md` for full terms.
 
 ---
 
