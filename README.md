@@ -51,6 +51,27 @@ Complete 9-module analysis framework.
 
 ---
 
+## Execution Layer
+
+Starting in v5.4, Geo Market Watch includes a **minimal executable engine**.
+
+**Included components:**
+
+- **Scoring engine** — converts event indicators into signal scores (0-10)
+- **Trigger engine** — decides whether to escalate to Full Analysis Mode
+- **Benchmark dataset** — 7 real-world events for validation
+- **Benchmark runner** — automated test and validation script
+
+This allows the framework to convert structured event inputs into:
+
+- signal score
+- decision band  
+- escalation trigger
+
+See [engine/README.md](engine/README.md) for implementation details.
+
+---
+
 # ⚠️ Repository Scope
 
 This repository provides:
@@ -191,10 +212,23 @@ geo-market-watch/
 │   ├── scout-mode-example.md
 │   ├── event-card-schema.md
 │   ├── signal-scoring.md
+│   ├── scoring-engine-spec.md
 │   ├── full-analysis-trigger.md
 │   ├── event-database-design.md
 │   ├── benchmark-v5.md
+│   ├── benchmark-v5.4.md
 │   └── scheduled-monitoring.md
+│
+├── data/
+│   └── benchmark-events.json
+│
+├── engine/
+│   ├── scoring_engine.py
+│   ├── trigger_engine.py
+│   └── README.md
+│
+├── scripts/
+│   └── run_benchmark.py
 │
 ├── agents/
 │   └── openai.yaml
@@ -220,14 +254,23 @@ Key framework documents:
 **Signal Scoring Framework**  
 [docs/signal-scoring.md](docs/signal-scoring.md)
 
+**Scoring Engine Specification**  
+[docs/scoring-engine-spec.md](docs/scoring-engine-spec.md)
+
 **Full Analysis Triggers**  
 [docs/full-analysis-trigger.md](docs/full-analysis-trigger.md)
 
 **Event Database Design**  
 [docs/event-database-design.md](docs/event-database-design.md)
 
-**Benchmark Comparison**  
+**Benchmark Comparison (v5)**  
 [docs/benchmark-v5.md](docs/benchmark-v5.md)
+
+**Benchmark Validation (v5.4)**  
+[docs/benchmark-v5.4.md](docs/benchmark-v5.4.md)
+
+**Engine Documentation**  
+[engine/README.md](engine/README.md)
 
 **Scheduled Monitoring Guide**  
 [docs/scheduled-monitoring.md](docs/scheduled-monitoring.md)

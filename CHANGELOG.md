@@ -3,6 +3,38 @@
 All notable changes to Geo Market Watch will be documented in this file.
 For a deep dive into the AI design philosophy and research logic behind these updates, please refer to our [Design Notes](docs/design-notes.md).
 
+## [v5.4] - 2026-03-15
+### Automated Signal Scoring
+
+This release introduces the **first executable layer** of Geo Market Watch.
+
+#### New Engine Components
+- **Minimal scoring engine** — Converts event indicators into deterministic signal scores (0-10)
+- **Minimal trigger engine** — Decides whether to escalate to Full Analysis Mode
+- **Benchmark dataset** — 7 real-world geopolitical events for validation
+- **Benchmark runner** — Automated test and validation script
+
+#### New Documentation
+- `docs/scoring-engine-spec.md`
+- `docs/benchmark-v5.4.md`
+- `engine/README.md`
+
+#### Data
+- `data/benchmark-events.json`
+
+#### Scripts
+- `scripts/run_benchmark.py`
+
+#### Improvements
+- Converts documented signal scoring rules into executable logic
+- Converts trigger conditions into deterministic escalation rules
+- Upgrades benchmark from descriptive review to reproducible validation
+
+#### Notes
+This release is the first step from a **research framework** toward an **executable geopolitical monitoring system**.
+
+---
+
 ## [v5.3] - 2026-03-15
 ### Scout Mode Edition
 
