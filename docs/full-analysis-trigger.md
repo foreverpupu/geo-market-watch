@@ -1,117 +1,103 @@
-# Full Analysis Trigger
+# Full Analysis Trigger Rules
 
-This document defines when Scout Mode should escalate to Full Analysis Mode.
+Full Analysis Mode performs the complete Geo Market Watch framework.
+
+It includes:
+
+1. Confirmed Facts
+2. Market Interpretation
+3. Scenario Analysis
+4. Supply Chain Translation
+5. Sector Exposure
+6. Watchlist
+7. Trigger Signals
+8. Invalidation Conditions
+9. Monitoring Plan
+
+Because Full Analysis is resource intensive, it should only be triggered when events meet predefined criteria.
 
 ---
 
 # Trigger Conditions
 
-Full Analysis is triggered when any of the following conditions are met.
-
-## Signal Score Threshold
-
-**Condition:** Signal score ≥ 7
-
-When the Scout Agent assigns a score of 7 or higher, automatic escalation occurs.
-
-## Explicit Escalation Triggers
-
-**Physical Disruption**
-
-- Confirmed export halt
-- Major route blockage
-- Infrastructure destruction
-
-**Policy Changes**
-
-- New sanctions announced
-- Export restrictions imposed
-- Trade policy reversal
-
-**Market Indicators**
-
-- Insurance premium spike (>50%)
-- Freight rate surge (>30%)
-- Commodity price gap opens
-
-**Conflict Escalation**
-
-- Military action expands
-- New actors enter conflict
-- Regional allies activated
+Full analysis should be triggered if **any of the following conditions are met**.
 
 ---
 
-# Escalation Process
+## Condition 1 — Signal Score Threshold
 
-When triggered, the following occurs:
+**Signal Score ≥ 7**
 
-1. **Event Freezing**
-   - Lock event details
-   - Preserve source links
-   - Record trigger timestamp
-
-2. **Context Gathering**
-   - Collect related news
-   - Identify key actors
-   - Map affected regions
-
-3. **Full Analysis Launch**
-   - Run SKILL.md methodology
-   - Generate 9-section report
-   - Create structured watchlist
-
-4. **Output Delivery**
-   - Human-readable report
-   - JSON structured output
-   - Alert notifications
+This indicates a high probability of market relevance.
 
 ---
 
-# No-Escalation Rules
+## Condition 2 — Confirmed Supply Disruption
 
-Full Analysis is **not** triggered when:
+Examples:
 
-- Event is purely diplomatic rhetoric
-- No physical supply impact detected
-- Source reliability is low (Tier 3 only)
-- Market has already absorbed news
+- oil exports halted 
+- mining production stopped 
+- LNG terminal shutdown
 
-These events remain in Scout monitoring.
-
----
-
-# Example Escalation
-
-**Event:** Red Sea shipping attacks
-
-**Initial Scout Score:** 6
-
-**Day 2 Update:**
-- Insurance premiums spike 80%
-- Major carrier announces indefinite suspension
-
-**New Score:** 8
-
-**Trigger:** Score ≥ 7 threshold met
-
-**Action:** Escalate to Full Analysis Mode
-
-**Output:**
-- Confirmed facts section
-- Market interpretation
-- Scenario analysis (A/B/C)
-- Structured watchlist with triggers
-- Invalidation conditions
+Physical supply disruptions always require full analysis.
 
 ---
 
-# Post-Analysis Return
+## Condition 3 — Strategic Transport Disruption
 
-After Full Analysis completes, events may return to Scout Mode if:
+Examples:
 
-- Invalidation conditions met
-- Signal strength drops below 4
-- No further escalation triggers
+- Suez Canal closure 
+- Panama Canal restrictions 
+- Strait of Hormuz blockade risk
 
-This prevents alert fatigue from stale events.
+Major logistics routes impact global markets.
+
+---
+
+## Condition 4 — Major Sanctions Escalation
+
+Examples:
+
+- energy export bans 
+- financial system sanctions 
+- technology export restrictions
+
+These events often produce cross-sector impacts.
+
+---
+
+## Condition 5 — Military Escalation
+
+Examples:
+
+- direct conflict between states 
+- naval blockade 
+- strategic strikes
+
+Military escalation introduces extreme uncertainty.
+
+---
+
+# Trigger Logic
+
+Scout Mode evaluates events first.
+
+If triggers are met:
+
+```
+Scout Mode → Full Analysis Mode
+```
+
+---
+
+# Example
+
+**Event:** Russia expands oil export restrictions
+
+**Signal score:** 7
+
+**Trigger condition:** Signal Score Threshold
+
+**Result:** Full Analysis Mode initiated

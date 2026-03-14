@@ -1,118 +1,155 @@
-# Signal Scoring Guide
+# Signal Scoring Framework
 
-This document defines the signal scoring system used in Geo Market Watch.
+The signal scoring framework evaluates whether a geopolitical event is likely to impact markets.
 
-Signal scores help prioritize events and determine whether to escalate to Full Analysis Mode.
+It converts qualitative news into a **structured numerical signal**.
 
----
+Signal scores range from:
 
-# Scoring Scale
-
-Events are scored on a 0–10 scale.
-
-| Score | Category | Action |
-|-------|----------|--------|
-| 0–3 | Noise | Archive |
-| 4–6 | Watch | Scout monitoring |
-| 7–8 | Strong signal | Trigger full analysis |
-| 9–10 | Major shock | Immediate full analysis + alerts |
+- **0** → no relevance 
+- **10** → major geopolitical shock
 
 ---
 
-# Scoring Factors
+# Scoring Dimensions
 
-## Physical Impact (40%)
+Signals are evaluated across five dimensions.
 
-Measures actual disruption to physical infrastructure or supply.
+| Dimension | Description | Weight |
+|-----------|-------------|--------|
+| Physical Disruption | Actual supply or production disruption | 3 |
+| Transport Impact | Shipping routes, logistics, pipelines | 2 |
+| Policy / Sanctions | Government or regulatory changes | 2 |
+| Market Transmission | Immediate observable market effects | 2 |
+| Escalation Risk | Potential for rapid deterioration | 1 |
 
-| Indicator | Weight |
-|-----------|--------|
-| Supply route disruption | 15% |
-| Production halt | 15% |
-| Infrastructure damage | 10% |
-
-## Market Exposure (30%)
-
-Measures potential market impact.
-
-| Indicator | Weight |
-|-----------|--------|
-| Affected commodity importance | 15% |
-| Global market share | 10% |
-| Price volatility potential | 5% |
-
-## Escalation Risk (20%)
-
-Measures likelihood of event worsening.
-
-| Indicator | Weight |
-|-----------|--------|
-| Conflict intensity trend | 10% |
-| Policy uncertainty | 10% |
-
-## Source Reliability (10%)
-
-Measures confidence in information.
-
-| Source Tier | Score |
-|-------------|-------|
-| Tier 1 (Reuters, Bloomberg) | 10% |
-| Tier 2 (Regional wires) | 7% |
-| Tier 3 (Social media) | 3% |
+**Maximum total score = 10**
 
 ---
 
-# Score Calculation Example
+# Dimension Details
 
-**Event:** Red Sea shipping disruption
+## Physical Disruption
 
-| Factor | Score | Weight | Weighted |
-|--------|-------|--------|----------|
-| Supply route disruption | 8 | 15% | 1.2 |
-| Production halt | 2 | 15% | 0.3 |
-| Infrastructure damage | 1 | 10% | 0.1 |
-| Commodity importance | 7 | 15% | 1.05 |
-| Global market share | 6 | 10% | 0.6 |
-| Price volatility | 5 | 5% | 0.25 |
-| Conflict trend | 6 | 10% | 0.6 |
-| Policy uncertainty | 5 | 10% | 0.5 |
-| Source reliability | 10 | 10% | 1.0 |
-| **Total** | | | **5.6** |
+Examples:
 
-**Rounded: 6 / 10**
+- oil export shutdown 
+- mining halt 
+- pipeline sabotage 
+- LNG terminal outage
 
-**Action:** Scout monitoring continues
+**Score:**
 
----
-
-# Special Cases
-
-## Automatic Escalation (Score ≥ 7)
-
-Events automatically escalate to Full Analysis Mode when:
-
-- Major supply route completely blocked
-- Strategic commodity export halted
-- Military conflict expands to new region
-- Sanctions affect global commodity markets
-
-## Automatic Archive (Score ≤ 3)
-
-Events are archived when:
-
-- Purely political rhetoric
-- Localized incident with no supply impact
-- Already priced-in market event
-- Unverified social media reports
+| Score | Meaning |
+|-------|---------|
+| 0 | none |
+| 1 | potential disruption |
+| 2 | partial disruption |
+| 3 | confirmed disruption |
 
 ---
 
-# Score Review
+## Transport Impact
 
-Scores should be reviewed and updated:
+Examples:
 
-- Every monitoring cycle (6h / 12h / 24h)
-- When new information arrives
-- When escalation triggers activate
+- canal restrictions 
+- shipping route closures 
+- tanker rerouting 
+- freight insurance spike
 
-Score changes may trigger escalation or invalidation.
+**Score:**
+
+| Score | Meaning |
+|-------|---------|
+| 0 | none |
+| 1 | moderate impact |
+| 2 | severe impact |
+
+---
+
+## Policy / Sanctions
+
+Examples:
+
+- export bans 
+- sanctions expansion 
+- tariff escalation 
+- regulatory shutdown
+
+**Score:**
+
+| Score | Meaning |
+|-------|---------|
+| 0 | none |
+| 1 | announced / possible |
+| 2 | implemented |
+
+---
+
+## Market Transmission
+
+Evidence markets are already reacting.
+
+Examples:
+
+- freight rate spike 
+- commodity price surge 
+- shipping capacity tightening
+
+**Score:**
+
+| Score | Meaning |
+|-------|---------|
+| 0 | no market reaction |
+| 1 | early signals |
+| 2 | confirmed market movement |
+
+---
+
+## Escalation Risk
+
+Potential for rapid escalation.
+
+Examples:
+
+- military involvement 
+- blockade threat 
+- alliance intervention
+
+**Score:**
+
+| Score | Meaning |
+|-------|---------|
+| 0 | unlikely |
+| 1 | possible |
+
+---
+
+# Score Interpretation
+
+| Score | Meaning | Action |
+|-------|---------|--------|
+| 0–3 | Noise / irrelevant event | Archive |
+| 4–6 | Monitor event | Scout Mode |
+| 7–8 | Market relevant event | Full Analysis |
+| 9–10 | Major geopolitical shock | Full Analysis + Alert |
+
+---
+
+# Example
+
+**Event:** Red Sea shipping attacks
+
+**Evaluation:**
+
+| Dimension | Score |
+|-----------|-------|
+| Physical disruption | 1 |
+| Transport impact | 2 |
+| Policy change | 0 |
+| Market transmission | 1 |
+| Escalation risk | 1 |
+| **Total** | **5** |
+
+**Interpretation:** Monitor event
