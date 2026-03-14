@@ -1,126 +1,135 @@
 # Example Output
 
-## Event Snapshot
+This file shows a representative output format for **Geo Market Watch**.
 
-On March 13, 2026, US forces conducted airstrikes on Iran's Kharg Island, a strategic oil export hub handling 80-90% of Iranian oil exports. The strikes targeted military installations while deliberately avoiding oil infrastructure. President Trump warned that oil facilities could be targeted if Iran continues interfering with Strait of Hormuz shipping.
-
----
-
-## Confirmed Facts
-
-| Fact | Source | Date |
-|------|--------|------|
-| US airstrikes on Kharg Island military facilities | [官方] Trump statement | 2026-03-13 |
-| Oil infrastructure deliberately avoided | [官方] Trump statement | 2026-03-13 |
-| Kharg Island handles 80-90% of Iranian oil exports | [通讯社] Multiple outlets | - |
-| Trump threatened future oil facility strikes | [官方] Trump statement | 2026-03-13 |
-| Iran has been interfering with Hormuz shipping | [通讯社] Maritime reports | Ongoing |
-
-**仍存在争议**: Exact extent of military damage; Iran's official response pending.
+The example below is illustrative. It demonstrates:
+- fact / interpretation / scenario separation
+- source-level tagging
+- fog-of-war handling
+- three-market watchlist construction
+- trigger and invalidation design
 
 ---
 
-## Market Interpretation
+# 事件驱动观察框架
 
-**Macro Backdrop**: Fed in wait-and-see mode; inflation concerns elevated; growth recovery fragile. Market sensitive to supply shocks but has priced in some geopolitical risk premium.
-
-**Transmission Path**:
-```
-Military strike → Hormuz risk premium → oil price volatility → 
-shipping costs → inflation expectations → risk asset repricing
-```
-
-**What Market is Trading**: Risk of escalation to oil infrastructure, not current supply disruption (which is minimal).
+## 1. 事件快照
+2026 年 3 月 14 日前后，多家公开媒体报道美国对伊朗哈尔克岛（Kharg Island）上的军事目标实施打击，但尚未确认对关键石油出口基础设施造成直接破坏。由于哈尔克岛是伊朗核心出口节点之一，事件迅速引发市场对油价风险溢价、霍尔木兹航运安全、战争险与油运链条的再定价。当前市场更像是在交易"升级风险"，而不完全是"现实供给损失"。
 
 ---
 
-## Scenario Analysis
+## 2. 已确认事实 / Confirmed Facts
 
-| Scenario | Trigger | Market Impact | Switch Signal |
-|----------|---------|---------------|---------------|
-| **A. Risk Premium** (base) | Military strikes contained, oil facilities safe | Oil +5-10%, brief volatility | Iran de-escalates, Hormuz flows normal |
-| **B. Supply Shock** | Iran continues Hormuz interference OR US hits oil facilities | Oil +20-40%, inflation shock, risk-off | Confirmed infrastructure damage |
-| **C. Systemic Crisis** | Hormuz closure sustained, regional war expands | Oil historic highs, recession risk, flight to safety | Iran attacks Saudi/UAE facilities |
+- [通讯社] 多家主流媒体确认，美方对哈尔克岛上的军事相关目标实施了打击。 
+- [通讯社] 截至初始公开报道时，尚无一致证据显示岛上关键石油装船基础设施已被直接摧毁。 
+- [官方] 美方公开表态中出现了对进一步升级的威胁，但该类表态本身不自动等于已确认的市场影响。 
+- [通讯社] 哈尔克岛长期以来被普遍认为是伊朗重要原油出口节点之一。 
+- [官方机构/航运通告] 霍尔木兹及周边航运风险上升通常会先体现在保险、运价、绕航和通行不确定性上。 
 
----
-
-## Key Indicators
-
-| Indicator | Why It Matters | Current Status | Implication |
-|-----------|----------------|----------------|-------------|
-| Brent crude price | Direct supply risk barometer | 数据滞后/缺失 | Watch for $90 breach (B scenario) |
-| Hormuz shipping volume | Actual supply disruption | 数据滞后/缺失 | Decline >50% confirms B |
-| Tanker equity relative performance | Shipping risk premium proxy | Monitor | Outperformance confirms risk pricing |
-| Gold ETF flows | Safe haven demand | Monitor | Acceleration suggests C scenario worry |
+**Fog of War Rule** 
+关于设施实际受损程度、后续是否影响装船、是否会进一步升级到出口系统层面，**仍存在争议**。 
+现阶段不应把早期冲突叙事自动收敛为"已经发生确定性供给中断"。
 
 ---
 
-## Three-Market Watchlist
+## 3. 市场解读 / Market Interpretation
 
-### US Stocks
+当前宏观背景下，如果全球仍处在对通胀黏性较敏感、而增长预期并不强的环境中，那么地缘事件对油价和避险资产的影响通常更容易先表现为风险溢价，而不一定立刻演变成长期供给缺口定价。也就是说，同样的中东冲击，在高利率或增长偏弱环境下，价格弹性可能更短、更快，但持续性未必自动成立。
 
-| Group | Ticker | Mapping Logic | Trigger Signal | Invalidation Condition | Type |
-|-------|--------|---------------|----------------|------------------------|------|
-| Aggressive | USO | Direct oil exposure | Brent >$85 | Iran compromise, Hormuz open | Beneficiary |
-| Aggressive | OIH | Oil services demand | Oil >$80 for 2 weeks | Oil <$70 | Beneficiary |
-| Aggressive | NAT | Tanker risk premium + rates | Tankers outperform market | Hormuz reopens | Beneficiary |
-| Balanced | XLE | Broad energy exposure | Energy outperforms SPY | Oil <$75 | Beneficiary |
-| Balanced | CVX | Integrated, dividend defense | Oil >$80, vol down | Oil <$70 for 1 month | Beneficiary |
-| Defensive | GLD | Geopolitical hedge | Gold >$2,100 | Iran compromise | Hedge |
-| Defensive | UUP | Safe haven + Fed hawkish | DXY >105 | Fed dovish, oil down | Hedge |
+当前市场最可能先交易三条线：
 
-### A-Shares
+1. **油价风险溢价**：若关键出口节点存在升级威胁，布油容易获得地缘溢价。 
+2. **航运与保险链条**：即使实物供应未完全中断，只要"能走但更贵"，油运和风险管理链条会先反应。 
+3. **避险与军工延伸**：若事件拉长而不是一次性冲击，黄金、防务等方向的相对强度可能增强。 
 
-| Group | Code | Mapping Logic | Trigger Signal | Invalidation Condition | Type |
-|-------|------|---------------|----------------|------------------------|------|
-| Aggressive | 601857 | Oil price → upstream profit | Oil >$85 | Oil <$70 | Beneficiary |
-| Aggressive | 600028 | Refining + inventory gains | Oil $80-90 range | Oil >$100 (demand destruction) | Beneficiary |
-| Aggressive | 601872 | VLCC rates up | BDTI rising | Tanker demand down | Beneficiary |
-| Balanced | 518880 | Geopolitical hedge | Gold >500 CNY/g | Risk fades | Hedge |
-| Defensive | 511010 | Safe haven + rate cut | 10y yield <2.5% | Inflation spike | Hedge |
-
-### Hong Kong Stocks
-
-| Group | Code | Mapping Logic | Trigger Signal | Invalidation Condition | Type |
-|-------|------|---------------|----------------|------------------------|------|
-| Aggressive | 0883 | Pure upstream, max oil leverage | Oil >$85 | Oil <$70 | Beneficiary |
-| Aggressive | 1138 | Tanker leader, rate leverage | VLCC >$50k/day | Rates <$30k/day | Beneficiary |
-| Balanced | 02823 | 2x long oil | Oil trending up | Oil vol spikes | Beneficiary |
-| Defensive | 02840 | HKD gold | Gold >$2,100 | Risk fades | Hedge |
-| Defensive | 03069 | 2x long gold | Geopolitical escalation | Risk fades | Hedge |
+从市场结构上看，这类事件往往先影响：
+- 美股：能源 ETF、油运、黄金、防务
+- 港股：中海油、中国石油、油运、黄金 ETF
+- A 股：资源、黄金、油运、军工映射
 
 ---
 
-## Bucket Summaries
+## 4. 情景推演 / Scenario Analysis
 
-### Aggressive
-Target 5 names; if insufficient high-quality direct mappings, provide 3-4 and note: **(未强行补足)**
+### Scenario A：风险溢价阶段
+**条件**：军事目标受打击，但没有确认打到关键油气出口基础设施；航道风险升高但仍可通行。 
+**市场影响**：油价获得风险溢价，能源与油运偏强，航空与高耗能板块承压。 
+**升级条件**：若后续确认装船、终端、管道、泊位等关键节点受损，则向 Scenario B 演进。 
 
-### Balanced
-Target 5 names; if insufficient, provide 3-4 and note: **(未强行补足)**
+### Scenario B：直接供给冲击阶段
+**条件**：关键出口终端、物流节点或生产设施受损，出口能力明确下滑。 
+**市场影响**：油价从"风险溢价"切换到"供给冲击"定价，上游能源、特定航运、防务进一步受关注。 
+**升级条件**：若霍尔木兹长期失灵、区域互袭扩大、政策外溢，则向 Scenario C 演进。 
 
-### Defensive
-Target 5 names; if insufficient, provide 3-4 and note: **(未强行补足)**
+### Scenario C：长期系统扰动阶段
+**条件**：战略通道长期受阻、区域冲突升级、政策或制裁外溢至更广供应链。 
+**市场影响**：从单一主题交易转向更广泛的通胀再定价与 risk-off，黄金、防御性资源与部分防务相对占优。 
+**回落条件**：若航道恢复、备用节点承接、政策迅速托底，则可能回落到 A 或 B。 
 
----
-
-## Short Commentary
-
-**Most Important Variable**: Iran's response. Trump deliberately left escalation space; Iran's next move determines A vs B scenario.
-
-**Potential Market Overestimation**: Short-term oil spike sustainability. Historical pattern: geopolitical risk premium fades if no actual supply disruption.
-
-**Potential Market Underestimation**: Tail risk of Hormuz closure. 20% of global oil flows through the strait; closure would be systemic.
-
-**What Would Break Current Framework**: Iran explicitly de-escalates (A→risk premium collapse); Iran attacks Saudi/UAE facilities (A/B→C).
+**当前基准情景**：更接近 **Scenario A**，即"高风险但未确认进入全面供给冲击"。
 
 ---
 
-## Risk Warning
+## 5. 关键观察指标
 
-- **Confirmed facts**: US strikes on Kharg Island military facilities; oil infrastructure avoided; Trump threat issued
-- **Market interpretation**: Current pricing risk premium, not supply shock; Hormuz closure is tail risk
-- **Scenario assumptions**: B/C scenarios depend on Iran response and Trump follow-through; high uncertainty
-- **Framework-breaking variables**: Iran official response, actual Hormuz shipping volumes, Trump action on oil facility threat
+- 布油是否连续站稳关键价格阈值 
+- 是否出现对关键出口终端、装船泊位、管道或储运系统受损的独立确认 
+- 霍尔木兹及周边官方通航状态 
+- 战争险、运价、绕航与油运股相对强度 
+- 黄金 ETF 是否出现持续资金流入 
+- 防务板块是否开始形成多日相对强势 
+- 若关键高频数据无法公开获取，则明确标注：**数据滞后/缺失**
 
-**This is a research framework, not investment advice. All outputs should be reviewed critically in fast-moving situations.**
+---
+
+## 6. 三地观察池
+
+| 市场 | 风格分组 | 标的 | 映射逻辑 | 触发信号 | 失效条件 | 属性 |
+|---|---|---|---|---|---|---|
+| 美股 | 进攻型 | XLE | 能源主线最直接的行业篮子 | 布油连续 2 个交易日站稳关键阈值，能源板块持续跑赢大盘 | 油价快速跌回事件前区间，能源相对强度消失 | 受益 |
+| 美股 | 进攻型 | FRO | "能走但更贵"情景下的油运映射 | 油运股持续强于大盘，航运风险新闻继续发酵 | 航道风险缓和，运价/保险正常化 | 受益 |
+| 美股 | 平衡型 | GLD | 地缘与再通胀环境下的避险表达 | 金价与黄金 ETF 流入同步改善 | 地缘降温且风险偏好修复 | 对冲/避险 |
+| 美股 | 防守型 | ITA | 若冲突拉长，军工关注度上升 | 防务板块连续多日相对跑赢 | 事件快速降级，军工回吐相对强势 | 受益 |
+| A 股 | 平衡型 | 601857.SH 中国石油 | 国际油价映射较直接 | 国内资源股风格抬头，油价高位维持 | 油价回落，资源风格走弱 | 受益 |
+| A 股 | 进攻型 | 600026.SH 中远海能 | 油运和液货运输映射 | 航运链条相对强势延续 | 通航与保险正常化 | 受益 |
+| A 股 | 防守型 | 601899.SH 紫金矿业 | 黄金+资源双属性 | 黄金与资源板块同步偏强 | 黄金回落且资源风格转弱 | 对冲/受益 |
+| 港股 | 进攻型 | 0883.HK 中海油 | 港股中最直接的油价映射之一 | 港股能源板块持续跑赢恒指 | 油价下行且能源股相对弱化 | 受益 |
+| 港股 | 平衡型 | 1138.HK 中远海能 | 航运风险溢价映射 | 运费/保险相关新闻继续强化 | 风险快速消退 | 受益 |
+| 港股 | 防守型 | 2840.HK SPDR Gold Shares | 纯黄金避险工具 | 金价和避险情绪同步走高 | 风险偏好修复，黄金回落 | 对冲 |
+
+---
+
+## 7. 分组总结
+
+### 进攻型
+- XLE
+- FRO
+- 600026.SH 中远海能
+- 0883.HK 中海油
+- 1138.HK 中远海能
+
+### 平衡型
+- GLD
+- 601857.SH 中国石油
+- 601899.SH 紫金矿业
+- 2840.HK SPDR Gold Shares
+- ITA
+
+### 防守型
+- GLD
+- ITA
+- 601899.SH 紫金矿业
+- 2840.HK SPDR Gold Shares
+- 601857.SH 中国石油
+
+> 注：若某一事件下高质量直接映射标的不够，输出可缩减至 3–4 个，并明确标注：**（未强行补足）**
+
+---
+
+## 8. 短评
+
+当前最重要的不是"标题写得多惊悚"，而是：是否已经确认关键出口基础设施本体受损。只要这一点没有被独立坐实，市场更像是在交易地缘风险溢价，而不是全面供给损失。
+
+这类事件里，最容易被高估的是单条情绪化叙事；最容易被低估的是物流、保险和航运链条的先行扰动。也就是说，很多时候先动的不是"产量"，而是"能不能顺利把货运出去"。
+
+当前基准情景仍偏向 Scenario A。如果后续确认关键终端、泊位、储运或管道节点受损，这个基准情景才需要明显上修到 Scenario B。若航道持续通行、风险回落或政策托底，则当前观察池中的高弹性方向可能很快失效。
