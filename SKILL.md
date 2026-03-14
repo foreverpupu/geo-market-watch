@@ -169,3 +169,4 @@ Avoid vague phrases such as:
 - Use [references/watchlist-rules.md](references/watchlist-rules.md) for basket logic and naming discipline.
 - Use [references/discovery-rules.md](references/discovery-rules.md) for proactive scanning, event scoring, and escalation thresholds.
 - Use [references/sample-prompts.md](references/sample-prompts.md) for example requests and expected behavior.
+- Use [docs/scheduled-monitoring.md](docs/scheduled-monitoring.md) for automated scheduled monitoring setup and Scout Prompt configuration.
