@@ -1,0 +1,115 @@
+{
+  "event_id": "gmw-2026-0001",
+  "created_at": "2026-03-15T08:30:00Z",
+  "event_timestamp": "2026-03-15T06:10:00Z",
+  "title": "Escalation in Red Sea shipping disruption raises rerouting risks",
+  "summary": "Multiple reports indicate renewed attacks and security incidents affecting commercial shipping in the Red Sea, increasing the likelihood of vessel rerouting, higher insurance costs, and longer transit times for Europe-Asia trade flows.",
+  "event_type": "shipping_disruption",
+  "status": "partially_confirmed",
+  "source_tier": 2,
+  "confidence_level": "medium",
+  "fog_of_war": true,
+  "urgency": "high",
+  "market_relevance_score": 0.84,
+  "escalation_score": 0.88,
+  "geographies": [
+    {
+      "name": "Red Sea",
+      "type": "sea_route"
+    },
+    {
+      "name": "Bab el-Mandeb",
+      "type": "strait"
+    },
+    {
+      "name": "Suez Canal",
+      "type": "canal"
+    }
+  ],
+  "actors": [
+    {
+      "name": "Commercial shipping operators",
+      "actor_type": "shipping_company"
+    },
+    {
+      "name": "Regional armed group",
+      "actor_type": "militia"
+    },
+    {
+      "name": "Egypt",
+      "actor_type": "state",
+      "country": "Egypt"
+    }
+  ],
+  "commodities": [
+    "crude oil",
+    "container freight",
+    "refined products"
+  ],
+  "infrastructure_nodes": [
+    {
+      "name": "Suez Canal",
+      "node_type": "shipping_lane",
+      "country": "Egypt"
+    },
+    {
+      "name": "Bab el-Mandeb",
+      "node_type": "shipping_lane"
+    }
+  ],
+  "market_domains": [
+    "shipping",
+    "ports_logistics",
+    "energy",
+    "equities"
+  ],
+  "sources": [
+    {
+      "source_id": "src-001",
+      "publisher": "Reuters",
+      "source_type": "newswire",
+      "tier": 1,
+      "url": "https://example.com/reuters-red-sea-1",
+      "published_at": "2026-03-15T06:30:00Z",
+      "headline": "Shipping disruption risk rises after renewed incidents in Red Sea"
+    },
+    {
+      "source_id": "src-002",
+      "publisher": "Lloyd's List",
+      "source_type": "industry_report",
+      "tier": 2,
+      "url": "https://example.com/lloyds-red-sea-1",
+      "published_at": "2026-03-15T07:00:00Z",
+      "headline": "Insurers and operators reassess Red Sea exposure"
+    },
+    {
+      "source_id": "src-003",
+      "publisher": "Regional social account",
+      "source_type": "social_media",
+      "tier": 4,
+      "url": "https://example.com/social-red-sea-1",
+      "published_at": "2026-03-15T06:12:00Z",
+      "headline": "Unverified claims of vessel damage"
+    }
+  ],
+  "contradictions": [
+    {
+      "field": "damage_extent",
+      "description": "Some reports claim direct vessel damage, while others only confirm near-miss or security alert activity.",
+      "source_ids": [
+        "src-001",
+        "src-003"
+      ]
+    }
+  ],
+  "tags": [
+    "red-sea",
+    "shipping",
+    "rerouting",
+    "freight-rates"
+  ],
+  "raw_input_refs": [
+    "user-link-001",
+    "feed-redsea-20260315-01"
+  ]
+}
