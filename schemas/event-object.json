@@ -1,27 +1,180 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://github.com/foreverpupu/geo-market-watch/schemas/event-object.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://geo-market-watch/schemas/event-object.json",
   "title": "Geo Market Watch Event Object",
-  "description": "Standardized representation of a geopolitical event for analysis",
+  "description": "Normalized geopolitical or macro event input object for the Geo Market Watch pipeline.",
   "type": "object",
-  "required": ["event_id", "timestamp", "event_type", "source", "confidence"],
+  "additionalProperties": false,
+  "required": [
+    "event_id",
+    "created_at",
+    "event_timestamp",
+    "title",
+    "summary",
+    "event_type",
+    "status",
+    "source_tier",
+    "confidence_level",
+    "geographies",
+    "actors",
+    "sources"
+  ],
   "properties": {
     "event_id": {
       "type": "string",
-      "description": "Unique identifier for the event",
-      "pattern": "^[a-z0-9_-]+$"
+      "description": "Globally unique event identifier.",
+      "pattern": "^gmw-[0-9]{4}-[0-9]{4,}$"
     },
-    "timestamp": {
+    "created_at": {
       "type": "string",
       "format": "date-time",
-      "description": "ISO 8601 timestamp when the event occurred or was reported"
+      "description": "Timestamp when this event object was created by the system."
     },
-    "location": {
+    "event_timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Best-known timestamp for when the underlying event occurred."
+    },
+    "title": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 300,
+      "description": "Short event title."
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 20,
+      "maxLength": 4000,
+      "description": "Concise event summary."
+    },
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "military_escalation",
+        "sanctions",
+        "export_control",
+        "trade_policy",
+        "shipping_disruption",
+        "port_disruption",
+        "pipeline_disruption",
+        "commodity_supply_disruption",
+        "infrastructure_damage",
+        "labor_strike",
+        "regulatory_change",
+        "election_political_risk",
+        "civil_unrest",
+        "natural_disaster",
+        "cyber_incident",
+        "industrial_accident",
+        "diplomatic_breakthrough",
+        "ceasefire_negotiation",
+        "other"
+      ],
+      "description": "Primary event category."
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "confirmed",
+        "partially_confirmed",
+        "unconfirmed",
+        "disputed",
+        "resolved"
+      ],
+      "description": "Current verification state of the event."
+    },
+    "source_tier": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 4,
+      "description": "Overall source quality tier. 1 = highest quality."
+    },
+    "confidence_level": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "description": "System confidence in the event facts as currently stated."
+    },
+    "fog_of_war": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the event is currently in a high-uncertainty, contradictory information environment."
+    },
+    "urgency": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ],
+      "description": "Operational urgency for analysis or monitoring."
+    },
+    "market_relevance_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Normalized score for likely market impact."
+    },
+    "escalation_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Normalized score for whether the event should be escalated into deeper analysis."
+    },
+    "geographies": {
+      "type": "array",
+      "description": "Relevant countries, regions, maritime chokepoints, ports, or routes.",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/geography"
+      }
+    },
+    "actors": {
+      "type": "array",
+      "description": "Relevant state actors, companies, organizations, or non-state actors.",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/actor"
+      }
+    },
+    "commodities": {
+      "type": "array",
+      "description": "Relevant commodities or materials exposed to the event.",
+      "items": {
+        "type": "string",
+        "minLength": 2,
+        "maxLength": 100
+      },
+      "uniqueItems": true
+    },
+    "infrastructure_nodes": {
+      "type": "array",
+      "description": "Physical infrastructure nodes involved in the event.",
+      "items": {
+        "$ref": "#/$defs/infrastructureNode"
+      }
+    },
+    "market_domains": {
+      "type": "array",
+      "description": "High-level market domains impacted by the event.",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "$defs": {
+    "geography": {
       "type": "object",
-      "description": "Geographic information about the event",
       "properties": {
-        "country": { "type": "string" },
-        "region": { "type": "string" },
+        "name": { "type": "string" },
+        "type": {
+          "type": "string",
+          "enum": ["country", "region", "chokepoint", "port", "route"]
+        },
         "coordinates": {
           "type": "object",
           "properties": {
@@ -31,123 +184,29 @@
         }
       }
     },
-    "actors": {
-      "type": "array",
-      "description": "Entities involved in the event",
-      "items": {
-        "type": "object",
-        "properties": {
-          "name": { "type": "string" },
-          "type": {
-            "type": "string",
-            "enum": ["state", "organization", "individual", "military", "corporate"]
-          },
-          "role": {
-            "type": "string",
-            "enum": ["aggressor", "target", "mediator", "observer"]
-          }
-        }
-      }
-    },
-    "event_type": {
-      "type": "string",
-      "enum": [
-        "military_strike",
-        "sanctions",
-        "export_control",
-        "shipping_disruption",
-        "infrastructure_damage",
-        "diplomatic_escalation",
-        "commodity_supply_shock",
-        "trade_policy_change"
-      ],
-      "description": "Category of geopolitical event"
-    },
-    "source": {
+    "actor": {
       "type": "object",
-      "description": "Information about the event source",
       "properties": {
+        "name": { "type": "string" },
         "type": {
           "type": "string",
-          "enum": [
-            "official_government",
-            "wire_service",
-            "financial_data_provider",
-            "industry_analyst",
-            "expert_commentary",
-            "social_media",
-            "other"
-          ]
+          "enum": ["state", "corporate", "organization", "non_state_actor"]
         },
-        "tier": {
-          "type": "integer",
-          "minimum": 1,
-          "maximum": 4
-        },
-        "url": {
+        "role": {
           "type": "string",
-          "format": "uri"
-        },
-        "published_at": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "headline": {
-          "type": "string",
-          "maxLength": 500
+          "enum": ["aggressor", "target", "mediator", "observer", "beneficiary"]
         }
       }
     },
-    "contradiction": {
+    "infrastructureNode": {
       "type": "object",
-      "additionalProperties": false,
-      "required": ["field", "description"],
       "properties": {
-        "field": {
+        "name": { "type": "string" },
+        "type": {
           "type": "string",
-          "minLength": 1,
-          "maxLength": 100
+          "enum": ["port", "pipeline", "terminal", "refinery", "mine", "factory", "route"]
         },
-        "description": {
-          "type": "string",
-          "minLength": 5,
-          "maxLength": 1000
-        },
-        "source_ids": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 100
-          },
-          "uniqueItems": true
-        }
-      }
-    },
-    "confidence": {
-      "type": "number",
-      "minimum": 0,
-      "maximum": 1,
-      "description": "Confidence level from 0.0 to 1.0"
-    },
-    "raw_input": {
-      "type": "object",
-      "description": "Original input data",
-      "properties": {
-        "text": { "type": "string" },
-        "links": {
-          "type": "array",
-          "items": { "type": "string", "format": "uri" }
-        }
-      }
-    },
-    "metadata": {
-      "type": "object",
-      "description": "Additional metadata",
-      "properties": {
-        "discovery_mode": { "type": "boolean" },
-        "escalation_score": { "type": "number", "minimum": 0, "maximum": 10 },
-        "fog_of_war": { "type": "boolean" }
+        "location": { "type": "string" }
       }
     }
   }
