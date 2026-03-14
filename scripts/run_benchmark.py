@@ -7,6 +7,8 @@ Validates scoring and trigger engines against real-world events.
 
 import json
 import sys
+import subprocess
+from datetime import datetime
 from pathlib import Path
 
 # Add engine directory to path
@@ -14,6 +16,35 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "engine"))
 
 from scoring_engine import score_event
 from trigger_engine import evaluate_trigger
+
+
+# Release version
+VERSION = "v5.4"
+
+
+def get_git_commit() -> str:
+    """Get current git commit hash if available."""
+    try:
+        result = subprocess.run(
+            ["git", "rev-parse", "--short", "HEAD"],
+            capture_output=True,
+            text=True,
+            cwd=Path(__file__).parent.parent
+        )
+        return result.stdout.strip() if result.returncode == 0 else "unknown"
+    except Exception:
+        return "unknown"
+
+
+def get_run_metadata() -> dict:
+    """Generate run metadata for benchmark traceability."""
+    return {
+        "version": VERSION,
+        "generated_at": datetime.now().isoformat(),
+        "dataset_path": "data/benchmark-events.json",
+        "git_commit": get_git_commit(),
+        "python_version": f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}"
+    }
 
 
 def load_benchmark_events() -> list:
@@ -114,12 +145,27 @@ def run_benchmark() -> dict:
     return results
 
 
-def print_summary(results: dict):
-    """Print benchmark summary."""
+def print_summary(results: dict, metadata: dict = None):
+    """Print benchmark summary with run metadata."""
     print("=" * 60)
     print("Benchmark Summary")
     print("=" * 60)
     print()
+    
+    # Print Run Metadata section
+    print("Run Metadata")
+    print("-" * 60)
+    if metadata:
+        print(f"Version: {metadata.get('version', 'unknown')}")
+        print(f"Generated: {metadata.get('generated_at', 'unknown')}")
+        print(f"Dataset: {metadata.get('dataset_path', 'unknown')}")
+        print(f"Git Commit: {metadata.get('git_commit', 'unknown')}")
+        print(f"Python: {metadata.get('python_version', 'unknown')}")
+    print()
+    
+    # Print Results section
+    print("Results")
+    print("-" * 60)
     print(f"Total Events: {results['total']}")
     print()
     print("Scoring Engine:")
@@ -148,8 +194,9 @@ def print_summary(results: dict):
 
 def main():
     """Main entry point."""
+    metadata = get_run_metadata()
     results = run_benchmark()
-    return print_summary(results)
+    return print_summary(results, metadata)
 
 
 if __name__ == "__main__":
