@@ -5,7 +5,6 @@
 Geo Market Watch depends heavily on source quality.
 
 Geopolitical market analysis fails most often not because the event is misunderstood, but because:
-
 - rhetoric is mistaken for fact
 - commentary is mistaken for reporting
 - emotional amplification is mistaken for signal
@@ -14,7 +13,6 @@ Geopolitical market analysis fails most often not because the event is misunders
 This document defines how sources should be classified and used inside the workflow.
 
 The goal is simple:
-
 - protect the **Confirmed Facts** layer from contamination
 - preserve useful structural analysis
 - suppress low-quality noise without suppressing legitimate expert insight
@@ -24,26 +22,22 @@ The goal is simple:
 ## Source hierarchy overview
 
 Geo Market Watch uses three broad source categories:
-
 1. **Tier 1 — Ground-truth / factual anchors**
 2. **Tier 2 — Structural analysis / variable interpretation**
 3. **Low-trust or emotional amplifiers**
 
-These categories are not moral judgments. 
+These categories are not moral judgments.  
 They are functional roles in the workflow.
 
 A source can be:
-
 - excellent for confirmed facts
 - weak for market interpretation
 
 or:
-
 - weak for direct fact anchoring
 - excellent for identifying structural variables
 
 The purpose of tiering is to decide:
-
 - what can enter the **Confirmed Facts** section
 - what belongs in **Market Interpretation**
 - what should be downranked or ignored
@@ -53,10 +47,10 @@ The purpose of tiering is to decide:
 ## Tier 1 — Ground-truth / factual anchors
 
 ## Definition
+
 Tier 1 sources are the highest-confidence public anchors for **confirmed facts**.
 
 Use Tier 1 sources for statements such as:
-
 - what happened
 - when it happened
 - where it happened
@@ -65,7 +59,6 @@ Use Tier 1 sources for statements such as:
 - what a benchmark or official metric currently shows
 
 Tier 1 sources are allowed in:
-
 - `Confirmed Facts`
 - time-sensitive fact verification
 - evidence checks against lower-tier claims
@@ -73,6 +66,7 @@ Tier 1 sources are allowed in:
 ## Typical Tier 1 source types
 
 ### Official institutions
+
 Examples:
 - governments
 - ministries
@@ -86,12 +80,14 @@ Examples:
 - route or canal authorities
 
 ### Top-tier wire services and primary reporting
+
 Examples:
 - Reuters
 - AP
 - other equivalent primary wire-style reporting when confirming concrete facts
 
 ### Public company and issuer materials
+
 Examples:
 - company filings
 - stock exchange notices
@@ -101,6 +97,7 @@ Examples:
 - public presentations when factual and attributable
 
 ### Official institution data
+
 Examples:
 - agency datasets
 - official reported production figures
@@ -113,7 +110,6 @@ Examples:
 ## What Tier 1 is good for
 
 Tier 1 is good for anchoring:
-
 - exact dates
 - confirmed announcements
 - confirmed operational status
@@ -137,6 +133,7 @@ Tier 1 does **not** automatically convert every statement into a confirmed marke
 This is especially important in geopolitical situations.
 
 ### Official rhetoric is not automatically a fact of market impact
+
 Examples of statements that should be reported carefully:
 - threats
 - warnings
@@ -153,6 +150,7 @@ These may be politically important, but they do not automatically prove:
 - market-wide consequences
 
 ### Wire-service interpretation paragraphs are not always "pure fact"
+
 Even strong wire reporting may contain:
 - analyst interpretation
 - scenario framing
@@ -162,6 +160,7 @@ Even strong wire reporting may contain:
 These elements can still be valuable, but they should not be mechanically treated as ground truth.
 
 ### Interviews and executive commentary
+
 These can be useful, but often mix:
 - factual disclosure
 - opinion
@@ -190,8 +189,8 @@ it should not enter the `Confirmed Facts` layer as a hard fact unless independen
 ## Tier 2 — Structural analysis / variable interpretation
 
 ## Definition
-Tier 2 sources are used for:
 
+Tier 2 sources are used for:
 - structural explanation
 - variable identification
 - bottleneck mapping
@@ -201,7 +200,6 @@ Tier 2 sources are used for:
 - system dependency discussion
 
 Tier 2 sources belong primarily in:
-
 - `Market Interpretation`
 - scenario design
 - watchlist logic
@@ -215,6 +213,7 @@ Tier 2 sources are not normally sufficient by themselves for the `Confirmed Fact
 ## Typical Tier 2 source types
 
 ### Domain specialists
+
 Examples:
 - energy analysts
 - shipping specialists
@@ -224,6 +223,7 @@ Examples:
 - commodity market specialists
 
 ### Reputable industry analysis
+
 Examples:
 - sector analysts
 - specialist commentary
@@ -232,6 +232,7 @@ Examples:
 - domain-informed research threads
 
 ### Expert threads and commentary
+
 This includes:
 - high-signal threads on X / Twitter
 - specialist explainers
@@ -249,7 +250,6 @@ These can be highly valuable when they provide:
 ## What Tier 2 is good for
 
 Tier 2 is especially useful for answering:
-
 - why this event matters
 - which physical bottlenecks are critical
 - whether backup routes exist
@@ -283,6 +283,7 @@ But it should not replace Tier 1 for factual confirmation.
 ## Low-trust / emotional amplifiers
 
 ## Definition
+
 These are sources that may generate attention, but do not reliably improve analysis quality.
 
 They often exhibit one or more of the following:
@@ -305,6 +306,7 @@ These sources should be:
 ## Typical warning signs
 
 ### Tone-first, evidence-later
+
 Examples:
 - "historic collapse"
 - "systemic implosion"
@@ -320,6 +322,7 @@ without:
 - invalidation conditions
 
 ### False certainty
+
 Examples:
 - absolute claims about damage
 - absolute claims about market direction
@@ -327,6 +330,7 @@ Examples:
 - definitive claims during early fog-of-war conditions
 
 ### Commentary pretending to be reporting
+
 Signs include:
 - no attribution
 - vague "sources say" phrasing without specificity
@@ -335,6 +339,7 @@ Signs include:
 - no way to verify
 
 ### Narrative inflation
+
 This happens when a source:
 - overgeneralizes from a small fact
 - jumps from event to "inevitable global shock"
@@ -345,7 +350,6 @@ This happens when a source:
 ## Important nuance: strong tone does not automatically mean low quality
 
 A source should **not** be downranked for tone alone if it still provides:
-
 - verifiable variables
 - explicit boundaries
 - source support
@@ -361,6 +365,7 @@ The workflow must filter **hype**, not merely strong style.
 ## How to classify edge cases
 
 ## Case 1: Official statement with aggressive rhetoric
+
 Example:
 - "We will respond decisively"
 - "This attack failed"
@@ -375,6 +380,7 @@ Use:
 - wait for independent confirmation before upgrading to fact
 
 ## Case 2: Reuters article with factual reporting plus interpretation
+
 Classification:
 - factual elements can be Tier 1
 - interpretive elements belong in Tier 2-style usage
@@ -383,6 +389,7 @@ Use:
 - separate concrete reporting from analysis paragraphs
 
 ## Case 3: Expert thread with excellent infrastructure detail
+
 Classification:
 - Tier 2
 
@@ -394,6 +401,7 @@ Use:
 Do not use it alone to confirm hard facts if those facts are still disputed.
 
 ## Case 4: User-provided emotional article
+
 Classification:
 - low-trust / emotional unless independently supported
 
@@ -428,6 +436,7 @@ This is especially important in the first 12–48 hours after major geopolitical
 ## How source tiers map into output sections
 
 ## Confirmed Facts
+
 Use:
 - Tier 1 only
 
@@ -445,6 +454,7 @@ Do not include:
 - emotional language
 
 ## Market Interpretation
+
 Use:
 - Tier 2 plus fresh verified context
 - macro framing
@@ -455,6 +465,7 @@ Use:
 This section can reference Tier 1 facts, but its analytical content is interpretive.
 
 ## Scenario Analysis
+
 Use:
 - conditional reasoning
 - escalation pathways
@@ -488,7 +499,7 @@ If rhetorical:
 - do not convert it into physical impact automatically
 
 ### 4. Is the source giving me variables or just emotion?
-Variables improve the workflow. 
+Variables improve the workflow.  
 Emotion without variables usually does not.
 
 ### 5. Does this belong in facts, interpretation, or scenarios?
@@ -499,7 +510,6 @@ Never mix these casually.
 ## Recommended default behavior
 
 When in doubt:
-
 - prefer Tier 1 for facts
 - use Tier 2 for structure and variables
 - downrank emotional amplification
@@ -515,13 +525,11 @@ This discipline is more important than sounding certain.
 The source-tiering framework exists to protect analytical integrity.
 
 Its purpose is to ensure that Geo Market Watch does not become:
-
 - a news rewriter
 - a hype amplifier
 - a certainty generator under uncertainty
 
 Instead, it should function as:
-
 - a disciplined event-research workflow
 - a structured market-mapping tool
 - a source-aware system that distinguishes fact, interpretation, and scenario
