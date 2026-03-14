@@ -11,6 +11,32 @@
 
 ---
 
+## 🏗️ Architecture Overview
+
+```
+News Links / Feeds
+        ↓
+Scout Mode (Discovery)
+        ↓
+SKILL.md (Analysis Engine)
+        ↓
+Market Mapping Framework
+        ↓
+Structured Watchlists
+        ↓
+Automation / Notification Layer
+```
+
+**数据流说明**：
+1. **输入层**：新闻链接、Twitter 专家长文、RSS 订阅
+2. **侦察模式**：Scout Prompt 初筛，识别高价值事件
+3. **分析引擎**：SKILL.md 执行完整 9 段式分析
+4. **映射框架**：物理节点 → 市场敞口 → 三地标的
+5. **结构化输出**：带触发信号和失效条件的观察池
+6. **自动化层**：Cron 定时任务、消息推送（需自行配置）
+
+---
+
 ## ⏱️ 30秒看懂 Geo Market Watch
 
 它不是一个普通的"新闻摘要机器人"，而是一个**投资映射引擎**。
