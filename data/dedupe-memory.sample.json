@@ -1,0 +1,10 @@
+{
+  "description": "Geo Market Watch v5.5 — Sample Deduplication Memory",
+  "version": "5.5",
+  "seen_event_keys": [],
+  "notes": [
+    "This is a sample deduplication memory file.",
+    "Event keys are added here after processing to prevent duplicates.",
+    "The agent loop automatically updates this file."
+  ]
+}

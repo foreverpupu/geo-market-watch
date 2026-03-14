@@ -6,6 +6,41 @@
 
 ---
 
+## v5.5 Minimal Agent Loop
+
+Starting in v5.5, Geo Market Watch includes a **minimal runnable local agent loop**:
+
+- **News intake** — Load and normalize event items
+- **Event dedupe** — Filter duplicate events
+- **Score + trigger** — Compute signal scores and escalation decisions
+- **Notify / handoff** — Generate notifications or handoff to full analysis
+
+This enables **local end-to-end execution** of the monitoring workflow:
+
+```bash
+python scripts/run_agent_loop.py \
+  --input data/intake-sample.json \
+  --memory data/dedupe-memory.json \
+  --output outputs/
+```
+
+However, the repository **still does not include** a built-in persistent background scheduler or hosted automation service.
+
+The agent loop is:
+- ✅ Runnable on demand
+- ✅ Deterministic and reproducible
+- ✅ Zero external dependencies
+- ❌ Not a persistent daemon
+- ❌ Not a hosted service
+
+To run this on a schedule, you must integrate with an external scheduler (cron, OpenClaw, etc.).
+
+---
+
+## 💡 设计思路：双模式架构 (Dual Mode)
+
+---
+
 ## 💡 设计思路：双模式架构 (Dual Mode)
 
 大语言模型（LLM）执行复杂投研框架时，极易面临 API 超时、死循环和信息轰炸（Alert Fatigue）的问题。因此，在自动化部署时，我们强烈建议采用**"双模式拦截"**：

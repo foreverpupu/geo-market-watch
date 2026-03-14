@@ -70,6 +70,39 @@ This will:
 
 ---
 
+## Minimal Agent Loop
+
+Starting in v5.5, Geo Market Watch includes a **minimal runnable agent loop**.
+
+**Included nodes:**
+
+- **News intake** — Load and normalize raw event items
+- **Event dedupe** — Filter duplicate events using persistent memory
+- **Score + trigger** — Compute signal scores and escalation decisions
+- **Notify / handoff** — Generate notifications or handoff to full analysis
+
+This is the **first end-to-end executable workflow** in the repository.
+
+It is intentionally:
+- **Local** — runs on your machine
+- **Deterministic** — same input produces same output
+- **Narrow in scope** — validates the loop, not the platform
+
+**What this enables:**
+- Run complete monitoring workflow locally
+- Test and validate event processing logic
+- Generate handoff artifacts for full analysis
+
+**What this does NOT include:**
+- Live RSS/API ingestion
+- Persistent background scheduler
+- Hosted automation service
+- Multi-agent orchestration
+
+See [docs/minimal-agent-architecture.md](docs/minimal-agent-architecture.md) for details.
+
+---
+
 ## Execution Layer
 
 Starting in v5.4, Geo Market Watch includes a **minimal executable engine**.
@@ -226,8 +259,14 @@ Full example files: [examples/schema-examples/](examples/schema-examples/)
 ```
 geo-market-watch/
 │
-├── prompts/
-│   └── scout-mode.md
+├── agents/
+│   ├── openai.yaml
+│   └── minimal-agent-config.example.json
+│
+├── data/
+│   ├── benchmark-events.json
+│   ├── intake-sample.json
+│   └── dedupe-memory.sample.json
 │
 ├── docs/
 │   ├── scout-mode-example.md
@@ -243,31 +282,29 @@ geo-market-watch/
 │   ├── benchmark-v5.5.md
 │   └── scheduled-monitoring.md
 │
-├── data/
-│   ├── benchmark-events.json
-│   └── intake-sample.json
-│
 ├── engine/
-│   ├── intake_normalizer.py
-│   ├── dedupe_memory.py
 │   ├── scoring_engine.py
 │   ├── trigger_engine.py
+│   ├── intake_normalizer.py
+│   ├── dedupe_memory.py
 │   ├── notifier.py
-│   ├── agent_loop.py
-│   └── README.md
+│   └── agent_loop.py
+│
+├── examples/
+│   ├── intake-input.example.json
+│   ├── notify-monitor.example.md
+│   └── notify-full-analysis.example.md
+│
+├── prompts/
+│   └── scout-mode.md
 │
 ├── scripts/
 │   ├── run_benchmark.py
 │   └── run_agent_loop.py
 │
-├── agents/
-│   ├── openai.yaml
-│   └── minimal-agent-config.example.json
-│
-├── SKILL.md
 ├── CHANGELOG.md
-├── LICENSE.md
-└── README.md
+├── README.md
+└── SKILL.md
 ```
 
 ---
@@ -314,6 +351,15 @@ Key framework documents:
 
 **Scheduled Monitoring Guide**  
 [docs/scheduled-monitoring.md](docs/scheduled-monitoring.md)
+
+**Example Intake Input**  
+[examples/intake-input.example.json](examples/intake-input.example.json)
+
+**Example Monitor Notification**  
+[examples/notify-monitor.example.md](examples/notify-monitor.example.md)
+
+**Example Full Analysis Handoff**  
+[examples/notify-full-analysis.example.md](examples/notify-full-analysis.example.md)
 
 ---
 

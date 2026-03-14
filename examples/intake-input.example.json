@@ -1,0 +1,28 @@
+{
+  "description": "Example intake input for Geo Market Watch v5.5",
+  "version": "5.5",
+  "items": [
+    {
+      "source_name": "Reuters",
+      "source_url": "https://www.reuters.com/world/middle-east/red-sea-shipping-2024-01-12",
+      "published_at": "2024-01-12",
+      "headline": "Red Sea shipping disruption",
+      "region": "Middle East",
+      "category": "Maritime disruption",
+      "summary": "Major container lines reroute vessels due to security risks in the Red Sea.",
+      "indicators": {
+        "physical_disruption": 1,
+        "transport_impact": 2,
+        "policy_sanctions": 0,
+        "market_transmission": 1,
+        "escalation_risk": 1
+      },
+      "flags": {
+        "confirmed_supply_disruption": false,
+        "strategic_transport_disruption": true,
+        "major_sanctions_escalation": false,
+        "military_escalation": false
+      }
+    }
+  ]
+}
