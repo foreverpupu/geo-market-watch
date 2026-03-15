@@ -1,151 +1,107 @@
-# Engine Module
+# Engine Layer
 
-This module contains the **first executable components** of Geo Market Watch.
+The engine module contains the core logic for processing geopolitical events into structured intelligence artifacts.
 
-**Included:**
-
-- `scoring_engine.py` — calculates signal scores from structured event inputs
-- `trigger_engine.py` — decides whether an event should escalate into Full Analysis Mode
-
-This release introduces **deterministic execution logic** without external dependencies.
+It powers the event → analysis → monitoring pipeline used by Geo Market Watch.
 
 ---
 
-## ⚠️ Current Limitations
+## Responsibilities
 
-This is **not yet** a full autonomous agent system.
+The engine currently implements:
 
-**What it does NOT include:**
-- ❌ Automatic extraction from raw articles
-- ❌ Event deduplication
-- ❌ Live news ingestion pipeline
-- ❌ Database persistence layer
-- ❌ Multi-agent orchestration
-
-**What it DOES include:**
-- ✅ Deterministic scoring from structured inputs
-- ✅ Explicit trigger rules
-- ✅ Validation and error handling
-- ✅ Reproducible benchmark testing
-
-**Status:** The engine accepts pre-structured Event Card objects and converts them into scores and trigger decisions. Article parsing and automated ingestion are planned for future releases.
+- **Event normalization** — Convert raw inputs to structured event cards
+- **Event deduplication** — Detect and filter duplicate events
+- **Event scoring** — Calculate impact scores (0-10)
+- **Escalation triggers** — Decide monitor vs full analysis
+- **Notification generation** — Create analyst handoff artifacts
+- **Database persistence** — SQLite storage for events and analysis
+- **Lifecycle management** — Track idea states from creation to closure
+- **Performance tracking** — Paper-trade evaluation
 
 ---
 
-## Components
+## What the Engine Does NOT Do
 
-### Scoring Engine (`scoring_engine.py`)
+The engine intentionally does not include:
 
-Converts Event Card indicators into a deterministic signal score (0-10).
+- External news ingestion (RSS/API feeds)
+- Continuous scheduling (cron/background jobs)
+- External data pipelines (market data feeds)
+- UI dashboards (web interfaces)
+- Multi-user coordination
 
-**What it does:**
-- Reads structured Event Card data
-- Validates indicator values against maximums
-- Calculates total score across 5 dimensions
-- Maps score to signal band (noise/monitor/full_analysis/major_shock)
-
-**Input:**
-```python
-{
-    "event_title": "Red Sea shipping disruption",
-    "date_detected": "2024-01-12",
-    "region": "Middle East",
-    "category": "Maritime disruption",
-    "indicators": {
-        "physical_disruption": 1,    # max 3
-        "transport_impact": 2,       # max 2
-        "policy_sanctions": 0,       # max 2
-        "market_transmission": 1,    # max 2
-        "escalation_risk": 1         # max 1
-    }
-}
-```
-
-**Output:**
-```python
-{
-    "event_title": "Red Sea shipping disruption",
-    "score": 5,
-    "band": "monitor"
-}
-```
+These responsibilities are handled by external automation, CLI scripts, or orchestration layers.
 
 ---
 
-### Trigger Engine (`trigger_engine.py`)
+## Module Overview
 
-Decides whether Full Analysis Mode should be triggered.
+| Module | Responsibility | Key Functions |
+|--------|----------------|---------------|
+| `intake_normalizer.py` | Event normalization | `normalize_event()`, `validate_event()` |
+| `dedupe_memory.py` | Deduplication | `check_duplicate()`, `add_to_memory()` |
+| `scoring_engine.py` | Impact scoring | `compute_score()`, `get_score_band()` |
+| `trigger_engine.py` | Escalation logic | `should_escalate()`, `get_trigger_reason()` |
+| `database.py` | Persistence | `connect_db()`, `execute_query()` |
+| `database_models.py` | Schema definitions | Table schemas, validation |
+| `lifecycle_engine.py` | State management | `record_event()`, `invalidate_idea()` |
+| `performance_engine.py` | Paper tracking | `start_tracking()`, `close_tracking()` |
+| `idea_review_engine.py` | Analyst workflow | `submit_review()`, `get_pending_reviews()` |
+| `exposure_engine.py` | Market mapping | `map_to_sectors()`, `map_to_companies()` |
+| `agent_loop.py` | Orchestration | `run_agent_loop()`, `process_event()` |
+| `notifier.py` | Output generation | `generate_notification()`, `format_output()` |
 
-**What it does:**
-- Evaluates signal score against threshold (≥7)
-- Checks escalation flags
-- Returns trigger decision with reasons
+---
 
-**Input:**
+## Design Philosophy
+
+The engine focuses on **deterministic processing and structured outputs**, allowing higher-level automation or analyst workflows to build on top.
+
+### Key Principles
+
+1. **Pure Functions** — Minimize side effects, maximize testability
+2. **Explicit Dependencies** — Pass dependencies as parameters
+3. **Structured Data** — Return objects, not print statements
+4. **Error Handling** — Raise exceptions, don't exit
+5. **Local-First** — SQLite, no external service dependencies
+
+---
+
+## Usage Example
+
 ```python
-{
-    "event_title": "Russia expands oil export restrictions",
-    "score": 7,
-    "flags": {
-        "confirmed_supply_disruption": False,
-        "strategic_transport_disruption": False,
-        "major_sanctions_escalation": True,
-        "military_escalation": False
-    }
-}
-```
+from engine.intake_normalizer import normalize_event
+from engine.scoring_engine import compute_score
+from engine.trigger_engine import should_escalate
 
-**Output:**
-```python
-{
-    "event_title": "Russia expands oil export restrictions",
-    "trigger_full_analysis": True,
-    "reasons": ["score_threshold", "major_sanctions_escalation"]
-}
+# Process an event
+raw_event = {"headline": "Red Sea shipping disruption..."}
+event = normalize_event(raw_event)
+score = compute_score(event)
+escalate = should_escalate(score)
+
+if escalate:
+    # Generate full analysis
+    pass
 ```
 
 ---
 
-## Design Principles
+## Testing
 
-- **Deterministic**: Same input always produces same output
-- **No external dependencies**: No APIs, no LLM calls, no database
-- **Minimal**: Only implements documented framework rules
-- **Validating**: Clear errors for invalid inputs
-
----
-
-## Usage
+Engine modules are designed for unit testing:
 
 ```python
-from scoring_engine import score_event
-from trigger_engine import evaluate_trigger
+# test_scoring.py
+from engine.scoring_engine import compute_score
 
-# Score an event
-event_card = {...}
-score_result = score_event(event_card)
-
-# Check if full analysis should trigger
-trigger_data = {
-    "event_title": score_result["event_title"],
-    "score": score_result["score"],
-    "flags": {...}
-}
-trigger_result = evaluate_trigger(trigger_data)
+def test_shipping_disruption_score():
+    event = {"category": "shipping", "severity": "high"}
+    score = compute_score(event)
+    assert 7 <= score <= 9  # Should be high
 ```
 
 ---
 
-## About
-
-This is the **first executable layer** of Geo Market Watch.
-
-It bridges the gap between:
-- **Documentation** (docs/signal-scoring.md, docs/full-analysis-trigger.md)
-- **Implementation** (machine-executable Python code)
-
-Future releases will build upon these engines to create:
-- Automated event ingestion
-- Database integration
-- Dashboard visualization
-- Alert systems
+See [docs/architecture/code-structure.md](../docs/architecture/code-structure.md) for full architecture details.

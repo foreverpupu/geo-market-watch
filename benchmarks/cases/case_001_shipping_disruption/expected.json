@@ -1,0 +1,43 @@
+{
+  "normalized_event": {
+    "event_id": "case_001_normalized",
+    "headline": "Red Sea shipping disruption escalates as carriers reroute vessels",
+    "summary": "Major shipping lines announce rerouting around Africa due to security concerns in the Red Sea, adding 10-14 days to transit times.",
+    "region": "Middle East",
+    "category": "shipping",
+    "severity": "high",
+    "timestamp": "2026-03-15T08:00:00Z"
+  },
+  "score": {
+    "value": 8,
+    "band": "high",
+    "min_expected": 7,
+    "max_expected": 9
+  },
+  "escalation": {
+    "decision": "full_analysis",
+    "rationale": "Supply chain disruption with clear market transmission"
+  },
+  "expected_outputs": {
+    "sectors": ["shipping", "energy", "insurance", "retail"],
+    "watchlist_items": [
+      {
+        "asset": "Baltic Dry Index",
+        "trigger": "Sustained >2000",
+        "invalidation": "Normalization <1500"
+      },
+      {
+        "asset": "LNG Spot Rates",
+        "trigger": "+30% from baseline",
+        "invalidation": "Return to pre-crisis levels"
+      }
+    ],
+    "trade_ideas": [
+      {
+        "direction": "long",
+        "target": "LNG carriers",
+        "thesis": "Supply constraint from longer voyages"
+      }
+    ]
+  }
+}

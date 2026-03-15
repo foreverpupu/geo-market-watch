@@ -1,297 +1,146 @@
 # Contributing to Geo Market Watch
 
-Thank you for your interest in contributing to Geo Market Watch.
-
-This project aims to build a structured framework that converts geopolitical
-events into actionable market observation signals. Contributions are welcome
-from developers, researchers, analysts, and domain experts.
-
-Before contributing, please read the guidelines below to ensure consistency
-with the project's methodology and engineering standards.
+Thank you for your interest in contributing! This document provides guidelines for contributing to the project.
 
 ---
 
-# Project Philosophy
-
-Geo Market Watch is designed around three core principles:
-
-1. **Structured intelligence over narrative commentary**
-2. **Event-driven analysis**
-3. **Explicit trigger and invalidation logic**
-
-The repository prioritizes:
-
-- reproducible analytical structure
-- machine-readable outputs
-- clear separation between facts and interpretation
-- long-term maintainability
-
-Contributors should preserve these principles when proposing changes.
-
----
-
-# Types of Contributions
-
-We welcome several categories of contributions.
-
-## 1. Documentation improvements
-
-Examples:
-
-- clarifying methodology explanations
-- improving architecture documentation
-- expanding the roadmap
-- improving examples
-
-Relevant directories:
-
-```
-docs/
-README.md
-```
-
----
-
-## 2. Schema improvements
-
-The project relies on JSON schemas for structured data contracts.
-
-Schemas are located in:
-
-```
-schemas/
-```
-
-Current schemas:
-
-- `event-object.json`
-- `watchlist-item.json`
-- `analysis-output.json`
-
-Possible improvements:
-
-- new optional fields
-- better enum definitions
-- validation tightening
-- schema documentation
-
-**Important:** 
-Breaking schema changes should be discussed in an issue before submitting a PR.
-
----
-
-## 3. Example data improvements
-
-Example payloads demonstrate how schemas are intended to be used.
-
-Location:
-
-```
-examples/schema-examples/
-```
-
-Examples include:
-
-- event objects
-- watchlist items
-- full analysis outputs
-
-Example contributions:
-
-- additional scenario cases
-- fog-of-war examples
-- multi-event examples
-- commodity supply disruption cases
-
----
-
-## 4. Tooling and engineering improvements
-
-Engineering contributions may include:
-
-- validation tooling
-- CI improvements
-- testing scripts
-- workflow automation
-- schema validation utilities
-
-Relevant directories:
-
-```
-tests/
-.github/workflows/
-```
-
----
-
-## 5. Methodology improvements
-
-Changes to the analytical framework should be approached carefully.
-
-Relevant files:
-
-```
-SKILL.md
-docs/methodology.md
-```
-
-Potential contributions:
-
-- improved scenario frameworks
-- better propagation logic
-- improved trigger design patterns
-
-Major methodological changes should always be discussed in an issue first.
-
----
-
-# Development Setup
+## Development Setup
 
 Clone the repository:
 
 ```bash
-git clone https://github.com/<your-org>/geo-market-watch.git
+git clone https://github.com/foreverpupu/geo-market-watch.git
 cd geo-market-watch
 ```
 
-Install validation dependencies:
+Install dependencies:
 
 ```bash
-pip install -r tests/schema_validation/requirements.txt
+pip install -r requirements.txt
 ```
 
-Run schema validation:
+Run schema validation tests:
 
 ```bash
-python tests/schema_validation/validate_examples.py
+pytest tests/schema_validation
 ```
 
-All validations should pass before submitting a pull request.
+Run pipeline tests:
 
----
-
-# Schema Validation
-
-The repository includes automated validation to ensure example data matches
-the JSON schema definitions.
-
-Validation checks:
-- schema structure integrity
-- example JSON correctness
-- cross-file `$ref` resolution
-
-Validation script:
-
-```
-tests/schema_validation/validate_examples.py
-```
-
-Validation must pass locally and in CI.
-
----
-
-# Pull Request Guidelines
-
-When submitting a PR:
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Run schema validation
-5. Submit a pull request
-
-Branch naming suggestions:
-
-```
-feature/<topic>
-docs/<topic>
-schema/<topic>
-tooling/<topic>
-```
-
-Example:
-
-```
-feature/add-commodity-shock-example
-schema/add-policy-node-type
-docs/improve-propagation-logic
+```bash
+python tests/pipeline/test_pipeline.py
 ```
 
 ---
 
-# Commit Message Guidelines
+## Contribution Types
 
-Use clear commit messages describing the change.
+We welcome contributions in the following areas:
 
-Recommended format:
+- **Bug fixes** — Fix issues in existing code
+- **Documentation improvements** — Clarify, expand, or correct docs
+- **Benchmark cases** — Add new test cases to the benchmark suite
+- **Pipeline tests** — Add regression tests for core workflows
+- **Automation integrations** — Connect external data sources or tools
+- **Research methodology extensions** — Improve analysis approaches
 
-```
-type: short description
-```
-
-Examples:
-
-```
-docs: clarify propagation mapping example
-schema: add optional commodity_flow node type
-tests: add additional validation example
-ci: add schema validation workflow
-```
-
-Common types:
-- `docs`
-- `schema`
-- `tests`
-- `ci`
-- `tooling`
-- `chore`
+Large architectural changes should be discussed in an issue before submitting a PR.
 
 ---
 
-# Review Expectations
+## How to Contribute
 
-Pull requests will be reviewed based on:
-- alignment with project philosophy
-- schema consistency
-- documentation clarity
-- backward compatibility
-- engineering quality
+### Reporting Issues
 
-Contributors may be asked to revise proposals before merging.
+If you find a bug or have a suggestion:
+
+1. Check if the issue already exists
+2. Create a new issue with:
+   - Clear title and description
+   - Steps to reproduce (for bugs)
+   - Expected vs actual behavior
+   - Your environment (OS, Python version)
+
+### Submitting Changes
+
+1. **Fork the repository**
+2. **Create a feature branch**
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+
+3. **Make your changes**
+   - Follow existing code style
+   - Add tests for new functionality
+   - Update documentation as needed
+
+4. **Test your changes**
+   ```bash
+   # Run tests
+   pytest tests/
+   
+   # Run specific test file
+   pytest tests/schema_validation/test_event_object.py
+   ```
+
+5. **Commit with clear messages**
+   ```bash
+   git commit -m "Add: feature description"
+   ```
+
+6. **Push and create Pull Request**
+   ```bash
+   git push origin feature/your-feature-name
+   ```
+
+### Pull Request Guidelines
+
+- **Title:** Clear, concise description of changes
+- **Description:** Explain what and why
+- **Tests:** Include tests for new functionality
+- **Documentation:** Update relevant docs
+- **Breaking Changes:** Clearly mark if any
+
+### Code Style
+
+- Follow PEP 8 for Python code
+- Use meaningful variable names
+- Add docstrings for functions
+- Keep functions focused and small
+
+### Documentation
+
+- Update README.md if adding major features
+- Add to docs/ for detailed explanations
+- Include examples where helpful
+- Update CHANGELOG.md
 
 ---
 
-# Reporting Issues
+## Development Areas
 
-If you encounter problems or have improvement ideas, please open an issue.
+### Priority Areas
 
-**Suggested issue categories:**
-- schema discussion
-- methodology improvement
-- tooling bug
-- documentation clarification
-- feature proposal
+1. **Benchmark Expansion** — Add more test cases
+2. **Documentation** — Improve clarity and coverage
+3. **Testing** — Increase test coverage
+4. **Performance** — Optimize processing speed
 
-**When possible, include:**
-- example input
-- expected behavior
-- current behavior
+### Good First Issues
 
----
-
-# Code of Conduct
-
-Please maintain a professional and constructive tone when interacting
-with other contributors.
-
-Respect different perspectives and focus discussions on improving
-the project.
+Look for issues labeled:
+- `good first issue`
+- `documentation`
+- `help wanted`
 
 ---
 
-# Acknowledgment
+## Questions?
 
-Every contribution—whether documentation, schema design, or tooling—helps
-improve the robustness of the Geo Market Watch framework.
+- Open an issue for questions
+- Check existing documentation
+- Review closed issues for similar questions
 
-Thank you for helping build a structured geopolitical intelligence system.
+---
+
+Thank you for contributing to Geo Market Watch!
