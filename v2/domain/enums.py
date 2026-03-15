@@ -82,3 +82,30 @@ class ExposureHorizon(str, Enum):
     WEEKS = "weeks"
     MONTHS = "months"
     STRUCTURAL = "structural"
+
+
+class SignalClass(str, Enum):
+    """信号等级。"""
+    MAJOR_SHOCK = "major_shock"
+    HIGH_PRIORITY = "high_priority"
+    WATCHLIST_UPGRADE = "watchlist_upgrade"
+    MONITOR = "monitor"
+    LOW_SIGNAL = "low_signal"
+
+
+class SignalStatus(str, Enum):
+    """信号状态。"""
+    GENERATED = "generated"
+    QUEUED = "queued"
+    CONFIRMED = "confirmed"
+    DISMISSED = "dismissed"
+    ARCHIVED = "archived"
+
+
+class QueueType(str, Enum):
+    """队列类型。"""
+    TRIAGE = "triage"
+    ACTIVE_EVENT = "active_event"
+    CONFLICT = "conflict"
+    WATCHLIST = "watchlist"
+    POSTMORTEM = "postmortem"

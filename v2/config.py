@@ -77,3 +77,64 @@ class ExposureConfig:
 
 # 默认 exposure 配置
 DEFAULT_EXPOSURE_CONFIG = ExposureConfig()
+
+
+@dataclass(frozen=True)
+class RankingConfig:
+    """Ranking 配置类。"""
+    
+    # 特征权重
+    severity_weight: float = 0.22
+    market_relevance_weight: float = 0.20
+    novelty_weight: float = 0.16
+    confidence_weight: float = 0.14
+    breadth_weight: float = 0.14
+    urgency_weight: float = 0.14
+    
+    # Boost 和 Penalty
+    watchlist_boost_max: float = 0.10
+    analyst_interest_boost_max: float = 0.08
+    duplicate_penalty: float = 0.10
+    low_evidence_penalty: float = 0.15
+    
+    # 优先级阈值（动态配置）
+    major_shock_threshold: float = 0.80
+    high_priority_threshold: float = 0.65
+    watchlist_upgrade_threshold: float = 0.50
+    monitor_threshold: float = 0.35
+    low_signal_threshold: float = 0.10
+    
+    # 冲突路由配置
+    conflict_confidence_gap_threshold: float = 0.15
+    mixed_exposure_threshold: float = 0.15
+    
+    # Novelty 时间衰减
+    novelty_decay_hours: float = 24.0
+    novelty_min_score: float = 0.20
+    
+    # Market Relevance 资产增强
+    tradable_asset_boost: float = 1.2
+    
+    # 事件类型默认严重度
+    event_type_severity_defaults: dict = None
+    
+    def __post_init__(self):
+        if self.event_type_severity_defaults is None:
+            object.__setattr__(
+                self,
+                'event_type_severity_defaults',
+                {
+                    "shipping_disruption": 0.70,
+                    "port_closure": 0.62,
+                    "sanction": 0.68,
+                    "export_control": 0.66,
+                    "military_strike": 0.85,
+                    "labor_strike": 0.55,
+                    "infrastructure_outage": 0.60,
+                    "commodity_supply_shock": 0.78,
+                }
+            )
+
+
+# 默认 ranking 配置
+DEFAULT_RANKING_CONFIG = RankingConfig()

@@ -177,3 +177,64 @@ class ExposureResult:
     graph_exposures: list[Exposure]
     aggregated_exposures: list[Exposure]
     net_exposure_summaries: list[NetExposureSummary]
+
+
+@dataclass
+class RankingFeatureSet:
+    """Ranking 特征集。"""
+    severity_score: float
+    market_relevance_score: float
+    novelty_score: float
+    confidence_score: float
+    breadth_score: float
+    urgency_score: float
+    watchlist_match_score: float = 0.0
+    analyst_interest_boost: float = 0.0
+    duplicate_penalty: float = 0.0
+    low_evidence_penalty: float = 0.0
+    metadata: dict = field(default_factory=dict)
+
+
+@dataclass
+class SignalScoreBreakdown:
+    """信号分数拆解。"""
+    base_score: float
+    watchlist_boost: float
+    analyst_interest_boost: float
+    duplicate_penalty: float
+    low_evidence_penalty: float
+    final_score: float
+    formula_trace: str
+    feature_contributions: dict = field(default_factory=dict)
+    exposure_contributions: dict = field(default_factory=dict)
+
+
+@dataclass
+class Signal:
+    """信号对象。"""
+    signal_id: str
+    event_id: str
+    signal_class: str
+    rank_score: float
+    severity_score: float
+    market_relevance_score: float
+    novelty_score: float
+    confidence_score: float
+    breadth_score: float
+    urgency_score: float
+    watchlist_match_score: float
+    assigned_queue: str
+    status: str
+    summary_text: str
+    reasoning_trace: str
+    generated_at: datetime
+    metadata: dict = field(default_factory=dict)
+
+
+@dataclass
+class SignalResult:
+    """Signal 完整结果。"""
+    event: CanonicalEvent
+    signal: Signal
+    features: RankingFeatureSet
+    breakdown: SignalScoreBreakdown
