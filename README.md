@@ -48,24 +48,52 @@ Raw Event → Normalization → Scoring → Escalation → Analysis → Review �
 
 ---
 
-## Repository Status
+## System Status & Project Scope
 
-Geo Market Watch is currently a **research framework with a runnable local pipeline**, not a hosted production system.
+### Current State
 
-**It includes:**
-- A structured event → analysis → monitoring workflow
-- A local agent loop for event processing
-- A lightweight SQLite-based Geo Alpha database
-- An analyst review and lifecycle tracking layer
-- Paper performance tracking for idea evaluation
+Geo Market Watch is a **local-first research framework** with a functional, runnable pipeline. It is not a hosted service or turnkey product.
 
-**It does NOT currently include:**
-- Live RSS/API ingestion pipelines
-- A persistent background scheduler
-- Hosted APIs or dashboards
-- Multi-user orchestration services
+**Core Capabilities (Implemented):**
+| Component | Status | Description |
+|-----------|--------|-------------|
+| Event Normalization | ✅ Stable | Convert raw inputs to structured event cards |
+| Signal Scoring | ✅ Stable | Deterministic 0-10 impact scoring |
+| Database Layer | ✅ Stable | SQLite persistence with query interface |
+| Exposure Mapping | ✅ Beta | Event → sector → company mapping |
+| Analyst Review | ✅ Beta | Human-in-the-loop approval workflow |
+| Performance Tracking | ✅ Beta | Paper-trade evaluation |
+| Benchmark Suite | ✅ Beta | 5 test cases with deterministic validation |
 
-The project is designed as a **foundation for building geopolitical event intelligence systems**, not a turnkey investment product.
+**Not in Scope (Current):**
+| Feature | Reason | Future |
+|---------|--------|--------|
+| Live RSS/API ingestion | Requires external service integration | v7.0 (extensible) |
+| Persistent scheduler | No daemon/background process | User's cron/systemd |
+| Hosted API | No cloud infrastructure | Self-hosted option |
+| Multi-user backend | Single-user SQLite design | PostgreSQL migration path |
+
+### Design Philosophy
+
+**Local-First:** All data stays on your machine. No external dependencies required for core functionality.
+
+**Explicit Over Implicit:** Every transformation is logged, scored, and reviewable. No black-box algorithms.
+
+**Composable:** Use only the layers you need. Database without agent loop. Scoring without exposure mapping.
+
+**Deterministic:** Same input → same output. Enables testing, benchmarking, and reproducible research.
+
+### Maturity Assessment
+
+| Layer | Maturity | Notes |
+|-------|----------|-------|
+| Data (v6.0) | Production | Stable schema, tested migrations |
+| Agent (v5.5) | Production | Deterministic scoring, reliable triggers |
+| Intelligence (v6.2) | Beta | Exposure mappings need domain tuning |
+| Research (v6.4) | Beta | Review workflows functional, UI minimal |
+| Observability (v6.6) | Beta | Logging complete, automated insights pending |
+
+**Recommendation:** Use for research and prototyping. Production deployment requires additional hardening (monitoring, backup, access control).
 
 ---
 
