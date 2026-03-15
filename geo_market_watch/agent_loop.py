@@ -5,56 +5,40 @@ Runs the full 4-node processing pipeline in a single process.
 """
 
 import os
-import sys
+import json
 from pathlib import Path
-from typing import Dict, Any, List
+from datetime import datetime
+from typing import Dict, Any, List, Optional
 
-# Add engine directory to path
-sys.path.insert(0, str(Path(__file__).parent))
+from geo_market_watch.intake_normalizer import IntakeNormalizer
+from geo_market_watch.dedupe_memory import DedupeMemory
+from geo_market_watch.scoring_engine import ScoringEngine
+from geo_market_watch.trigger_engine import TriggerEngine
+from geo_market_watch.models import (
+    NormalizedEvent,
+    ScoreResult,
+    TriggerResult,
+    AgentRunSummary,
+)
 
-from intake_normalizer import load_intake_file, normalize_intake_batch
-from dedupe_memory import load_dedupe_memory
-from scoring_engine import score_event
-from trigger_engine import evaluate_trigger
-from notifier import render_notification, write_notification
 
-
-def process_event(event: Dict[str, Any]) -> Dict[str, Any]:
-    """
-    Process a single event through scoring and trigger engines.
+def load_intake_file(intake_path: str) -> List[Dict[str, Any]]:
+    """Load intake items from JSON file."""
+    with open(intake_path, 'r', encoding='utf-8') as f:
+        data = json.load(f)
     
-    Args:
-        event: Normalized event dict
-        
-    Returns:
-        Enriched event dict with score, band, and trigger info
-    """
-    # Run scoring engine
-    score_result = score_event(event)
-    event['score'] = score_result['score']
-    event['band'] = score_result['band']
-    
-    # Run trigger engine
-    trigger_data = {
-        "event_title": event['event_title'],
-        "score": event['score'],
-        "flags": event.get('flags', {})
-    }
-    trigger_result = evaluate_trigger(trigger_data)
-    event['trigger_full_analysis'] = trigger_result['trigger_full_analysis']
-    event['trigger_reasons'] = trigger_result['reasons']
-    
-    return event
+    # Support both {items: [...]} and [...] formats
+    if isinstance(data, dict) and 'items' in data:
+        return data['items']
+    elif isinstance(data, list):
+        return data
+    else:
+        raise ValueError(f"Unexpected intake format: {type(data)}")
 
 
-def ensure_directories(intake_path: str, dedupe_memory_path: str, output_dir: str = None):
+def ensure_directories(intake_path: str, dedupe_memory_path: str, output_dir: Optional[str] = None):
     """
     Ensure all required directories exist.
-    
-    Creates parent directories for:
-    - intake file (if path provided)
-    - dedupe memory file
-    - output directory (if provided)
     """
     # Ensure intake file parent directory exists
     if intake_path:
@@ -76,8 +60,9 @@ def ensure_directories(intake_path: str, dedupe_memory_path: str, output_dir: st
 def run_agent_loop(
     intake_path: str,
     dedupe_memory_path: str,
-    output_dir: str = None
-) -> Dict[str, Any]:
+    output_dir: Optional[str] = None,
+    current_time: Optional[datetime] = None
+) -> AgentRunSummary:
     """
     Run the full agent loop.
 
@@ -86,8 +71,8 @@ def run_agent_loop(
     2. Load raw intake file
     3. Normalize intake items
     4. Load dedupe memory
-    5. Split new vs duplicate events
-    6. For each new event: compute score, trigger, render notification
+    5. Check for duplicates
+    6. For each new event: compute score, trigger
     7. Update dedupe memory
     8. Return run summary
 
@@ -95,82 +80,121 @@ def run_agent_loop(
         intake_path: Path to intake JSON file
         dedupe_memory_path: Path to dedupe memory JSON file
         output_dir: Optional directory to write notification files
+        current_time: Optional time reference for reproducibility
 
     Returns:
-        Run summary dict
+        AgentRunSummary with full execution details
     """
-    # Step 0: Ensure directories exist
-    ensure_directories(intake_path, dedupe_memory_path, output_dir)
+    run_id = f"run_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+    started_at = current_time or datetime.now()
+    
+    summary = AgentRunSummary(
+        run_id=run_id,
+        started_at=started_at
+    )
+    
+    try:
+        # Step 0: Ensure directories exist
+        ensure_directories(intake_path, dedupe_memory_path, output_dir)
 
-    # Step 1 & 2: Load and normalize intake
-    raw_items = load_intake_file(intake_path)
-    normalized_events = normalize_intake_batch(raw_items)
-    
-    # Step 3: Load dedupe memory
-    memory = load_dedupe_memory(dedupe_memory_path)
-    
-    # Step 4: Split new vs duplicate
-    new_events, duplicate_events = memory.split_events(normalized_events)
-    
-    # Step 5: Process new events
-    monitor_count = 0
-    full_analysis_count = 0
-    processed_events = []
-    
-    for event in new_events:
-        # Compute score and trigger
-        enriched_event = process_event(event)
-        processed_events.append(enriched_event)
+        # Step 1: Load intake file
+        raw_items = load_intake_file(intake_path)
+        summary.items_processed = len(raw_items)
         
-        # Count outcomes
-        if enriched_event['trigger_full_analysis']:
-            full_analysis_count += 1
-        else:
-            monitor_count += 1
+        # Step 2: Initialize engines
+        normalizer = IntakeNormalizer(current_time=started_at)
+        dedupe_memory = DedupeMemory(dedupe_memory_path)
+        scoring_engine = ScoringEngine()
+        trigger_engine = TriggerEngine()
         
-        # Render and optionally write notification
-        if output_dir:
-            filepath = write_notification(enriched_event, output_dir)
-            enriched_event['notification_path'] = filepath
-    
-    # Step 6: Update dedupe memory
-    memory.save()
-    
-    # Step 7: Return summary
-    summary = {
-        "intake_count": len(raw_items),
-        "normalized_count": len(normalized_events),
-        "new_event_count": len(new_events),
-        "duplicate_event_count": len(duplicate_events),
-        "monitor_count": monitor_count,
-        "full_analysis_count": full_analysis_count,
-        "processed_events": processed_events
-    }
-    
-    return summary
+        # Step 3: Normalize events
+        normalized_events: List[NormalizedEvent] = []
+        for raw in raw_items:
+            try:
+                event = normalizer.normalize(raw)
+                normalized_events.append(event)
+            except Exception as e:
+                summary.errors.append(f"Failed to normalize item: {e}")
+        
+        summary.items_normalized = len(normalized_events)
+        
+        # Step 4 & 5: Check duplicates and process new events
+        new_events = []
+        duplicate_count = 0
+        
+        for event in normalized_events:
+            is_dup, reason = dedupe_memory.check_duplicate(event, current_time=started_at)
+            if is_dup:
+                duplicate_count += 1
+            else:
+                new_events.append(event)
+        
+        summary.items_deduped = duplicate_count
+        
+        # Step 6: Score and trigger new events
+        monitor_count = 0
+        full_analysis_count = 0
+        
+        for event in new_events:
+            try:
+                # Score event
+                score_result = scoring_engine.compute_score(event)
+                summary.items_scored += 1
+                
+                # Check trigger
+                context = {
+                    "category": event.category,
+                    "severity": event.severity,
+                }
+                trigger_result = trigger_engine.should_escalate(score_result, context)
+                
+                if trigger_result.trigger_full_analysis:
+                    full_analysis_count += 1
+                else:
+                    monitor_count += 1
+                
+                summary.items_triggered += 1
+                
+            except Exception as e:
+                summary.errors.append(f"Failed to process event {event.event_id}: {e}")
+        
+        summary.notifications_generated = full_analysis_count
+        summary.completed_at = datetime.now()
+        
+        return summary
+        
+    except Exception as e:
+        summary.errors.append(f"Agent loop failed: {e}")
+        summary.completed_at = datetime.now()
+        return summary
 
 
-def print_summary(summary: Dict[str, Any]):
+def print_summary(summary: AgentRunSummary):
     """Print run summary to stdout."""
     print("=" * 60)
     print("Geo Market Watch v5.5 — Agent Loop Summary")
     print("=" * 60)
     print()
-    print(f"Intake items: {summary['intake_count']}")
-    print(f"Normalized events: {summary['normalized_count']}")
+    print(f"Run ID: {summary.run_id}")
+    print(f"Started: {summary.started_at}")
+    if summary.completed_at:
+        print(f"Completed: {summary.completed_at}")
+        print(f"Duration: {summary.duration_seconds:.2f}s")
     print()
-    print(f"New events: {summary['new_event_count']}")
-    print(f"Duplicate events: {summary['duplicate_event_count']}")
+    print(f"Items processed: {summary.items_processed}")
+    print(f"Items normalized: {summary.items_normalized}")
+    print(f"Items deduped: {summary.items_deduped}")
+    print(f"Items scored: {summary.items_scored}")
+    print(f"Items triggered: {summary.items_triggered}")
     print()
-    print(f"Monitor outcomes: {summary['monitor_count']}")
-    print(f"Full Analysis outcomes: {summary['full_analysis_count']}")
-    print()
+    print(f"Notifications generated: {summary.notifications_generated}")
+    print(f"Success: {summary.success}")
     
-    if summary['processed_events']:
-        print("Processed Events:")
-        for event in summary['processed_events']:
-            trigger_status = "→ Full Analysis" if event['trigger_full_analysis'] else "→ Monitor"
-            print(f"  • {event['event_title'][:50]}... (Score: {event['score']}) {trigger_status}")
+    if summary.errors:
+        print()
+        print("Errors:")
+        for error in summary.errors:
+            print(f"  - {error}")
     
     print()
     print("=" * 60)
@@ -179,7 +203,6 @@ def print_summary(summary: Dict[str, Any]):
 if __name__ == "__main__":
     # Example usage
     import tempfile
-    import json
     
     # Create sample intake file
     sample_intake = {
@@ -188,23 +211,19 @@ if __name__ == "__main__":
                 "source_name": "Reuters",
                 "source_url": "https://example.com/red-sea",
                 "published_at": "2024-01-12",
-                "headline": "Red Sea shipping disruption",
+                "headline": "Red Sea shipping disruption escalates as Houthis target more vessels",
                 "region": "Middle East",
-                "category": "Maritime disruption",
+                "category": "shipping",
                 "summary": "Major container lines reroute vessels.",
-                "indicators": {"physical_disruption": 1, "transport_impact": 2, "policy_sanctions": 0, "market_transmission": 1, "escalation_risk": 1},
-                "flags": {"confirmed_supply_disruption": False, "strategic_transport_disruption": True, "major_sanctions_escalation": False, "military_escalation": False}
             },
             {
                 "source_name": "Bloomberg",
                 "source_url": "https://example.com/russia-oil",
                 "published_at": "2023-12-15",
-                "headline": "Russia expands oil export restrictions",
+                "headline": "Russia expands oil export restrictions amid sanctions",
                 "region": "Eastern Europe",
-                "category": "Energy policy",
+                "category": "energy",
                 "summary": "Russia expands restrictions affecting energy exports.",
-                "indicators": {"physical_disruption": 2, "transport_impact": 1, "policy_sanctions": 2, "market_transmission": 2, "escalation_risk": 1},
-                "flags": {"confirmed_supply_disruption": True, "strategic_transport_disruption": False, "major_sanctions_escalation": True, "military_escalation": False}
             }
         ]
     }
@@ -221,7 +240,4 @@ if __name__ == "__main__":
         summary = run_agent_loop(intake_path, memory_path, output_path)
         print_summary(summary)
         
-        print(f"\nOutput files written to: {output_path}")
-        if os.path.exists(output_path):
-            for f in os.listdir(output_path):
-                print(f"  - {f}")
+        print(f"\nOutput directory: {output_path}")

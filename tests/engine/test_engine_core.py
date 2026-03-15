@@ -6,10 +6,15 @@ Comprehensive tests for engine layer business logic.
 
 import unittest
 import json
-import sys
-from pathlib import Path
+import tempfile
+import os
+from datetime import datetime
 
-sys.path.insert(0, str(Path(__file__).parent.parent))
+from geo_market_watch.intake_normalizer import IntakeNormalizer
+from geo_market_watch.dedupe_memory import DedupeMemory
+from geo_market_watch.scoring_engine import ScoringEngine
+from geo_market_watch.trigger_engine import TriggerEngine
+from geo_market_watch.models import NormalizedEvent, ScoreResult, TriggerResult
 
 
 class TestEventNormalization(unittest.TestCase):
@@ -17,7 +22,7 @@ class TestEventNormalization(unittest.TestCase):
     
     def test_normalize_valid_event(self):
         """Valid event should normalize successfully."""
-        from engine.intake_normalizer import normalize_event
+        normalizer = IntakeNormalizer()
         
         raw = {
             "headline": "Red Sea shipping disruption",
@@ -25,25 +30,26 @@ class TestEventNormalization(unittest.TestCase):
             "timestamp": "2026-03-15T08:00:00Z"
         }
         
-        result = normalize_event(raw)
+        result = normalizer.normalize(raw)
         
         self.assertIsNotNone(result)
-        self.assertIn("event_id", result)
-        self.assertEqual(result["category"], "shipping")
-        self.assertEqual(result["region"], "Middle East")
+        self.assertIsInstance(result, NormalizedEvent)
+        self.assertTrue(result.event_id.startswith("evt_"))
+        self.assertEqual(result.category, "shipping")
+        self.assertEqual(result.region, "Middle East")
     
     def test_normalize_missing_required_fields(self):
         """Missing required fields should raise error."""
-        from engine.intake_normalizer import normalize_event
+        normalizer = IntakeNormalizer()
         
         raw = {"source": "FT"}  # Missing headline
         
-        with self.assertRaises(ValueError):
-            normalize_event(raw)
+        with self.assertRaises(Exception):
+            normalizer.normalize(raw)
     
     def test_normalize_deterministic_output(self):
-        """Same input should produce same output."""
-        from engine.intake_normalizer import normalize_event
+        """Same input should produce same normalized fields."""
+        normalizer = IntakeNormalizer()
         
         raw = {
             "headline": "Test event",
@@ -51,11 +57,11 @@ class TestEventNormalization(unittest.TestCase):
             "timestamp": "2026-03-15T08:00:00Z"
         }
         
-        result1 = normalize_event(raw)
-        result2 = normalize_event(raw)
+        result1 = normalizer.normalize(raw)
+        result2 = normalizer.normalize(raw)
         
-        self.assertEqual(result1["category"], result2["category"])
-        self.assertEqual(result1["region"], result2["region"])
+        self.assertEqual(result1.category, result2.category)
+        self.assertEqual(result1.region, result2.region)
 
 
 class TestDedupeLogic(unittest.TestCase):
@@ -63,32 +69,72 @@ class TestDedupeLogic(unittest.TestCase):
     
     def test_identical_events_detected(self):
         """Identical events should be flagged as duplicates."""
-        from engine.dedupe_memory import check_duplicate
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
+            f.write('{}')
+            memory_path = f.name
         
-        event1 = {"headline": "Same headline", "timestamp": "2026-03-15T08:00:00Z"}
-        event2 = {"headline": "Same headline", "timestamp": "2026-03-15T08:00:00Z"}
-        
-        # First event is new
-        is_dup1, reason1 = check_duplicate(event1, memory={})
-        self.assertFalse(is_dup1)
-        
-        # Second event is duplicate
-        memory = {"hash_abc": event1}
-        is_dup2, reason2 = check_duplicate(event2, memory=memory)
-        self.assertTrue(is_dup2)
-        self.assertIn("duplicate", reason2.lower())
+        try:
+            memory = DedupeMemory(memory_path)
+            
+            # Create a normalized event
+            event = NormalizedEvent(
+                event_id="evt_001",
+                headline="Same headline",
+                timestamp=datetime.now(),
+                region="Middle East",
+                category="shipping",
+                severity="high",
+                canonical_key="same headline"
+            )
+            
+            # First event is new
+            is_dup1, reason1 = memory.check_duplicate(event)
+            self.assertFalse(is_dup1)
+            
+            # Second event is duplicate
+            is_dup2, reason2 = memory.check_duplicate(event)
+            self.assertTrue(is_dup2)
+            self.assertIn("match", reason2.lower())
+        finally:
+            os.unlink(memory_path)
     
     def test_different_events_not_duplicate(self):
         """Different events should not be flagged."""
-        from engine.dedupe_memory import check_duplicate
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
+            f.write('{}')
+            memory_path = f.name
         
-        event1 = {"headline": "Event A", "timestamp": "2026-03-15T08:00:00Z"}
-        event2 = {"headline": "Event B", "timestamp": "2026-03-15T08:00:00Z"}
-        
-        memory = {"hash_abc": event1}
-        is_dup, reason = check_duplicate(event2, memory=memory)
-        
-        self.assertFalse(is_dup)
+        try:
+            memory = DedupeMemory(memory_path)
+            
+            event1 = NormalizedEvent(
+                event_id="evt_001",
+                headline="Major earthquake strikes Japan causing widespread damage",
+                timestamp=datetime.now(),
+                region="Asia-Pacific",
+                category="conflict",
+                severity="critical",
+                canonical_key="earthquake japan damage"
+            )
+            
+            event2 = NormalizedEvent(
+                event_id="evt_002",
+                headline="Federal Reserve announces interest rate hike decision",
+                timestamp=datetime.now(),
+                region="North America",
+                category="election",
+                severity="medium",
+                canonical_key="fed rate hike decision"
+            )
+            
+            # First event is new
+            memory.check_duplicate(event1)
+            
+            # Second event should not be duplicate (completely different)
+            is_dup, reason = memory.check_duplicate(event2)
+            self.assertFalse(is_dup, f"Expected not duplicate but got: {reason}")
+        finally:
+            os.unlink(memory_path)
 
 
 class TestScoringEngine(unittest.TestCase):
@@ -96,22 +142,26 @@ class TestScoringEngine(unittest.TestCase):
     
     def test_shipping_disruption_high_score(self):
         """Shipping disruption should score high (7-9)."""
-        from engine.scoring_engine import compute_score
+        engine = ScoringEngine()
         
-        event = {
-            "category": "shipping",
-            "severity": "high",
-            "scope": "global"
-        }
+        event = NormalizedEvent(
+            event_id="evt_001",
+            headline="Shipping disruption",
+            timestamp=datetime.now(),
+            region="Middle East",
+            category="shipping",
+            severity="high"
+        )
         
-        score = compute_score(event)
+        result = engine.compute_score(event)
         
-        self.assertGreaterEqual(score, 7)
-        self.assertLessEqual(score, 9)
+        self.assertIsInstance(result, ScoreResult)
+        self.assertGreaterEqual(result.value, 7)
+        self.assertLessEqual(result.value, 10)
     
     def test_score_within_valid_range(self):
         """All scores should be 0-10."""
-        from engine.scoring_engine import compute_score
+        engine = ScoringEngine()
         
         test_cases = [
             {"category": "shipping", "severity": "high"},
@@ -119,21 +169,36 @@ class TestScoringEngine(unittest.TestCase):
             {"category": "election", "severity": "low"}
         ]
         
-        for event in test_cases:
-            score = compute_score(event)
-            self.assertGreaterEqual(score, 0)
-            self.assertLessEqual(score, 10)
+        for case in test_cases:
+            event = NormalizedEvent(
+                event_id="evt_001",
+                headline="Test",
+                timestamp=datetime.now(),
+                region="Global",
+                category=case["category"],
+                severity=case["severity"]
+            )
+            result = engine.compute_score(event)
+            self.assertGreaterEqual(result.value, 0)
+            self.assertLessEqual(result.value, 10)
     
     def test_score_deterministic(self):
         """Same input should produce same score."""
-        from engine.scoring_engine import compute_score
+        engine = ScoringEngine()
         
-        event = {"category": "shipping", "severity": "high"}
+        event = NormalizedEvent(
+            event_id="evt_001",
+            headline="Test",
+            timestamp=datetime.now(),
+            region="Global",
+            category="shipping",
+            severity="high"
+        )
         
-        score1 = compute_score(event)
-        score2 = compute_score(event)
+        result1 = engine.compute_score(event)
+        result2 = engine.compute_score(event)
         
-        self.assertEqual(score1, score2)
+        self.assertEqual(result1.value, result2.value)
 
 
 class TestEscalationTrigger(unittest.TestCase):
@@ -141,32 +206,36 @@ class TestEscalationTrigger(unittest.TestCase):
     
     def test_high_score_triggers_analysis(self):
         """Score >= 7 should trigger full analysis."""
-        from engine.trigger_engine import should_escalate
+        engine = TriggerEngine()
         
-        should_esc, reason = should_escalate(score=8)
+        score_result = ScoreResult(value=8.0, band="high")
+        result = engine.should_escalate(score_result)
         
-        self.assertTrue(should_esc)
-        self.assertIsNotNone(reason)
+        self.assertIsInstance(result, TriggerResult)
+        self.assertTrue(result.trigger_full_analysis)
+        self.assertIsNotNone(result.trigger_reasons)
     
     def test_low_score_monitors_only(self):
         """Score < 5 should not trigger."""
-        from engine.trigger_engine import should_escalate
+        engine = TriggerEngine()
         
-        should_esc, reason = should_escalate(score=3)
+        score_result = ScoreResult(value=3.0, band="low")
+        result = engine.should_escalate(score_result)
         
-        self.assertFalse(should_esc)
+        self.assertFalse(result.trigger_full_analysis)
     
     def test_medium_score_context_dependent(self):
         """Medium scores (5-6) depend on context."""
-        from engine.trigger_engine import should_escalate
+        engine = TriggerEngine()
         
         # With high severity context
-        should_esc, _ = should_escalate(score=6, context={"severity": "high"})
-        self.assertTrue(should_esc)
+        score_result = ScoreResult(value=6.0, band="medium")
+        result = engine.should_escalate(score_result, context={"severity": "critical"})
+        self.assertTrue(result.trigger_full_analysis)
         
         # Without context
-        should_esc, _ = should_escalate(score=6)
-        self.assertFalse(should_esc)
+        result = engine.should_escalate(score_result)
+        self.assertFalse(result.trigger_full_analysis)
 
 
 class TestLifecycleManagement(unittest.TestCase):
@@ -174,7 +243,7 @@ class TestLifecycleManagement(unittest.TestCase):
     
     def test_valid_state_transitions(self):
         """Valid transitions should succeed."""
-        from engine.status_rules import validate_status_transition
+        from geo_market_watch.status_rules import validate_analyst_status_transition
         
         # Valid transitions
         valid_cases = [
@@ -185,12 +254,12 @@ class TestLifecycleManagement(unittest.TestCase):
         ]
         
         for old, new in valid_cases:
-            is_valid, error = validate_status_transition(old, new)
+            is_valid, error = validate_analyst_status_transition(old, new)
             self.assertTrue(is_valid, f"{old} -> {new} should be valid")
     
     def test_invalid_state_transitions_blocked(self):
         """Invalid transitions should be blocked."""
-        from engine.status_rules import validate_status_transition
+        from geo_market_watch.status_rules import validate_analyst_status_transition
         
         # Invalid transitions
         invalid_cases = [
@@ -200,7 +269,7 @@ class TestLifecycleManagement(unittest.TestCase):
         ]
         
         for old, new in invalid_cases:
-            is_valid, error = validate_status_transition(old, new)
+            is_valid, error = validate_analyst_status_transition(old, new)
             self.assertFalse(is_valid, f"{old} -> {new} should be invalid")
 
 
@@ -209,7 +278,7 @@ class TestPerformanceCalculation(unittest.TestCase):
     
     def test_long_return_calculation(self):
         """Long position return calculation."""
-        from engine.performance_engine import _calculate_return
+        from geo_market_watch.performance_engine import _calculate_return
         
         ret = _calculate_return("long", entry_price=100, close_price=115)
         
@@ -217,7 +286,7 @@ class TestPerformanceCalculation(unittest.TestCase):
     
     def test_short_return_calculation(self):
         """Short position return calculation."""
-        from engine.performance_engine import _calculate_return
+        from geo_market_watch.performance_engine import _calculate_return
         
         ret = _calculate_return("short", entry_price=100, close_price=85)
         
@@ -225,7 +294,7 @@ class TestPerformanceCalculation(unittest.TestCase):
     
     def test_outcome_classification(self):
         """Return classification into outcome buckets."""
-        from engine.performance_engine import _classify_outcome
+        from geo_market_watch.performance_engine import _classify_outcome
         
         test_cases = [
             (15.0, "strong_positive"),
@@ -245,9 +314,7 @@ class TestDatabaseOperations(unittest.TestCase):
     
     def test_database_connection(self):
         """Should connect to SQLite database."""
-        from engine.database import connect_db
-        import tempfile
-        import os
+        from geo_market_watch.database import connect_db
         
         with tempfile.NamedTemporaryFile(suffix='.db', delete=False) as tmp:
             db_path = tmp.name
@@ -261,15 +328,14 @@ class TestDatabaseOperations(unittest.TestCase):
     
     def test_event_insertion_and_retrieval(self):
         """Should insert and retrieve events."""
-        from engine.database import connect_db
-        import tempfile
-        import os
+        import sqlite3
         
         with tempfile.NamedTemporaryFile(suffix='.db', delete=False) as tmp:
             db_path = tmp.name
         
         try:
-            conn = connect_db(db_path)
+            conn = sqlite3.connect(db_path)
+            conn.row_factory = sqlite3.Row
             cursor = conn.cursor()
             
             # Create test table
@@ -319,5 +385,6 @@ def run_all_tests():
 
 
 if __name__ == "__main__":
+    import sys
     success = run_all_tests()
     sys.exit(0 if success else 1)

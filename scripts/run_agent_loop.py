@@ -9,10 +9,7 @@ import argparse
 import sys
 import os
 
-# Add parent directory to path for imports
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
-
-from engine.agent_loop import run_agent_loop, print_summary
+from geo_market_watch.agent_loop import run_agent_loop, print_summary
 
 
 def main():
