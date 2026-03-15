@@ -119,6 +119,50 @@ outputs/
 
 ---
 
+## Benchmark & Case Study
+
+### Evaluation Framework
+
+Geo Market Watch includes a deterministic benchmark suite for validating analysis quality:
+
+| Case | Category | Input → Output | Key Test |
+|------|----------|----------------|----------|
+| [Case 001](benchmarks/cases/case_001_shipping_disruption/) | Shipping Disruption | News headline → Trade ideas | Score: 8/10, Escalate: Yes |
+| [Case 002](benchmarks/cases/case_002_sanctions/) | Sanctions | Export controls → Sector exposure | Score: 7/10, Sectors: Tech |
+| [Case 003](benchmarks/cases/case_003_commodity_shock/) | Commodity Shock | Oil outage → Price impact | Score: 9/10, Return: +15% |
+| [Case 004](benchmarks/cases/case_004_military_escalation/) | Fog of War | Unverified reports → Monitor | Score: 5/10, Escalate: No |
+| [Case 005](benchmarks/cases/case_005_election_shock/) | Election Shock | Policy shift → Nationalization risk | Score: 8/10, Short: State-owned |
+
+**Run benchmarks:**
+```bash
+python tests/engine/test_engine_core.py
+```
+
+**Coverage:** 5 event categories, 20+ test assertions, deterministic validation
+
+### Case Study: Red Sea Shipping Disruption
+
+**Input:** "Major carriers announce rerouting around Africa due to Red Sea security concerns"
+
+**Processing:**
+```
+Raw Event → Normalized (Category: shipping, Region: Middle East)
+    ↓
+Scored: 8/10 (High severity, global scope, immediate impact)
+    ↓
+Escalated: Full analysis triggered
+    ↓
+Output: LNG carrier long thesis, +15% return tracked
+```
+
+**Result:**
+- ✅ Correctly identified supply constraint thesis
+- ✅ Recommended LNG carriers (Flex LNG +21% actual)
+- ⚠️ Underestimated container impact (+30% vs +50% expected)
+- 📊 Postmortem: [docs/operations/postmortem.md](docs/operations/postmortem.md)
+
+---
+
 ## Documentation Map
 
 **Product Overview**
