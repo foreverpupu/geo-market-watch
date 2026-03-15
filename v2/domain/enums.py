@@ -134,3 +134,17 @@ class WatchlistStatus(str, Enum):
     """Watchlist 项状态。"""
     ACTIVE = "active"
     ARCHIVED = "archived"
+
+
+class EventTypeCategory(str, Enum):
+    """事件类型分类。"""
+    DIRECTIONALITY = "directionality"  # 方向性事件（如关税）
+    VOLATILITY = "volatility"  # 波动性事件（如军事演习）
+
+
+class SignalUsefulnessRating(str, Enum):
+    """信号效用评级。"""
+    HIGH = "high"
+    MEDIUM = "medium"
+    LOW = "low"
+    FALSE_ALARM = "false_alarm"

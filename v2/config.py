@@ -162,3 +162,31 @@ class AnalystWorkflowConfig:
 
 # 默认 analyst workflow 配置
 DEFAULT_ANALYST_WORKFLOW_CONFIG = AnalystWorkflowConfig()
+
+
+@dataclass(frozen=True)
+class ReplayConfig:
+    """Replay 配置类。"""
+    
+    # 价格数据时间窗口（分钟）
+    price_window_before: int = 60
+    price_window_after: int = 240
+    
+    # 市场反应检测阈值
+    market_move_threshold: float = 0.02  # 2% 价格变动
+    volatility_spike_threshold: float = 1.5  # 波动率倍数
+    
+    # Lead time 计算参数
+    max_lead_time_minutes: int = 1440  # 24小时
+    
+    # 信号效用评估阈值
+    usefulness_threshold: float = 0.60
+    false_alarm_threshold: float = 0.20
+    
+    # 逻辑版本
+    prompt_version: str = "v1.0"
+    model_config_id: str = "default"
+
+
+# 默认 replay 配置
+DEFAULT_REPLAY_CONFIG = ReplayConfig()

@@ -291,3 +291,68 @@ class WatchlistEntry:
     status: str
     reason_for_watchlist: str
     metadata: dict = field(default_factory=dict)
+
+
+@dataclass
+class PricePoint:
+    """价格数据点（模拟数据）。"""
+    timestamp: datetime
+    symbol: str
+    price: float
+    volume: int
+    volatility: float | None = None  # 波动率
+
+
+@dataclass
+class EventTimeline:
+    """事件时间线。"""
+    event_id: str
+    signal_generated_at: datetime
+    price_points_before: list[PricePoint]
+    price_points_after: list[PricePoint]
+    market_reaction_detected_at: datetime | None
+    market_move_direction: str | None  # "up", "down", "neutral"
+    market_move_magnitude: float | None
+
+
+@dataclass
+class SignalUsefulnessMetrics:
+    """信号效用度指标。"""
+    signal_id: str
+    usefulness_score: float  # 0-1
+    usefulness_rating: str  # high, medium, low, false_alarm
+    lead_time_minutes: int | None  # T_market_move - T_signal_generated
+    prediction_error: float | None  # |predicted - actual|
+    is_false_alarm: bool
+    volatility_spike_match: bool  # 波动率预警是否匹配
+    market_move: float | None  # 实际市场变动
+    signal_move: float | None  # 信号预测变动
+    event_category: str  # directionality, volatility
+
+
+@dataclass
+class ReplayResult:
+    """回放结果。"""
+    replay_id: str
+    signal_id: str
+    event_id: str
+    prompt_version: str
+    model_config_id: str
+    timeline: EventTimeline
+    metrics: SignalUsefulnessMetrics
+    generated_at: datetime
+    metadata: dict = field(default_factory=dict)
+
+
+@dataclass
+class EvaluationResult:
+    """评估结果汇总。"""
+    total_signals: int
+    high_usefulness_count: int
+    medium_usefulness_count: int
+    low_usefulness_count: int
+    false_alarm_count: int
+    avg_lead_time_minutes: float | None
+    avg_prediction_error: float | None
+    volatility_accuracy: float  # 波动率预警准确率
+    directionality_accuracy: float  # 方向性预测准确率
