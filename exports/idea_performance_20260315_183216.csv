@@ -1,0 +1,1 @@
+trade_idea_id,company_name,ticker,direction,conviction,analyst_status,tracking_status,entry_price,entry_time,close_price,close_time,return_pct,benchmark_return_pct,alpha_spread_pct,outcome,holding_period_days,notes,idea_created_at,performance_updated_at

@@ -1,0 +1,36 @@
+[
+  {
+    "trade_idea_id": "7229fb66-b573-4fe9-845b-5ec7fa41823e",
+    "company_name": "Test Company",
+    "ticker": "TEST",
+    "direction": "long",
+    "conviction": "high",
+    "entry_price": 100.0,
+    "entry_time": "2026-03-15T09:30:00Z",
+    "close_price": 115.0,
+    "close_time": "2026-03-29T16:00:00Z",
+    "return_pct": 15.0,
+    "benchmark_return_pct": null,
+    "alpha_spread_pct": null,
+    "outcome": "win",
+    "holding_period_days": 14,
+    "notes": null
+  },
+  {
+    "trade_idea_id": "7fb5f267-a4d0-442c-9774-42ef9629eb05",
+    "company_name": "Short Test",
+    "ticker": "SHORT",
+    "direction": "short",
+    "conviction": "high",
+    "entry_price": 100.0,
+    "entry_time": "2026-03-15T09:30:00Z",
+    "close_price": 85.0,
+    "close_time": "2026-03-29T16:00:00Z",
+    "return_pct": 15.0,
+    "benchmark_return_pct": null,
+    "alpha_spread_pct": null,
+    "outcome": "win",
+    "holding_period_days": 14,
+    "notes": null
+  }
+]

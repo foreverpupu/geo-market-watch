@@ -10,7 +10,7 @@ from datetime import datetime
 from typing import Dict, Any, List, Optional, Tuple
 from pathlib import Path
 
-from database_models import CREATE_TABLES_SQL
+from .database_models import CREATE_TABLES_SQL
 
 
 def connect_db(db_path: str) -> sqlite3.Connection:

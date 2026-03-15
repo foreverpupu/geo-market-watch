@@ -2,103 +2,193 @@
 """
 Geo Market Watch v6.3 — List Active Ideas CLI
 
-List approved and active trade ideas.
+List and filter active trade ideas.
+
+Usage:
+    python scripts/list_active_ideas.py --db data/geo_alpha.db
+    python scripts/list_active_ideas.py --db data/geo_alpha.db --status pending_review
+    python scripts/list_active_ideas.py --db data/geo_alpha.db --all
 """
 
 import argparse
-import sqlite3
-from typing import List, Dict, Any
+import sys
+import json
+from pathlib import Path
+from datetime import datetime
+
+# Add parent directory to path for imports
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
+from engine.lifecycle_engine import get_active_ideas, get_ideas_by_status, get_lifecycle_history
+from engine.idea_review_engine import get_pending_reviews, get_review_statistics
+from engine.dashboard_views import (
+    get_approved_trade_ideas, 
+    get_pending_trade_ideas, 
+    get_invalidated_trade_ideas,
+    get_dashboard_snapshot
+)
 
 
-def get_active_ideas(db_path: str) -> List[Dict[str, Any]]:
-    """Get approved active trade ideas."""
-    conn = sqlite3.connect(db_path)
-    conn.row_factory = sqlite3.Row
-    
-    try:
-        cursor = conn.execute(
-            """
-            SELECT 
-                ti.trade_idea_id,
-                ti.event_id,
-                e.event_title,
-                ti.company_name,
-                ti.ticker,
-                ti.sector,
-                ti.direction,
-                ti.conviction,
-                ti.analyst_status,
-                ti.created_at
-            FROM trade_ideas ti
-            JOIN events e ON ti.event_id = e.event_id
-            WHERE ti.analyst_status = 'approved'
-            ORDER BY 
-                CASE ti.conviction 
-                    WHEN 'high' THEN 1 
-                    WHEN 'medium' THEN 2 
-                    WHEN 'low' THEN 3 
-                    ELSE 4 
-                END,
-                ti.created_at DESC
-            """
-        )
-        
-        return [dict(row) for row in cursor.fetchall()]
-        
-    finally:
-        conn.close()
-
-
-def format_table(ideas: List[Dict[str, Any]]) -> str:
-    """Format ideas as markdown table."""
-    if not ideas:
-        return "No active approved trade ideas."
-    
+def format_idea(idea: dict) -> str:
+    """Format a trade idea for display."""
     lines = [
-        "| Event | Company | Ticker | Direction | Conviction | Status |",
-        "|-------|---------|--------|-----------|------------|--------|"
+        f"  Trade ID: {idea.get('trade_idea_id', 'N/A')}",
+        f"  Company: {idea.get('company_name', 'N/A')} ({idea.get('ticker', 'N/A')})",
+        f"  Sector: {idea.get('sector', 'N/A')}",
+        f"  Direction: {idea.get('direction', 'N/A')} | Conviction: {idea.get('conviction', 'N/A')}",
+        f"  Status: {idea.get('analyst_status', 'N/A')} | Approval: {idea.get('approval_status', 'N/A')}",
     ]
     
-    for idea in ideas:
-        event = idea.get('event_title', 'Unknown')[:30]
-        company = idea.get('company_name', 'Unknown')
-        ticker = idea.get('ticker', '-')
-        direction = idea.get('direction', '-')
-        conviction = idea.get('conviction', '-')
-        status = idea.get('analyst_status', '-')
-        
-        lines.append(f"| {event}... | {company} | {ticker} | {direction} | {conviction} | {status} |")
+    if idea.get('thesis'):
+        thesis = idea['thesis'][:100] + "..." if len(idea['thesis']) > 100 else idea['thesis']
+        lines.append(f"  Thesis: {thesis}")
+    
+    lines.append(f"  Created: {idea.get('created_at', 'N/A')}")
     
     return "\n".join(lines)
 
 
 def main():
     parser = argparse.ArgumentParser(
-        description="List active approved trade ideas"
+        description="List active trade ideas",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+    # List all active ideas
+    python scripts/list_active_ideas.py --db data/geo_alpha.db
+
+    # List pending reviews
+    python scripts/list_active_ideas.py --db data/geo_alpha.db --status pending_review
+
+    # List approved ideas
+    python scripts/list_active_ideas.py --db data/geo_alpha.db --status approved
+
+    # Show statistics
+    python scripts/list_active_ideas.py --db data/geo_alpha.db --stats
+
+    # Output as JSON
+    python scripts/list_active_ideas.py --db data/geo_alpha.db --json
+        """
     )
+    
     parser.add_argument(
         "--db",
-        default="data/geo_alpha.db",
-        help="Path to SQLite database"
+        required=True,
+        help="Path to the SQLite database"
     )
     parser.add_argument(
-        "--format",
-        choices=["table", "json"],
-        default="table",
-        help="Output format"
+        "--status",
+        choices=["pending_review", "approved", "rejected", "invalidated", "closed"],
+        help="Filter by analyst status"
+    )
+    parser.add_argument(
+        "--all",
+        action="store_true",
+        help="List all ideas including closed/invalidated"
+    )
+    parser.add_argument(
+        "--stats",
+        action="store_true",
+        help="Show review statistics"
+    )
+    parser.add_argument(
+        "--json",
+        action="store_true",
+        help="Output as JSON"
+    )
+    parser.add_argument(
+        "--history",
+        help="Show lifecycle history for a specific trade idea ID"
+    )
+    parser.add_argument(
+        "--snapshot",
+        action="store_true",
+        help="Export full dashboard snapshot as JSON"
     )
     
     args = parser.parse_args()
     
-    ideas = get_active_ideas(args.db)
+    # Validate database exists
+    db_path = Path(args.db)
+    if not db_path.exists():
+        print(f"Error: Database not found: {args.db}")
+        sys.exit(1)
     
-    if args.format == "json":
-        import json
+    # Show statistics
+    if args.stats:
+        stats = get_review_statistics(str(db_path))
+        if args.json:
+            print(json.dumps(stats, indent=2))
+        else:
+            print("Review Statistics")
+            print("=" * 50)
+            print("\nBy Analyst Status:")
+            for status, count in stats.get("by_analyst_status", {}).items():
+                print(f"  {status}: {count}")
+            print("\nBy Approval Status:")
+            for status, count in stats.get("by_approval_status", {}).items():
+                print(f"  {status}: {count}")
+            print(f"\nTotal Reviews Submitted: {stats.get('total_reviews_submitted', 0)}")
+            print("\nReviews by Decision:")
+            for decision, count in stats.get("reviews_by_decision", {}).items():
+                print(f"  {decision}: {count}")
+        sys.exit(0)
+    
+    # Show lifecycle history
+    if args.history:
+        history = get_lifecycle_history(str(db_path), args.history)
+        if args.json:
+            print(json.dumps(history, indent=2))
+        else:
+            print(f"Lifecycle History: {args.history}")
+            print("=" * 50)
+            if not history:
+                print("No lifecycle events found.")
+            else:
+                for event in history:
+                    print(f"\n  [{event.get('created_at', 'N/A')}]")
+                    print(f"  Event: {event.get('event_type', 'N/A')}")
+                    if event.get('event_reason'):
+                        print(f"  Reason: {event.get('event_reason')}")
+        sys.exit(0)
+    
+    # Export dashboard snapshot
+    if args.snapshot:
+        snapshot = get_dashboard_snapshot(str(db_path))
+        print(json.dumps(snapshot, indent=2))
+        sys.exit(0)
+    
+    # Get ideas
+    if args.status:
+        ideas = get_ideas_by_status(str(db_path), args.status)
+        title = f"Trade Ideas: {args.status}"
+    elif args.all:
+        # Get all ideas - would need a new function, for now get active + rejected
+        ideas = get_active_ideas(str(db_path))
+        rejected = get_ideas_by_status(str(db_path), "rejected")
+        invalidated = get_ideas_by_status(str(db_path), "invalidated")
+        closed = get_ideas_by_status(str(db_path), "closed")
+        ideas = ideas + rejected + invalidated + closed
+        title = "All Trade Ideas"
+    else:
+        ideas = get_active_ideas(str(db_path))
+        title = "Active Trade Ideas"
+    
+    # Output
+    if args.json:
         print(json.dumps(ideas, indent=2))
     else:
-        print(f"Active Approved Trade Ideas: {len(ideas)}")
-        print()
-        print(format_table(ideas))
+        print(title)
+        print("=" * 50)
+        
+        if not ideas:
+            print("\nNo trade ideas found.")
+        else:
+            for i, idea in enumerate(ideas, 1):
+                print(f"\n[{i}]")
+                print(format_idea(idea))
+        
+        print(f"\nTotal: {len(ideas)} ideas")
 
 
 if __name__ == "__main__":

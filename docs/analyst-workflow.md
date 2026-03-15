@@ -1,163 +1,186 @@
-# Analyst Workflow — Geo Market Watch v6.3
+# Analyst Workflow Guide
 
 ## Overview
 
-Starting in v6.3, Geo Market Watch supports a full research workflow with analyst review and lifecycle management for trade ideas.
+The Geo Market Watch v6.3 analyst workflow transforms automatically generated trade ideas into a reviewable research process. This guide explains how analysts interact with the system.
 
-## Workflow Diagram
+## Workflow Stages
 
 ```
-Event Detected
-     ↓
-Sector Exposure Generated
-     ↓
-Company Exposure Generated
-     ↓
-Trade Idea Generated (status: pending_review)
-     ↓
-Analyst Review
-     ↓
-┌─────────────┬─────────────┬─────────────┐
-│   Approve   │   Reject    │   Monitor   │
-└─────────────┴─────────────┴─────────────┘
-     ↓              ↓              ↓
-  Approved      Rejected      Pending
-     ↓
-Lifecycle Tracking
-     ↓
-Invalidation / Closure
+Event Detection
+      ↓
+Sector Exposure Analysis
+      ↓
+Company Exposure Mapping
+      ↓
+Trade Idea Generation
+      ↓
+┌─────────────────┐
+│  PENDING REVIEW │ ← Analyst review required
+└─────────────────┘
+      ↓
+   ┌────┴────┐
+   ↓         ↓
+APPROVED   REJECTED
+   ↓
+┌────┴────┐
+↓         ↓
+ACTIVE   INVALIDATED/CLOSED
 ```
-
-## Review States
-
-### Pending Review
-- Initial state for all generated trade ideas
-- Awaiting analyst decision
-- Visible in pending dashboard
-
-### Approved
-- Analyst has approved the idea
-- Idea is active and tradeable
-- Tracked in active ideas list
-
-### Rejected
-- Analyst has rejected the idea
-- Requires review notes explaining why
-- No further transitions allowed
-
-### Invalidated
-- Approved idea no longer valid
-- Conditions have changed
-- Requires invalidation reason
-
-### Closed
-- Idea has been closed out
-- Position exited or thesis complete
-- Requires closure reason
 
 ## Review Decisions
 
-| Decision | Result | Notes Required |
-|----------|--------|----------------|
-| approve | Status → approved | Optional |
-| reject | Status → rejected | **Required** |
-| monitor | Status stays pending | Optional |
-| needs_revision | Status stays pending | **Required** |
+When reviewing a trade idea, analysts can choose from four decisions:
+
+| Decision | Description | Status Change | Notes Required |
+|----------|-------------|---------------|----------------|
+| **approve** | Idea passes review, ready for tracking | → approved | Optional |
+| **monitor** | Idea has potential but needs watching | → pending_review | Optional |
+| **reject** | Idea doesn't meet criteria | → rejected | **Required** |
+| **needs_revision** | Thesis needs more work | → pending_review | **Required** |
+
+**Note:** Review notes are mandatory for `reject` and `needs_revision` decisions to ensure feedback quality and audit trail completeness.
+
+### Confidence Levels
+
+- **low** - High uncertainty, speculative
+- **medium** - Reasonable confidence, some risks
+- **high** - Strong conviction, clear catalyst
 
 ## CLI Commands
 
-### Submit Review
+### Review an Idea
 
 ```bash
 python scripts/review_trade_ideas.py \
-  --db data/geo_alpha.db \
-  --idea-id TRADE_ID \
-  --reviewer analyst1 \
-  --decision approve \
-  --confidence medium \
-  --notes "Energy price risk justified"
+    --db data/geo_alpha.db \
+    --idea-id TRADE_ID \
+    --reviewer analyst_name \
+    --decision approve \
+    --confidence high \
+    --notes "Strong thesis, clear risk/reward"
 ```
 
 ### Quick Approve
 
 ```bash
 python scripts/approve_trade_idea.py \
-  --db data/geo_alpha.db \
-  --idea-id TRADE_ID \
-  --reviewer analyst1
+    --db data/geo_alpha.db \
+    --idea-id TRADE_ID \
+    --reviewer amy \
+    --confidence high \
+    --notes "Energy price risk justified"
 ```
 
-### Invalidate Idea
+### Invalidate an Idea
+
+When the thesis no longer holds:
 
 ```bash
 python scripts/invalidate_trade_idea.py \
-  --db data/geo_alpha.db \
-  --idea-id TRADE_ID \
-  --reason "Shipping traffic normalizing"
+    --db data/geo_alpha.db \
+    --idea-id TRADE_ID \
+    --reason "Shipping traffic normalized, disruption risk faded"
 ```
 
 ### List Active Ideas
 
 ```bash
+# All active ideas
 python scripts/list_active_ideas.py --db data/geo_alpha.db
+
+# Pending review
+python scripts/list_active_ideas.py --db data/geo_alpha.db --status pending_review
+
+# Approved ideas
+python scripts/list_active_ideas.py --db data/geo_alpha.db --status approved
+
+# Statistics
+python scripts/list_active_ideas.py --db data/geo_alpha.db --stats
+
+# Lifecycle history
+python scripts/list_active_ideas.py --db data/geo_alpha.db --history TRADE_ID
 ```
+
+## Review Guidelines
+
+### Approve When:
+- Clear geopolitical catalyst identified
+- Risk/reward is asymmetric
+- Invalidation conditions are specific
+- Conviction level matches thesis strength
+
+### Reject When:
+- Thesis is too vague or generic
+- Risk/reward is not favorable
+- No clear catalyst or timeline
+- Better opportunities exist
+
+### Monitor When:
+- Event is developing but not confirmed
+- Need more data on impact magnitude
+- Waiting for price action confirmation
+
+### Needs Revision When:
+- Good concept but thesis unclear
+- Missing key risk factors
+- Invalidation conditions too broad
+
+## Status Transitions
+
+### Allowed Transitions
+
+```
+pending_review → approved
+pending_review → rejected
+pending_review → invalidated
+
+approved → invalidated
+approved → closed
+approved → updated
+```
+
+### Terminal States (No Further Changes)
+
+- **rejected** - Final decision
+- **invalidated** - Thesis failed
+- **closed** - Idea completed
+
+## Invalidation Examples
+
+Common reasons to invalidate an approved idea:
+
+| Scenario | Invalidation Reason |
+|----------|---------------------|
+| Shipping disruption | "Shipping traffic normalized" |
+| Supply shortage fears | "Fertilizer supply remained stable" |
+| Retaliation threat | "Retaliation threat faded without action" |
+| Sanctions risk | "Sanctions scope narrower than expected" |
+| Military escalation | "De-escalation achieved via diplomacy" |
+
+## Best Practices
+
+1. **Review promptly** - Ideas are time-sensitive
+2. **Document reasoning** - Notes help future analysis
+3. **Be specific** - Vague invalidation conditions are useless
+4. **Update as needed** - Market conditions change
+5. **Track your decisions** - Learn from outcomes
 
 ## Dashboard Prioritization
 
-Active ideas are sorted by:
+The dashboard (`list_active_ideas.py`) surfaces ideas in priority order:
 
-1. **Approval status** — approved first
-2. **Conviction** — high before medium before low
-3. **Activity** — active before other statuses
-4. **Recency** — newest first
+1. **Approved ideas first** - Status: `approved` > `pending_review` > others
+2. **Highest conviction first** - Within each status: `high` > `medium` > `low`
+3. **Most recent first** - Within same status + conviction: newest first
 
-This ensures the most decision-relevant ideas appear at the top.
+This ensures analysts see the most actionable ideas at the top.
 
-## Review Quality Guidelines
+## Integration with Research Process
 
-### Required Notes
+The analyst workflow connects to your broader research:
 
-Review decisions `reject` and `needs_revision` **require notes**. This ensures:
-- Feedback for system improvement
-- Audit trail for decisions
-- Learning for future idea generation
-
-### Optional Notes
-
-Decisions `approve` and `monitor` may include notes but are not required.
-
-## Lifecycle Events
-
-All status changes are logged:
-- created
-- approved
-- rejected
-- invalidated
-- updated
-- closed
-
-View lifecycle history via database query or future dashboard.
-
-## Database Tables
-
-- **trade_ideas** — idea records with analyst_status
-- **idea_reviews** — review decisions
-- **idea_lifecycle** — lifecycle event log
-
-## Integration with Exposure Engine
-
-The analyst workflow sits on top of the v6.2 Exposure Engine:
-
-1. Exposure Engine generates ideas
-2. Ideas enter pending_review state
-3. Analysts review via CLI
-4. Approved ideas flow to active monitoring
-5. Lifecycle engine tracks changes
-
-## Future Enhancements
-
-- Web dashboard for review
-- Batch review capabilities
-- Review assignment
-- Performance tracking
-- Automated invalidation triggers
+1. **Morning review** - Check pending ideas from overnight events
+2. **Event-driven** - Review ideas triggered by new developments
+3. **Weekly audit** - Review statistics, identify patterns
+4. **Post-mortem** - Analyze invalidated ideas for model improvement

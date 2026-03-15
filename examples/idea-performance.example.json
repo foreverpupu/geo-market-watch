@@ -1,0 +1,17 @@
+{
+  "performance_id": "perf-550e8400-e29b-41d4-a716-446655440000",
+  "trade_idea_id": "idea-6f2g3h4i-5j6k-7l8m-9n0o-1p2q3r4s5t6u",
+  "tracking_status": "closed",
+  "entry_price": 100.0,
+  "entry_time": "2026-03-15T09:30:00+00:00",
+  "close_price": 115.0,
+  "close_time": "2026-03-29T16:00:00+00:00",
+  "return_pct": 15.0,
+  "benchmark_return_pct": 5.0,
+  "alpha_spread_pct": 10.0,
+  "outcome": "strong_positive",
+  "holding_period_days": 14,
+  "notes": "Strong momentum play on Red Sea disruption. Target reached.",
+  "created_at": "2026-03-15T09:30:00+00:00",
+  "updated_at": "2026-03-29T16:00:00+00:00"
+}

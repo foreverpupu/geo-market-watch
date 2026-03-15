@@ -92,6 +92,7 @@ CREATE TABLE IF NOT EXISTS trade_ideas (
     conviction TEXT,
     thesis TEXT,
     invalidation_condition TEXT,
+    benchmark_hint TEXT,
     status TEXT DEFAULT 'active',
     analyst_status TEXT DEFAULT 'pending_review',
     approval_status TEXT DEFAULT 'unreviewed',
@@ -146,6 +147,28 @@ CREATE TABLE IF NOT EXISTS idea_lifecycle (
     event_type TEXT NOT NULL,
     event_reason TEXT,
     created_at TEXT NOT NULL,
+    FOREIGN KEY (trade_idea_id) REFERENCES trade_ideas(trade_idea_id)
+);
+
+-- Trade idea performance table: tracks paper trading performance (v6.4)
+CREATE TABLE IF NOT EXISTS trade_idea_performance (
+    performance_id TEXT PRIMARY KEY,
+    trade_idea_id TEXT NOT NULL UNIQUE,
+    tracking_status TEXT DEFAULT 'not_started',
+    entry_price REAL,
+    entry_time TEXT,
+    close_price REAL,
+    close_time TEXT,
+    return_pct REAL,
+    benchmark_return_pct REAL,
+    alpha_spread_pct REAL,
+    max_unfavorable_excursion_pct REAL,
+    max_favorable_excursion_pct REAL,
+    outcome TEXT,
+    holding_period_days INTEGER,
+    notes TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
     FOREIGN KEY (trade_idea_id) REFERENCES trade_ideas(trade_idea_id)
 );
 
@@ -235,6 +258,7 @@ TABLE_SCHEMAS = {
         "conviction": "TEXT",
         "thesis": "TEXT",
         "invalidation_condition": "TEXT",
+        "benchmark_hint": "TEXT",
         "status": "TEXT DEFAULT 'active'",
         "analyst_status": "TEXT DEFAULT 'pending_review'",
         "approval_status": "TEXT DEFAULT 'unreviewed'",
@@ -277,6 +301,25 @@ TABLE_SCHEMAS = {
         "event_type": "TEXT NOT NULL",
         "event_reason": "TEXT",
         "created_at": "TEXT NOT NULL"
+    },
+    "trade_idea_performance": {
+        "performance_id": "TEXT PRIMARY KEY",
+        "trade_idea_id": "TEXT NOT NULL UNIQUE",
+        "tracking_status": "TEXT DEFAULT 'not_started'",
+        "entry_price": "REAL",
+        "entry_time": "TEXT",
+        "close_price": "REAL",
+        "close_time": "TEXT",
+        "return_pct": "REAL",
+        "benchmark_return_pct": "REAL",
+        "alpha_spread_pct": "REAL",
+        "max_unfavorable_excursion_pct": "REAL",
+        "max_favorable_excursion_pct": "REAL",
+        "outcome": "TEXT",
+        "holding_period_days": "INTEGER",
+        "notes": "TEXT",
+        "created_at": "TEXT NOT NULL",
+        "updated_at": "TEXT NOT NULL"
     }
 }
 

@@ -3,6 +3,51 @@
 All notable changes to Geo Market Watch will be documented in this file.
 For a deep dive into the AI design philosophy and research logic behind these updates, please refer to our [Design Notes](docs/design-notes.md).
 
+## [v6.4] - 2026-03-15
+### Idea Performance Tracking
+
+This release introduces the first **paper-performance tracking layer** for approved trade ideas.
+
+#### New Engine Components
+- **Performance Engine** — `engine/performance_engine.py` — Tracks paper trading performance
+- **Export Layer** — `engine/export_layer.py` — JSON/CSV export functionality
+- **Dashboard Views** — `engine/dashboard_views.py` — Extended with performance views
+
+#### New Scripts
+- `scripts/start_idea_tracking.py` — Start tracking with entry price
+- `scripts/close_trade_idea.py` — Close tracking and compute returns
+- `scripts/update_idea_price_reference.py` — Correct price references
+- `scripts/list_tracked_ideas.py` — List tracked ideas with performance
+- `scripts/export_dashboard_data.py` — Export performance data
+
+#### New Database Table
+- **trade_idea_performance** — Performance tracking records with MUE/MFE metrics
+
+#### New Documentation
+- `docs/idea-performance-spec.md` — Performance tracking specification
+- `docs/performance-methodology.md` — Calculation methodology
+- `docs/idea-outcome-classification.md` — Outcome classification
+- `docs/benchmark-v6.4.md` — Validation benchmark
+
+#### New Examples & Data
+- `examples/idea-performance.example.json`
+- `examples/idea-performance-output.example.md`
+- `data/idea-performance-sample.json`
+
+#### Improvements
+- Tracks entry and close reference prices for approved ideas
+- Calculates virtual return and holding period
+- Classifies idea outcomes deterministically
+- Extends dashboard exports with performance-aware research views
+- Supports benchmark hints and alpha spread calculation
+- Includes MUE/MFE risk metrics
+
+#### Notes
+This release adds **paper tracking only**.
+It does not provide live trading, execution integration, or real portfolio accounting.
+
+---
+
 ## [v6.3] - 2026-03-15
 ### Analyst Review Workflow
 
@@ -36,8 +81,108 @@ This release introduces **analyst review and lifecycle management** for trade id
 
 #### Improvements
 - Human review layer for generated trade ideas
-- Required notes for reject/needs_revision decisions
-- Dashboard prioritization (approved + high conviction first)
+- Required notes for reject/needs_revision decisions (enforced at engine level)
+- Dashboard prioritization (approved + high conviction first, then by created_at)
+- Complete audit trail via lifecycle events
+- Status transition validation prevents invalid moves
+
+---
+
+## [v6.4] - 2026-03-15
+### Performance Tracking
+
+This release adds **paper trading performance tracking** for approved trade ideas.
+
+#### New Engine Components
+- **Performance Engine** — `engine/performance_engine.py` — Tracks paper trading performance
+- **Export Layer** — `engine/export_layer.py` — JSON/CSV export functionality
+
+#### New Scripts
+- `scripts/start_idea_tracking.py` — Start tracking with entry price
+- `scripts/close_trade_idea.py` — Close tracking and compute returns
+- `scripts/update_idea_price_reference.py` — Correct price references
+- `scripts/list_tracked_ideas.py` — List tracked ideas with performance
+- `scripts/export_dashboard_data.py` — Export performance data
+
+#### New Database Table
+- **trade_idea_performance** — Performance tracking records
+
+#### New Documentation
+- `docs/idea-performance-spec.md` — Performance tracking specification
+- `docs/performance-methodology.md` — Calculation methodology
+- `docs/idea-outcome-classification.md` — Outcome classification
+- `docs/benchmark-v6.4.md` — Validation benchmark
+
+#### New Examples
+- `examples/idea-performance.example.json` — Performance record example
+- `examples/idea-performance-output.example.md` — Output example
+- `data/idea-performance-sample.json` — Sample data for testing
+
+#### Features
+- Entry/close price tracking with ISO timestamps
+- Automatic return calculation (long and short)
+- Outcome classification (strong_positive/positive/flat/negative/strong_negative)
+- Holding period calculation
+- Benchmark return and alpha spread support
+- Price reference corrections with audit trail
+- Approval-gated tracking (only approved ideas)
+- Dashboard views for tracked and closed ideas
+- JSON/CSV export with sanitized fields
+
+#### Validation
+- Entry/close prices must be positive
+- Close time must not be earlier than entry time
+- Only approved ideas can be tracked
+- Notes required for price corrections
+
+#### Query Script Updates
+- `--idea-performance` — Show idea performance data
+- `--performance-summary` — Show performance statistics
+- `--tracked-ideas` — Show currently tracked ideas
+- `--closed-ideas` — Show closed ideas with performance
+
+#### Notes
+This release adds quantitative performance measurement to the research workflow.
+
+**Important:** This is paper (hypothetical) tracking only — no actual trades are executed.
+
+---
+
+## [v6.3] - 2026-03-15
+### Analyst Review Workflow
+
+This release introduces **analyst review and lifecycle management** for trade ideas.
+
+#### New Engine Components
+- **Status Rules Engine** — `engine/status_rules.py` — Validates status transitions
+- **Idea Review Engine** — `engine/idea_review_engine.py` — Processes analyst reviews
+- **Lifecycle Engine** — `engine/lifecycle_engine.py` — Tracks lifecycle events
+
+#### New Scripts
+- `scripts/review_trade_ideas.py` — Submit analyst reviews
+- `scripts/approve_trade_idea.py` — Quick approval
+- `scripts/invalidate_trade_idea.py` — Invalidate ideas when conditions change
+- `scripts/list_active_ideas.py` — List approved active ideas
+
+#### New Database Tables
+- **trade_ideas** — Trade idea records with analyst_status
+- **idea_reviews** — Review decisions and notes
+- **idea_lifecycle** — Lifecycle event log
+
+#### New Documentation
+- `docs/analyst-workflow.md` — Complete workflow guide
+- `docs/idea-lifecycle-spec.md` — Lifecycle state specification
+- `docs/analyst-review-guidelines.md` — Review quality guidelines
+- `docs/benchmark-v6.3.md` — Validation benchmark
+
+#### New Examples
+- `examples/analyst-review.example.json` — Review record example
+- `examples/idea-lifecycle.example.md` — Lifecycle timeline example
+
+#### Improvements
+- Human review layer for generated trade ideas
+- Required notes for reject/needs_revision decisions (enforced at engine level)
+- Dashboard prioritization (approved + high conviction first, then by created_at)
 - Complete audit trail via lifecycle events
 - Status transition validation prevents invalid moves
 
@@ -45,7 +190,7 @@ This release introduces **analyst review and lifecycle management** for trade id
 This release upgrades Geo Market Watch from an **idea generation engine** into a **structured research workflow system**.
 
 It does not yet include:
-- Performance tracking
+- ~~Performance tracking~~ (added in v6.4)
 - Automated invalidation triggers
 - Multi-analyst consensus
 - Execution system integration

@@ -1,0 +1,24 @@
+{
+  "tracked_count": 3,
+  "closed_count": 2,
+  "positive_count": 2,
+  "negative_count": 0,
+  "zero_count": 0,
+  "average_return_pct": 15.0,
+  "average_alpha_spread_pct": null,
+  "outcome_distribution": {
+    "win": 2
+  },
+  "by_direction": [
+    {
+      "direction": "long",
+      "count": 1,
+      "avg_return": 15.0
+    },
+    {
+      "direction": "short",
+      "count": 1,
+      "avg_return": 15.0
+    }
+  ]
+}

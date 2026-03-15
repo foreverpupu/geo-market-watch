@@ -23,6 +23,76 @@ The project is designed for analysts, researchers, and developers who want to bu
 
 ---
 
+## System Evolution Roadmap
+
+Geo Market Watch evolves from a prompt-based monitoring framework into a multi-layer geopolitical intelligence platform.
+
+```
+v5 Monitoring Foundation
+  Scout → Score → Agent
+
+v6 Intelligence Platform  
+  Database → Exposure → Workflow → Performance
+
+v7 Multi-Agent Intelligence (Future)
+  Risk Map → Pattern Mining → Strategy Layer
+```
+
+**Current Status: v6.4 — Performance-Aware Research Platform**
+
+- ✅ **Monitoring Layer** — Event detection, scoring, agent routing
+- ✅ **Intelligence Layer** — Database, exposure mapping, trade ideas
+- ✅ **Research Layer** — Analyst review, lifecycle tracking, performance evaluation
+- 🔄 **AI Intelligence Layer** — Multi-agent scanning, risk maps, pattern mining (v7+)
+
+**Detailed Architecture:** [docs/system-evolution-architecture.md](docs/system-evolution-architecture.md) | [Institutional Four-Layer View](docs/institutional-system-architecture.md)
+
+---
+
+## Institutional System Architecture
+
+Geo Market Watch evolves from a prompt-based monitoring framework into a layered geopolitical intelligence and research platform.
+
+```
+┌──────────────────────────────────────────────┐
+│      GEO MARKET WATCH ARCHITECTURE           │
+└──────────────────────────────────────────────┘
+
+DATA LAYER
+  Raw Signals
+    → Event Cards
+    → Geo Alpha Database
+    → JSON / CSV / Snapshot Exports
+
+AGENT LAYER
+  News Intake
+    → Dedupe
+    → Scoring
+    → Trigger
+    → Monitoring / Full Analysis Handoff
+
+INTELLIGENCE LAYER
+  Event Understanding
+    → Sector Exposure
+    → Company Exposure
+    → Trade Ideas
+
+RESEARCH LAYER
+  Analyst Review
+    → Approval Workflow
+    → Lifecycle Tracking
+    → Performance Evaluation
+```
+
+**End-to-End Flow:**
+```
+Signals → Agents → Event Memory → Alpha Mapping → Research Workflow → Performance Feedback
+```
+
+**Full Architecture:** [docs/institutional-system-architecture.md](docs/institutional-system-architecture.md)
+
+---
+
 ## Framework Overview
 
 Geo Market Watch now operates as a **three-stage analysis system**.
@@ -81,6 +151,44 @@ python scripts/query_database.py --db data/geo_alpha.db --region "Middle East"
 
 # Show statistics
 python scripts/query_database.py --db data/geo_alpha.db --stats
+```
+
+---
+
+## Quickstart — Idea Performance Tracking
+
+Start tracking an approved idea:
+
+```bash
+python scripts/start_idea_tracking.py \
+  --db data/geo_alpha.db \
+  --idea-id TRADE_ID \
+  --entry-price 72.50 \
+  --entry-time 2026-03-15T09:30:00Z
+```
+
+Close a tracked idea:
+
+```bash
+python scripts/close_trade_idea.py \
+  --db data/geo_alpha.db \
+  --idea-id TRADE_ID \
+  --close-price 79.10 \
+  --close-time 2026-03-29T16:00:00Z
+```
+
+List tracked ideas:
+
+```bash
+python scripts/list_tracked_ideas.py --db data/geo_alpha.db
+```
+
+Export performance data:
+
+```bash
+python scripts/export_dashboard_data.py \
+  --db data/geo_alpha.db \
+  --output exports/
 ```
 
 ---
@@ -258,6 +366,61 @@ See [docs/analyst-workflow.md](docs/analyst-workflow.md) for details.
 
 ---
 
+## Idea Performance Tracking
+
+Starting in v6.4, Geo Market Watch can track **paper trading performance** for approved trade ideas.
+
+### Features
+
+- **Entry/Close tracking** — Record price references with timestamps
+- **Return calculation** — Automatic calculation for long and short ideas
+- **Outcome classification** — strong_positive / positive / flat / negative / strong_negative
+- **Benchmark comparison** — Track alpha spread vs benchmark
+- **Holding period** — Days held calculation
+- **Export support** — JSON and CSV export for analysis
+
+### Important Note
+
+This is **paper (hypothetical) tracking only**:
+- No actual trades are executed
+- No real money is at risk
+- For research evaluation only
+- Manual price entry required
+
+### CLI Commands
+
+```bash
+# Start tracking
+python scripts/start_idea_tracking.py \
+  --db data/geo_alpha.db \
+  --idea-id TRADE_ID \
+  --entry-price 72.50 \
+  --entry-time 2026-03-15T09:30:00Z
+
+# Close tracking
+python scripts/close_trade_idea.py \
+  --db data/geo_alpha.db \
+  --idea-id TRADE_ID \
+  --close-price 79.10 \
+  --close-time 2026-03-29T16:00:00Z
+
+# List tracked ideas
+python scripts/list_tracked_ideas.py --db data/geo_alpha.db
+
+# Export performance data
+python scripts/export_dashboard_data.py \
+  --db data/geo_alpha.db \
+  --output exports/
+```
+
+### Documentation
+
+- [docs/idea-performance-spec.md](docs/idea-performance-spec.md) — Performance tracking specification
+- [docs/performance-methodology.md](docs/performance-methodology.md) — Calculation methodology
+- [docs/idea-outcome-classification.md](docs/idea-outcome-classification.md) — Outcome classification
+
+---
+
 ## Execution Layer
 
 Starting in v5.4, Geo Market Watch includes a **minimal executable engine**.
@@ -423,7 +586,8 @@ geo-market-watch/
 │   ├── intake-sample.json
 │   ├── dedupe-memory.sample.json
 │   ├── db-seed-events.json
-│   └── geo_alpha.db
+│   ├── geo_alpha.db
+│   └── idea-performance-sample.json
 │
 ├── docs/
 │   ├── scout-mode-example.md
@@ -444,7 +608,13 @@ geo-market-watch/
 │   ├── analyst-workflow.md
 │   ├── idea-lifecycle-spec.md
 │   ├── analyst-review-guidelines.md
-│   └── benchmark-v6.3.md
+│   ├── benchmark-v6.3.md
+│   ├── idea-performance-spec.md
+│   ├── performance-methodology.md
+│   ├── idea-outcome-classification.md
+│   ├── benchmark-v6.4.md
+│   ├── system-evolution-architecture.md
+│   └── institutional-system-architecture.md
 │
 ├── engine/
 │   ├── scoring_engine.py
@@ -459,13 +629,18 @@ geo-market-watch/
 │   ├── exposure_engine.py
 │   ├── status_rules.py
 │   ├── idea_review_engine.py
-│   └── lifecycle_engine.py
+│   ├── lifecycle_engine.py
+│   ├── performance_engine.py
+│   ├── export_layer.py
+│   └── dashboard_views.py
 │
 ├── examples/
 │   ├── intake-input.example.json
 │   ├── notify-monitor.example.md
 │   ├── notify-full-analysis.example.md
-│   └── database-query-output.example.md
+│   ├── database-query-output.example.md
+│   ├── idea-performance.example.json
+│   └── idea-performance-output.example.md
 │
 ├── prompts/
 │   └── scout-mode.md
@@ -480,7 +655,12 @@ geo-market-watch/
 │   ├── review_trade_ideas.py
 │   ├── approve_trade_idea.py
 │   ├── invalidate_trade_idea.py
-│   └── list_active_ideas.py
+│   ├── list_active_ideas.py
+│   ├── start_idea_tracking.py
+│   ├── close_trade_idea.py
+│   ├── update_idea_price_reference.py
+│   ├── list_tracked_ideas.py
+│   └── export_dashboard_data.py
 │
 ├── CHANGELOG.md
 ├── README.md
@@ -538,6 +718,24 @@ Key framework documents:
 **Scheduled Monitoring Guide**  
 [docs/scheduled-monitoring.md](docs/scheduled-monitoring.md)
 
+**Analyst Workflow (v6.3)**  
+[docs/analyst-workflow.md](docs/analyst-workflow.md)
+
+**Idea Lifecycle Spec (v6.3)**  
+[docs/idea-lifecycle-spec.md](docs/idea-lifecycle-spec.md)
+
+**Idea Performance Spec (v6.4)**  
+[docs/idea-performance-spec.md](docs/idea-performance-spec.md)
+
+**Performance Methodology (v6.4)**  
+[docs/performance-methodology.md](docs/performance-methodology.md)
+
+**System Evolution Architecture**  
+[docs/system-evolution-architecture.md](docs/system-evolution-architecture.md)
+
+**Institutional System Architecture**  
+[docs/institutional-system-architecture.md](docs/institutional-system-architecture.md)
+
 **Example Intake Input**  
 [examples/intake-input.example.json](examples/intake-input.example.json)
 
@@ -546,6 +744,9 @@ Key framework documents:
 
 **Example Full Analysis Handoff**  
 [examples/notify-full-analysis.example.md](examples/notify-full-analysis.example.md)
+
+**Example Performance Output**  
+[examples/idea-performance-output.example.md](examples/idea-performance-output.example.md)
 
 ---
 
