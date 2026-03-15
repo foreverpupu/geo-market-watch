@@ -12,7 +12,8 @@ from pathlib import Path
 
 import pytest
 
-from geo_market_watch.agent_loop import run_agent_loop, load_intake_file
+from geo_market_watch.agent_loop import run_agent_loop
+from geo_market_watch.engine.agent_pipeline import load_intake
 from geo_market_watch.models import AgentRunSummary
 
 
@@ -157,7 +158,7 @@ class TestAgentLoopIntegration:
             json.dump([{"headline": "Test"}], f)
             f.flush()
             
-            items = load_intake_file(f.name)
+            items = load_intake(f.name)
             assert len(items) == 1
             assert items[0]["headline"] == "Test"
             
@@ -169,7 +170,7 @@ class TestAgentLoopIntegration:
             json.dump({"items": [{"headline": "Test"}]}, f)
             f.flush()
             
-            items = load_intake_file(f.name)
+            items = load_intake(f.name)
             assert len(items) == 1
             assert items[0]["headline"] == "Test"
             

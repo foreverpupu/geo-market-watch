@@ -51,15 +51,15 @@ class ScoringEngine:
         self.category_base = self.config.get("category_base", self.CATEGORY_BASE)
         self.severity_modifiers = self.config.get("severity_modifiers", self.SEVERITY_MODIFIERS)
     
-    def compute_score(self, event: NormalizedEvent) -> ScoreResult:
+    def compute_base_score(self, event: NormalizedEvent) -> tuple[float, dict]:
         """
-        Compute score for normalized event.
+        Compute base score from category and severity.
         
         Args:
             event: Normalized event
             
         Returns:
-            ScoreResult with value, band, and breakdown
+            Tuple of (base_score, breakdown_dict)
         """
         breakdown = {}
         
@@ -74,19 +74,43 @@ class ScoringEngine:
         # Calculate raw score
         raw_score = base_score + severity_mod
         
-        # Policy adjustments (future: config-driven rules)
-        policy_adjustment = self._apply_policy_adjustments(event)
-        breakdown["policy_adjustment"] = policy_adjustment
+        return float(raw_score), breakdown
+    
+    def apply_adjustments(self, base_score: float, event: NormalizedEvent) -> tuple[float, float]:
+        """
+        Apply policy-based adjustments to base score.
         
-        # Final score (clamped 0-10)
-        final_score = max(0, min(10, raw_score + policy_adjustment))
+        Args:
+            base_score: Raw score from compute_base_score
+            event: Normalized event for context
+            
+        Returns:
+            Tuple of (adjusted_score, adjustment_amount)
+        """
+        adjustment = self._apply_policy_adjustments(event)
+        adjusted_score = base_score + adjustment
+        return adjusted_score, adjustment
+    
+    def finalize_score(self, adjusted_score: float, breakdown: dict) -> ScoreResult:
+        """
+        Finalize score by clamping, determining band, and generating reasoning.
+        
+        Args:
+            adjusted_score: Score after adjustments
+            breakdown: Score breakdown dictionary
+            
+        Returns:
+            Final ScoreResult
+        """
+        # Clamp to valid range
+        final_score = max(0, min(10, adjusted_score))
         breakdown["final_score"] = final_score
         
         # Determine band
         band = self._score_to_band(final_score)
         
         # Generate reasoning
-        reasoning = self._generate_reasoning(event, breakdown)
+        reasoning = self._generate_reasoning_from_breakdown(breakdown)
         
         return ScoreResult(
             value=final_score,
@@ -94,6 +118,31 @@ class ScoringEngine:
             breakdown=breakdown,
             reasoning=reasoning
         )
+    
+    def compute_score(self, event: NormalizedEvent) -> ScoreResult:
+        """
+        Compute score for normalized event.
+        
+        Orchestrates the three-step process:
+        1. compute_base_score()
+        2. apply_adjustments()
+        3. finalize_score()
+        
+        Args:
+            event: Normalized event
+            
+        Returns:
+            ScoreResult with value, band, and breakdown
+        """
+        # Step 1: Compute base score
+        base_score, breakdown = self.compute_base_score(event)
+        
+        # Step 2: Apply adjustments
+        adjusted_score, adjustment = self.apply_adjustments(base_score, event)
+        breakdown["policy_adjustment"] = adjustment
+        
+        # Step 3: Finalize
+        return self.finalize_score(adjusted_score, breakdown)
     
     def _apply_policy_adjustments(self, event: NormalizedEvent) -> float:
         """
@@ -122,15 +171,30 @@ class ScoringEngine:
     
     def _generate_reasoning(self, event: NormalizedEvent, breakdown: Dict[str, float]) -> str:
         """Generate human-readable reasoning."""
-        parts = [
-            f"Category '{event.category}' base score: {breakdown['category_base']}",
-            f"Severity '{event.severity}' modifier: {breakdown['severity_modifier']}",
-        ]
+        return self._generate_reasoning_from_breakdown(breakdown, event.category, event.severity)
+    
+    def _generate_reasoning_from_breakdown(
+        self,
+        breakdown: Dict[str, float],
+        category: str = "",
+        severity: str = ""
+    ) -> str:
+        """Generate human-readable reasoning from breakdown."""
+        parts = []
+        
+        if "category_base" in breakdown:
+            cat = category or "unknown"
+            parts.append(f"Category '{cat}' base score: {breakdown['category_base']}")
+        
+        if "severity_modifier" in breakdown:
+            sev = severity or "unknown"
+            parts.append(f"Severity '{sev}' modifier: {breakdown['severity_modifier']}")
         
         if breakdown.get("policy_adjustment", 0) != 0:
             parts.append(f"Policy adjustment: {breakdown['policy_adjustment']}")
         
-        parts.append(f"Final score: {breakdown['final_score']}")
+        if "final_score" in breakdown:
+            parts.append(f"Final score: {breakdown['final_score']}")
         
         return "; ".join(parts)
     
