@@ -69,23 +69,54 @@ The project is designed as a **foundation for building geopolitical event intell
 
 ---
 
+## Environment Setup
+
+**Prerequisites:** Python 3.10+
+
+```bash
+# 1. Clone repository
+git clone https://github.com/foreverpupu/geo-market-watch.git
+cd geo-market-watch
+
+# 2. Create virtual environment (recommended)
+python -m venv .venv
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
+
+# 3. Install dependencies
+pip install -r requirements.txt
+
+# 4. Verify installation
+python --version  # Should show 3.10+
+python scripts/init_database.py --help
+```
+
+**Dependency Notes:**
+- **Core scripts** (database, query, agent loop): Only need Python standard library + click
+- **Schema validation**: Additional test dependencies in `tests/schema_validation/requirements.txt`
+- **LLM features**: Optional, install `openai` or `anthropic` packages as needed
+
+---
+
 ## Quick Start (10-minute run)
 
 ```bash
-# 1. Clone and setup
-git clone https://github.com/foreverpupu/geo-market-watch.git
-cd geo-market-watch
-pip install -r requirements.txt
-
-# 2. Initialize database
+# 1. Initialize database
 python scripts/init_database.py --db data/geo_alpha.db
 
-# 3. Run minimal example
+# 2. Seed with sample data
+python scripts/seed_database.py \
+  --db data/geo_alpha.db \
+  --seed data/db-seed-events.json
+
+# 3. Query to verify
+python scripts/query_database.py --db data/geo_alpha.db --list
+
+# 4. Run minimal example
 python scripts/run_agent_loop.py \
   --input examples/minimal_event.json \
   --output outputs/
 
-# 4. View results
+# 5. View results
 cat outputs/notification.md
 ```
 
@@ -270,6 +301,28 @@ python scripts/start_idea_tracking.py --db data/geo_alpha.db --idea-id TRADE_ID
 **Next: v7.0 — Multi-Agent Intelligence**
 
 See [v6.x Roadmap](docs/product/roadmap-v6.md) for details.
+
+---
+
+## Environment Reference
+
+| Component | Python Version | Dependencies | Location |
+|-----------|---------------|--------------|----------|
+| Core scripts | 3.10+ | `requirements.txt` | Root directory |
+| Schema validation | 3.10+ | `tests/schema_validation/requirements.txt` | Test subdirectory |
+| Engine tests | 3.10+ | Same as core | N/A |
+| LLM features | 3.10+ | Optional: `openai`, `anthropic` | Install as needed |
+
+**Minimal setup for core functionality:**
+```bash
+pip install -r requirements.txt
+```
+
+**Full setup for development:**
+```bash
+pip install -r requirements.txt
+pip install -r tests/schema_validation/requirements.txt
+```
 
 ---
 
