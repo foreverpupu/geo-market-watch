@@ -51,3 +51,29 @@ EVENT_TYPE_TIME_WINDOWS = {
 def get_time_window_for_event_type(event_type: str) -> int:
     """获取特定事件类型的时间窗口。"""
     return EVENT_TYPE_TIME_WINDOWS.get(event_type, DEFAULT_RESOLUTION_CONFIG.default_time_window_days)
+
+
+@dataclass(frozen=True)
+class ExposureConfig:
+    """Exposure 配置类。"""
+    
+    # 图传播参数
+    max_graph_hops: int = 2
+    propagation_decay_factor: float = 0.70
+    min_propagated_exposure_score: float = 0.15
+    graph_confidence_decay_per_hop: float = 0.75
+    
+    # 基础分数
+    direct_exposure_base_score: float = 0.75
+    template_exposure_base_score: float = 0.60
+    graph_exposure_base_score: float = 0.45
+    
+    # 聚合参数
+    aggregation_cap: float = 0.95
+    
+    # 图传播限制
+    max_propagation_nodes_per_seed: int = 10
+
+
+# 默认 exposure 配置
+DEFAULT_EXPOSURE_CONFIG = ExposureConfig()

@@ -29,3 +29,56 @@ class EventPhase(str, Enum):
     WARNING = "warning"
     IMPLEMENTATION = "implementation"
     ESCALATION = "escalation"
+
+
+class ExposureTargetType(str, Enum):
+    """暴露目标类型。"""
+    COUNTRY = "country"
+    SECTOR = "sector"
+    INDUSTRY = "industry"
+    COMPANY = "company"
+    COMMODITY = "commodity"
+    ASSET = "asset"
+    ETF = "etf"
+    ROUTE = "route"
+    FACILITY = "facility"
+    THEME = "theme"
+
+
+class ExposureDirection(str, Enum):
+    """暴露方向。"""
+    POSITIVE = "positive"
+    NEGATIVE = "negative"
+    MIXED = "mixed"
+    UNCERTAIN = "uncertain"
+
+
+class ExposureChannel(str, Enum):
+    """暴露渠道。"""
+    SUPPLY_SHOCK = "supply_shock"
+    DEMAND_SHOCK = "demand_shock"
+    LOGISTICS_DISRUPTION = "logistics_disruption"
+    REGULATORY_RISK = "regulatory_risk"
+    FINANCING_RISK = "financing_risk"
+    SANCTIONS_RISK = "sanctions_risk"
+    PRICING_POWER_SHIFT = "pricing_power_shift"
+    SUBSTITUTION_EFFECT = "substitution_effect"
+    GEOPOLITICAL_PREMIUM = "geopolitical_premium"
+    CYBER_RISK = "cyber_risk"
+    POLICY_UNCERTAINTY = "policy_uncertainty"
+
+
+class ExposureSourceType(str, Enum):
+    """暴露来源类型。"""
+    DIRECT_RULE = "direct_rule"
+    TEMPLATE = "template"
+    GRAPH_PROPAGATION = "graph_propagation"
+
+
+class ExposureHorizon(str, Enum):
+    """影响时间范围。"""
+    INTRADAY = "intraday"
+    DAYS = "days"
+    WEEKS = "weeks"
+    MONTHS = "months"
+    STRUCTURAL = "structural"

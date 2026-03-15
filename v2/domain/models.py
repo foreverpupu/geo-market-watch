@@ -79,3 +79,101 @@ class ResolutionResult:
     event: CanonicalEvent
     created_new_event: bool
     updated_existing_event: bool
+
+
+@dataclass
+class ExposureTraceStep:
+    """暴露追踪步骤（结构化来源）。"""
+    step_type: str  # direct_rule, template, graph_propagation
+    step_ref: str  # 规则ID、模板ID、图边等
+    source_target: str  # 来源target
+    target: str  # 当前target
+    score_contribution: float  # 该步骤的分数贡献
+    hop_count: int = 0  # 传播跳数（0表示直接）
+    metadata: dict = field(default_factory=dict)
+
+
+@dataclass
+class ExposureCandidate:
+    """暴露候选（内部中间对象）。"""
+    target_type: str
+    target_id: str
+    target_name: str
+    exposure_channel: str
+    direction: str
+    score: float
+    confidence: float
+    horizon: str
+    source_type: str
+    source_ref: str
+    reasoning_trace: str
+    trace_steps: list[ExposureTraceStep] = field(default_factory=list)
+    metadata: dict = field(default_factory=dict)
+
+
+@dataclass
+class Exposure:
+    """最终暴露对象。"""
+    exposure_id: str
+    event_id: str
+    target_type: str
+    target_id: str
+    target_name: str
+    exposure_channel: str
+    direction: str
+    magnitude_score: float
+    confidence_score: float
+    horizon: str
+    source_type: str
+    source_ref: str
+    reasoning_trace: str
+    trace_steps: list[ExposureTraceStep] = field(default_factory=list)
+    metadata: dict = field(default_factory=dict)
+
+
+@dataclass
+class GraphEdge:
+    """图边对象。"""
+    src_id: str
+    src_type: str
+    relation_type: str
+    dst_id: str
+    dst_type: str
+    weight: float
+    metadata: dict = field(default_factory=dict)
+
+
+@dataclass
+class ExposureTemplate:
+    """暴露模板。"""
+    template_id: str
+    event_type: str
+    template_name: str
+    steps: list[dict]
+    metadata: dict = field(default_factory=dict)
+
+
+@dataclass
+class NetExposureSummary:
+    """净暴露汇总。"""
+    target_type: str
+    target_id: str
+    target_name: str
+    net_direction: str  # positive, negative, mixed, uncertain
+    net_score: float
+    positive_score: float
+    negative_score: float
+    confidence: float
+    contributing_sources: list[str]
+    reasoning_summary: str
+
+
+@dataclass
+class ExposureResult:
+    """Exposure 完整结果。"""
+    event: CanonicalEvent
+    direct_exposures: list[Exposure]
+    template_exposures: list[Exposure]
+    graph_exposures: list[Exposure]
+    aggregated_exposures: list[Exposure]
+    net_exposure_summaries: list[NetExposureSummary]
