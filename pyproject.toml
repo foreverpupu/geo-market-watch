@@ -4,29 +4,25 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "geo-market-watch"
-version = "6.6.0"
-description = "Structured framework for turning geopolitical events into market-relevant intelligence"
+version = "0.1.0"
+description = "Geopolitical event intelligence platform"
 readme = "README.md"
 license = {text = "MIT"}
 requires-python = ">=3.10"
 authors = [
     {name = "foreverpupu"}
 ]
-keywords = ["geopolitics", "market-intelligence", "event-analysis", "finance"]
+keywords = ["geopolitics", "market-intelligence", "event-analysis"]
 classifiers = [
     "Development Status :: 4 - Beta",
-    "Intended Audience :: Financial and Insurance Industry",
-    "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
-    "Topic :: Office/Business :: Financial",
 ]
 
 dependencies = [
-    "click>=8.0.0",
+    "jsonschema>=4.0.0",
     "python-dateutil>=2.8.0",
 ]
 
@@ -35,56 +31,26 @@ dev = [
     "pytest>=7.0.0",
     "pytest-cov>=4.0.0",
     "black>=23.0.0",
-    "ruff>=0.1.0",
     "mypy>=1.0.0",
 ]
-schema = [
-    "jsonschema>=4.18.0",
-    "referencing>=0.30.0",
-]
-llm = [
-    "openai>=1.0.0",
-    "anthropic>=0.8.0",
-]
-all = [
-    "geo-market-watch[dev,schema,llm]"
-]
-
-[project.scripts]
-gmw-init-db = "geo_market_watch.scripts.init_database:main"
-gmw-seed-db = "geo_market_watch.scripts.seed_database:main"
-gmw-query = "geo_market_watch.scripts.query_database:main"
-gmw-agent = "geo_market_watch.scripts.run_agent_loop:main"
-gmw-benchmark = "geo_market_watch.scripts.run_benchmark:main"
-
-[project.urls]
-Homepage = "https://github.com/foreverpupu/geo-market-watch"
-Documentation = "https://github.com/foreverpupu/geo-market-watch#readme"
-Repository = "https://github.com/foreverpupu/geo-market-watch"
-Issues = "https://github.com/foreverpupu/geo-market-watch/issues"
 
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["geo_market_watch*"]
 exclude = ["tests*", "benchmarks*"]
 
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short"
+
 [tool.black]
 line-length = 100
 target-version = ['py310']
-
-[tool.ruff]
-line-length = 100
-target-version = "py310"
 
 [tool.mypy]
 python_version = "3.10"
 warn_return_any = true
 warn_unused_configs = true
-disallow_untyped_defs = true
-
-[tool.pytest.ini_options]
-testpaths = ["tests"]
-python_files = ["test_*.py", "*_test.py"]
-python_classes = ["Test*"]
-python_functions = ["test_*"]
-addopts = "-v --tb=short"
