@@ -1,0 +1,106 @@
+{
+  "description": "Geo Market Watch Event Cards — 2026-03-15 Scout Scan",
+  "version": "6.0",
+  "generated_at": "2026-03-15",
+  "events": [
+    {
+      "event_id": "GMW-2026-0315-001",
+      "event_key": "middle-east|maritime-disruption|strait-of-hormuz-shipping-disruption-risk",
+      "event_title": "Strait of Hormuz Shipping Disruption Risk",
+      "date_detected": "2026-03-15",
+      "region": "Middle East",
+      "category": "Maritime disruption",
+      "summary": "Iranian officials have issued threats regarding potential closure of the Strait of Hormuz. Market risk premiums have increased in energy markets. Oil prices have risen sharply in response to regional escalation concerns.",
+      "indicators": {
+        "physical_disruption": 0,
+        "transport_impact": 2,
+        "policy_sanctions": 1,
+        "market_transmission": 2,
+        "escalation_risk": 2
+      },
+      "flags": {
+        "confirmed_supply_disruption": 0,
+        "strategic_transport_disruption": 0,
+        "major_sanctions_escalation": 0,
+        "military_escalation": 0
+      },
+      "score": 7,
+      "band": "full_analysis",
+      "trigger_full_analysis": true,
+      "status": "monitoring",
+      "sources": [
+        {
+          "source_name": "Reuters",
+          "source_url": "https://www.reuters.com/world/middle-east/iran-hormuz-threats",
+          "published_at": "2026-03-15"
+        }
+      ]
+    },
+    {
+      "event_id": "GMW-2026-0315-002",
+      "event_key": "middle-east|energy-policy|iranian-retaliation-threats-against-oil-infrastructure",
+      "event_title": "Iranian Retaliation Threats Against Oil Infrastructure",
+      "date_detected": "2026-03-15",
+      "region": "Middle East",
+      "category": "Energy policy",
+      "summary": "Iranian leadership has issued warnings of retaliatory action following attacks near Kharg Island. Iranian statements referenced potential strikes against energy infrastructure of US-aligned regional actors.",
+      "indicators": {
+        "physical_disruption": 1,
+        "transport_impact": 1,
+        "policy_sanctions": 2,
+        "market_transmission": 2,
+        "escalation_risk": 2
+      },
+      "flags": {
+        "confirmed_supply_disruption": 0,
+        "strategic_transport_disruption": 0,
+        "major_sanctions_escalation": 0,
+        "military_escalation": 1
+      },
+      "score": 8,
+      "band": "full_analysis",
+      "trigger_full_analysis": true,
+      "status": "monitoring",
+      "sources": [
+        {
+          "source_name": "Bloomberg",
+          "source_url": "https://www.bloomberg.com/news/iran-retaliation",
+          "published_at": "2026-03-15"
+        }
+      ]
+    },
+    {
+      "event_id": "GMW-2026-0315-003",
+      "event_key": "middle-east|commodity-supply-disruption|middle-east-sulfur-supply-chain-disruption",
+      "event_title": "Middle East Sulfur Supply Chain Disruption",
+      "date_detected": "2026-03-15",
+      "region": "Middle East",
+      "category": "Commodity supply disruption",
+      "summary": "Rising concerns regarding sulfur supply availability from Gulf producers. Early industry commentary indicates potential pressure on fertilizer feedstock availability.",
+      "indicators": {
+        "physical_disruption": 0,
+        "transport_impact": 1,
+        "policy_sanctions": 0,
+        "market_transmission": 1,
+        "escalation_risk": 1
+      },
+      "flags": {
+        "confirmed_supply_disruption": 0,
+        "strategic_transport_disruption": 0,
+        "major_sanctions_escalation": 0,
+        "military_escalation": 0
+      },
+      "score": 3,
+      "band": "monitor",
+      "trigger_full_analysis": false,
+      "status": "monitoring",
+      "sources": [
+        {
+          "source_name": "Industry Reports",
+          "source_url": "https://example.com/sulfur-supply",
+          "published_at": "2026-03-15"
+        }
+      ]
+    }
+  ]
+}
