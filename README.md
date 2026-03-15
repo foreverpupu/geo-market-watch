@@ -187,6 +187,77 @@ See [docs/geo-alpha-database-spec.md](docs/geo-alpha-database-spec.md) for detai
 
 ---
 
+## Analyst Review Workflow
+
+Starting in v6.3, Geo Market Watch supports a **full research workflow** with analyst review and lifecycle management for trade ideas.
+
+Automatically generated trade ideas can now be:
+
+- **reviewed by analysts** — approve, reject, monitor, or request revision
+- **tracked over time** — full lifecycle from creation to closure
+- **invalidated when conditions change** — explicit invalidation with reasons
+- **prioritized in dashboards** — approved high-conviction ideas surface first
+
+### Workflow
+
+```
+Event Detected
+     ↓
+Exposure Generated
+     ↓
+Trade Idea Generated (pending_review)
+     ↓
+Analyst Review
+     ↓
+┌─────────────┬─────────────┬─────────────┐
+│   Approve   │   Reject    │   Monitor   │
+└─────────────┴─────────────┴─────────────┘
+     ↓
+Lifecycle Tracking
+     ↓
+Invalidation / Closure
+```
+
+### CLI Commands
+
+```bash
+# Review a trade idea
+python scripts/review_trade_ideas.py \
+  --db data/geo_alpha.db \
+  --idea-id TRADE_ID \
+  --reviewer analyst1 \
+  --decision approve \
+  --confidence high \
+  --notes "Strong thesis, clear invalidation"
+
+# Quick approve
+python scripts/approve_trade_idea.py \
+  --db data/geo_alpha.db \
+  --idea-id TRADE_ID \
+  --reviewer analyst1
+
+# Invalidate when conditions change
+python scripts/invalidate_trade_idea.py \
+  --db data/geo_alpha.db \
+  --idea-id TRADE_ID \
+  --reason "Shipping traffic normalizing"
+
+# List active approved ideas
+python scripts/list_active_ideas.py --db data/geo_alpha.db
+```
+
+### Review Quality
+
+- **Reject** and **needs_revision** decisions require notes
+- **Approve** and **monitor** decisions accept optional notes
+- All decisions are logged for audit and learning
+
+This adds a human review layer to the Geo Alpha Exposure Engine, transforming the system from an idea generator into a structured research workflow.
+
+See [docs/analyst-workflow.md](docs/analyst-workflow.md) for details.
+
+---
+
 ## Execution Layer
 
 Starting in v5.4, Geo Market Watch includes a **minimal executable engine**.
@@ -369,7 +440,11 @@ geo-market-watch/
 │   ├── benchmark-v5.4.md
 │   ├── benchmark-v5.5.md
 │   ├── benchmark-v6.md
-│   └── scheduled-monitoring.md
+│   ├── scheduled-monitoring.md
+│   ├── analyst-workflow.md
+│   ├── idea-lifecycle-spec.md
+│   ├── analyst-review-guidelines.md
+│   └── benchmark-v6.3.md
 │
 ├── engine/
 │   ├── scoring_engine.py
@@ -380,7 +455,11 @@ geo-market-watch/
 │   ├── agent_loop.py
 │   ├── database_models.py
 │   ├── database.py
-│   └── artifact_ingest.py
+│   ├── artifact_ingest.py
+│   ├── exposure_engine.py
+│   ├── status_rules.py
+│   ├── idea_review_engine.py
+│   └── lifecycle_engine.py
 │
 ├── examples/
 │   ├── intake-input.example.json
@@ -397,7 +476,11 @@ geo-market-watch/
 │   ├── init_database.py
 │   ├── seed_database.py
 │   ├── query_database.py
-│   └── ingest_artifacts.py
+│   ├── ingest_artifacts.py
+│   ├── review_trade_ideas.py
+│   ├── approve_trade_idea.py
+│   ├── invalidate_trade_idea.py
+│   └── list_active_ideas.py
 │
 ├── CHANGELOG.md
 ├── README.md

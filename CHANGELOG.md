@@ -3,6 +3,55 @@
 All notable changes to Geo Market Watch will be documented in this file.
 For a deep dive into the AI design philosophy and research logic behind these updates, please refer to our [Design Notes](docs/design-notes.md).
 
+## [v6.3] - 2026-03-15
+### Analyst Review Workflow
+
+This release introduces **analyst review and lifecycle management** for trade ideas.
+
+#### New Engine Components
+- **Status Rules Engine** — `engine/status_rules.py` — Validates status transitions
+- **Idea Review Engine** — `engine/idea_review_engine.py` — Processes analyst reviews
+- **Lifecycle Engine** — `engine/lifecycle_engine.py` — Tracks lifecycle events
+
+#### New Scripts
+- `scripts/review_trade_ideas.py` — Submit analyst reviews
+- `scripts/approve_trade_idea.py` — Quick approval
+- `scripts/invalidate_trade_idea.py` — Invalidate ideas when conditions change
+- `scripts/list_active_ideas.py` — List approved active ideas
+
+#### New Database Tables
+- **trade_ideas** — Trade idea records with analyst_status
+- **idea_reviews** — Review decisions and notes
+- **idea_lifecycle** — Lifecycle event log
+
+#### New Documentation
+- `docs/analyst-workflow.md` — Complete workflow guide
+- `docs/idea-lifecycle-spec.md` — Lifecycle state specification
+- `docs/analyst-review-guidelines.md` — Review quality guidelines
+- `docs/benchmark-v6.3.md` — Validation benchmark
+
+#### New Examples
+- `examples/analyst-review.example.json` — Review record example
+- `examples/idea-lifecycle.example.md` — Lifecycle timeline example
+
+#### Improvements
+- Human review layer for generated trade ideas
+- Required notes for reject/needs_revision decisions
+- Dashboard prioritization (approved + high conviction first)
+- Complete audit trail via lifecycle events
+- Status transition validation prevents invalid moves
+
+#### Notes
+This release upgrades Geo Market Watch from an **idea generation engine** into a **structured research workflow system**.
+
+It does not yet include:
+- Performance tracking
+- Automated invalidation triggers
+- Multi-analyst consensus
+- Execution system integration
+
+---
+
 ## [v6.0] - 2026-03-15
 ### Geo Alpha Database
 
