@@ -138,3 +138,27 @@ class RankingConfig:
 
 # 默认 ranking 配置
 DEFAULT_RANKING_CONFIG = RankingConfig()
+
+
+@dataclass(frozen=True)
+class AnalystWorkflowConfig:
+    """Analyst Workflow 配置类。"""
+    
+    # Triage 队列阈值
+    triage_priority_threshold: float = 0.80
+    
+    # Watchlist 阈值
+    watchlist_boost_threshold: float = 0.65
+    
+    # 分析师处理超时（小时）
+    review_action_timeout: int = 48
+    
+    # 是否启用审计轨迹
+    audit_trail_enabled: bool = True
+    
+    # 每个分析师最大 watchlist 数量
+    max_watchlist_size: int = 50
+
+
+# 默认 analyst workflow 配置
+DEFAULT_ANALYST_WORKFLOW_CONFIG = AnalystWorkflowConfig()

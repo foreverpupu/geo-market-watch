@@ -109,3 +109,28 @@ class QueueType(str, Enum):
     CONFLICT = "conflict"
     WATCHLIST = "watchlist"
     POSTMORTEM = "postmortem"
+
+
+class ReviewActionType(str, Enum):
+    """分析师操作类型。"""
+    MARK_AS_RELEVANT = "mark_as_relevant"
+    MARK_AS_IRRELEVANT = "mark_as_irrelevant"
+    ADD_TO_WATCHLIST = "add_to_watchlist"
+    ARCHIVE = "archive"
+    COMMENT = "comment"
+    ESCALATE = "escalate"
+    CLAIM = "claim"
+
+
+class TriageStatus(str, Enum):
+    """Triage 队列项状态。"""
+    PENDING = "pending"
+    IN_REVIEW = "in_review"
+    COMPLETED = "completed"
+    EXPIRED = "expired"
+
+
+class WatchlistStatus(str, Enum):
+    """Watchlist 项状态。"""
+    ACTIVE = "active"
+    ARCHIVED = "archived"

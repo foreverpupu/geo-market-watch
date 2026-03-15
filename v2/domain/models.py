@@ -238,3 +238,56 @@ class SignalResult:
     signal: Signal
     features: RankingFeatureSet
     breakdown: SignalScoreBreakdown
+
+
+@dataclass
+class TriageQueueItem:
+    """Triage 队列项。"""
+    signal_id: str
+    event_id: str
+    rank_score: float
+    assigned_to: str | None
+    added_at: datetime
+    due_by: datetime
+    status: str
+    metadata: dict = field(default_factory=dict)
+
+
+@dataclass
+class ReviewAction:
+    """分析师操作记录。"""
+    action_id: str
+    signal_id: str
+    action_type: str
+    action_taken_by: str
+    action_timestamp: datetime
+    comment: str | None = None
+    # 修正覆盖字段
+    exposure_override: dict | None = None
+    severity_override: float | None = None
+    # AI 认同度
+    agreement_with_ai: bool | None = None
+    metadata: dict = field(default_factory=dict)
+
+
+@dataclass
+class AuditTrailEntry:
+    """审计轨迹条目。"""
+    entry_id: str
+    signal_id: str
+    action_type: str
+    action_taken_by: str
+    timestamp: datetime
+    action_detail: str
+    metadata: dict = field(default_factory=dict)
+
+
+@dataclass
+class WatchlistEntry:
+    """Watchlist 条目。"""
+    signal_id: str
+    added_at: datetime
+    assigned_to: str
+    status: str
+    reason_for_watchlist: str
+    metadata: dict = field(default_factory=dict)
