@@ -19,13 +19,40 @@ Install dependencies:
 pip install -r requirements.txt
 ```
 
-Run schema validation tests:
+## Running Tests
+
+### Engine Core Logic Tests
+
+Test business logic in engine layer:
+
+```bash
+# Run all engine tests
+python tests/engine/test_engine_core.py
+
+# Or use the test runner
+./tests/run_engine_tests.sh
+```
+
+Tests cover:
+- Event normalization
+- Deduplication logic
+- Scoring engine
+- Escalation triggers
+- Lifecycle management
+- Performance calculations
+- Database operations
+
+### Schema Validation Tests
+
+Validate output schemas:
 
 ```bash
 pytest tests/schema_validation
 ```
 
-Run pipeline tests:
+### Pipeline Tests
+
+Test end-to-end workflows:
 
 ```bash
 python tests/pipeline/test_pipeline.py
