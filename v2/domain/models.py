@@ -328,6 +328,7 @@ class SignalUsefulnessMetrics:
     market_move: float | None  # 实际市场变动
     signal_move: float | None  # 信号预测变动
     event_category: str  # directionality, volatility
+    detection_method: str = "2sigma"  # 2sigma, fixed_threshold, neutral
 
 
 @dataclass

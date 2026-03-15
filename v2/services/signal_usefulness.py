@@ -155,6 +155,10 @@ def evaluate_signal_usefulness(
             avg_vol_after = sum(p.volatility or 0 for p in timeline.price_points_after[:20]) / 20
             volatility_spike_match = avg_vol_after > avg_vol_before * config.volatility_spike_threshold
     
+    # 获取检测方法（从 timeline 的 metadata 或通过其他方式传递）
+    # 这里简化处理，根据 is_false_alarm 推断
+    detection_method = "neutral" if is_false_alarm else "2sigma"
+    
     return SignalUsefulnessMetrics(
         signal_id=signal.signal_id if hasattr(signal, 'signal_id') else "unknown",
         usefulness_score=round(usefulness_score, 4),
@@ -166,4 +170,5 @@ def evaluate_signal_usefulness(
         market_move=timeline.market_move_magnitude,
         signal_move=0.05,  # 假设预测
         event_category=event_category,
+        detection_method=detection_method,
     )

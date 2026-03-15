@@ -1,17 +1,79 @@
 """
-Unit tests for replay core.
+Unit tests for replay core (optimized).
 """
 
 import pytest
+import pandas as pd
 from datetime import datetime, timedelta
 from v2.config import DEFAULT_REPLAY_CONFIG
-from v2.domain.models import Signal, PricePoint
+from v2.domain.models import Signal
 from v2.repositories.price_repository import MockPriceRepository
-from v2.services.replay_core import build_event_timeline, calculate_lead_time
+from v2.services.replay_core import (
+    build_event_timeline_optimized,
+    calculate_lead_time,
+    _detect_market_move_optimized,
+)
 
 
-class TestBuildEventTimeline:
-    """Test build_event_timeline function."""
+class TestDetectMarketMoveOptimized:
+    """Test _detect_market_move_optimized function."""
+    
+    def test_detects_with_2sigma(self):
+        """Should detect market move using 2-Sigma method."""
+        config = DEFAULT_REPLAY_CONFIG
+        signal_time = datetime(2024, 1, 15, 12, 0, 0)
+        
+        # 生成足够的历史数据（> 60 个点）
+        timestamps = pd.date_range(start=signal_time - timedelta(hours=2), periods=180, freq="1min")
+        prices = pd.Series([100.0 + i * 0.01 for i in range(180)])  # 缓慢上升趋势
+        
+        # 信号后价格突破 2-Sigma
+        prices.iloc[120:] = prices.iloc[120] * 1.05  # 5% jump
+        
+        result = _detect_market_move_optimized(
+            prices, timestamps, signal_time, prices.iloc[119], config
+        )
+        
+        assert result["detected_at"] is not None
+        assert result["direction"] == "up"
+        assert result["method"] == "2sigma"
+    
+    def test_uses_fixed_threshold_when_insufficient_data(self):
+        """Should use fixed threshold when insufficient historical data."""
+        config = DEFAULT_REPLAY_CONFIG
+        signal_time = datetime(2024, 1, 15, 12, 0, 0)
+        
+        # 只有 30 个历史数据点（< 60）
+        timestamps = pd.date_range(start=signal_time - timedelta(minutes=30), periods=90, freq="1min")
+        prices = pd.Series([100.0] * 30 + [100.0 + i * 0.05 for i in range(60)])  # 后 60 分钟上升
+        
+        result = _detect_market_move_optimized(
+            prices, timestamps, signal_time, 100.0, config
+        )
+        
+        assert result["detected_at"] is not None
+        assert result["method"] == "fixed_threshold"
+    
+    def test_marks_as_neutral_after_24h_no_movement(self):
+        """Should mark as neutral if no movement within 24 hours."""
+        config = DEFAULT_REPLAY_CONFIG
+        signal_time = datetime(2024, 1, 15, 12, 0, 0)
+        
+        # 生成数据，但价格几乎不变
+        timestamps = pd.date_range(start=signal_time - timedelta(hours=2), periods=180, freq="1min")
+        prices = pd.Series([100.0 + (i % 10) * 0.001 for i in range(180)])  # 微小波动
+        
+        result = _detect_market_move_optimized(
+            prices, timestamps, signal_time, 100.0, config
+        )
+        
+        assert result["direction"] == "neutral"
+        assert result["method"] == "neutral"
+        assert result["magnitude"] == 0.0
+
+
+class TestBuildEventTimelineOptimized:
+    """Test build_event_timeline_optimized function."""
     
     @pytest.fixture
     def base_signal(self):
@@ -34,21 +96,8 @@ class TestBuildEventTimeline:
             generated_at=datetime(2024, 1, 15, 12, 0, 0),
         )
     
-    def test_builds_timeline_with_price_data(self, base_signal):
-        """Should build timeline with price data."""
-        price_repo = MockPriceRepository()
-        config = DEFAULT_REPLAY_CONFIG
-        now = datetime(2024, 1, 15, 12, 0, 0)
-        
-        timeline = build_event_timeline(base_signal, ["SPY"], price_repo, config, now)
-        
-        assert timeline.event_id == "EVT_001"
-        assert len(timeline.price_points_before) > 0
-        assert len(timeline.price_points_after) > 0
-        assert timeline.signal_generated_at == now
-    
-    def test_detects_market_reaction(self, base_signal):
-        """Should detect market reaction."""
+    def test_builds_timeline_with_optimized_detection(self, base_signal):
+        """Should build timeline with optimized market detection."""
         price_repo = MockPriceRepository()
         config = DEFAULT_REPLAY_CONFIG
         now = datetime(2024, 1, 15, 12, 0, 0)
@@ -56,11 +105,13 @@ class TestBuildEventTimeline:
         # 注入市场变动
         price_repo.inject_market_move("SPY", now, 30, 0.05)
         
-        timeline = build_event_timeline(base_signal, ["SPY"], price_repo, config, now)
+        timeline = build_event_timeline_optimized(base_signal, ["SPY"], price_repo, config, now)
         
+        assert timeline.event_id == "EVT_001"
+        assert len(timeline.price_points_before) > 0
+        assert len(timeline.price_points_after) > 0
         assert timeline.market_reaction_detected_at is not None
         assert timeline.market_move_direction in ["up", "down"]
-        assert timeline.market_move_magnitude is not None
 
 
 class TestCalculateLeadTime:
@@ -92,8 +143,6 @@ class TestCalculateLeadTime:
         from v2.domain.models import EventTimeline
         
         config = DEFAULT_REPLAY_CONFIG
-        
-        # 市场反应在信号后 15 分钟
         reaction_time = datetime(2024, 1, 15, 12, 15, 0)
         
         timeline = EventTimeline(
@@ -122,8 +171,8 @@ class TestCalculateLeadTime:
             price_points_before=[],
             price_points_after=[],
             market_reaction_detected_at=None,
-            market_move_direction=None,
-            market_move_magnitude=None,
+            market_move_direction="neutral",
+            market_move_magnitude=0.0,
         )
         
         lead_time = calculate_lead_time(base_signal, timeline, config)

@@ -1,13 +1,21 @@
 """
-Replay Core
+Replay Core (Optimized)
 
-信号回放核心功能。
+信号回放核心功能 - 优化版本。
+
+优化点：
+1. 2-Sigma 冷启动处理（数据不足时使用固定百分比阈值）
+2. 动态观察窗口（只使用信号发出前的数据）
+3. 虚假信号检测（24小时无反应标记为 Neutral）
+4. Pandas rolling 提升计算效率
 """
 
 import uuid
+import numpy as np
+import pandas as pd
 from datetime import datetime, timedelta
 from v2.config import ReplayConfig, DEFAULT_REPLAY_CONFIG
-from v2.domain.models import Signal, EventTimeline, PricePoint, PricePoint
+from v2.domain.models import Signal, EventTimeline, PricePoint
 from v2.repositories.price_repository import PriceRepository, MockPriceRepository
 
 
@@ -16,15 +24,145 @@ def _generate_replay_id() -> str:
     return f"REPLAY_{uuid.uuid4().hex[:12].upper()}"
 
 
-def build_event_timeline(
-    signal,
+def _detect_market_move_optimized(
+    price_series: pd.Series,
+    timestamp_series: pd.Series,
+    signal_time: datetime,
+    price_at_signal: float,
+    config: ReplayConfig,
+) -> dict:
+    """
+    优化版市场反应检测。
+    
+    优化点：
+    - 使用 Pandas rolling 计算标准差
+    - 动态观察窗口（只使用信号前数据）
+    - 冷启动处理（数据不足时使用固定阈值）
+    
+    Args:
+        price_series: 价格序列
+        timestamp_series: 时间戳序列
+        signal_time: 信号时间
+        price_at_signal: 信号时价格
+        config: 配置
+        
+    Returns:
+        {
+            "detected_at": datetime | None,
+            "direction": "up" | "down" | "neutral" | None,
+            "magnitude": float | None,
+            "method": "2sigma" | "fixed_threshold" | "neutral",
+        }
+    """
+    # 分离信号前后的数据
+    mask_before = timestamp_series < signal_time
+    mask_after = timestamp_series >= signal_time
+    
+    prices_before = price_series[mask_before]
+    prices_after = price_series[mask_after]
+    timestamps_after = timestamp_series[mask_after]
+    
+    if len(prices_before) == 0 or len(prices_after) == 0:
+        return {"detected_at": None, "direction": None, "magnitude": None, "method": "neutral"}
+    
+    # 检查 24 小时内是否有反应（虚假信号检测）
+    max_check_time = signal_time + timedelta(hours=24)
+    mask_24h = timestamps_after <= max_check_time
+    prices_24h = prices_after[mask_24h]
+    
+    if len(prices_24h) == 0:
+        return {"detected_at": None, "direction": "neutral", "magnitude": 0.0, "method": "neutral"}
+    
+    # 冷启动处理：数据不足时使用固定百分比阈值
+    window_size = config.price_window_before  # 默认 60 分钟
+    
+    if len(prices_before) < window_size:
+        # 使用固定百分比阈值（如 1%）
+        fixed_threshold = price_at_signal * config.market_move_threshold
+        
+        for i, (price, ts) in enumerate(zip(prices_after, timestamps_after)):
+            if ts > max_check_time:
+                break
+            
+            move = abs(price - price_at_signal)
+            if move >= fixed_threshold:
+                direction = "up" if price > price_at_signal else "down"
+                return {
+                    "detected_at": ts,
+                    "direction": direction,
+                    "magnitude": round(move / price_at_signal, 4),
+                    "method": "fixed_threshold",
+                }
+        
+        # 24 小时内无反应 -> 虚假信号
+        return {"detected_at": None, "direction": "neutral", "magnitude": 0.0, "method": "neutral"}
+    
+    # 正常情况：使用 Pandas rolling 计算 2-Sigma
+    # 只使用信号前的数据计算滚动统计
+    rolling_mean = prices_before.rolling(window=window_size, min_periods=10).mean()
+    rolling_std = prices_before.rolling(window=window_size, min_periods=10).std()
+    
+    # 获取信号时的基准值
+    baseline_mean = rolling_mean.iloc[-1]
+    baseline_std = rolling_std.iloc[-1]
+    
+    if pd.isna(baseline_mean) or pd.isna(baseline_std):
+        # 滚动计算失败，回退到固定阈值
+        fixed_threshold = price_at_signal * config.market_move_threshold
+        
+        for i, (price, ts) in enumerate(zip(prices_after, timestamps_after)):
+            if ts > max_check_time:
+                break
+            
+            move = abs(price - price_at_signal)
+            if move >= fixed_threshold:
+                direction = "up" if price > price_at_signal else "down"
+                return {
+                    "detected_at": ts,
+                    "direction": direction,
+                    "magnitude": round(move / price_at_signal, 4),
+                    "method": "fixed_threshold",
+                }
+        
+        return {"detected_at": None, "direction": "neutral", "magnitude": 0.0, "method": "neutral"}
+    
+    # 2-Sigma 阈值
+    upper_bound = baseline_mean + 2 * baseline_std
+    lower_bound = baseline_mean - 2 * baseline_std
+    
+    # 检测突破
+    for i, (price, ts) in enumerate(zip(prices_after, timestamps_after)):
+        if ts > max_check_time:
+            break
+        
+        if price >= upper_bound:
+            return {
+                "detected_at": ts,
+                "direction": "up",
+                "magnitude": round((price - price_at_signal) / price_at_signal, 4),
+                "method": "2sigma",
+            }
+        elif price <= lower_bound:
+            return {
+                "detected_at": ts,
+                "direction": "down",
+                "magnitude": round((price_at_signal - price) / price_at_signal, 4),
+                "method": "2sigma",
+            }
+    
+    # 24 小时内无突破 -> 虚假信号
+    return {"detected_at": None, "direction": "neutral", "magnitude": 0.0, "method": "neutral"}
+
+
+def build_event_timeline_optimized(
+    signal: Signal,
     symbols: list[str],
     price_repository: PriceRepository,
     config: ReplayConfig = DEFAULT_REPLAY_CONFIG,
     now: datetime | None = None,
 ) -> EventTimeline:
     """
-    构建事件时间线。
+    优化版事件时间线构建。
     
     Args:
         signal: 信号
@@ -66,10 +204,25 @@ def build_event_timeline(
     all_points_before.sort(key=lambda x: x.timestamp)
     all_points_after.sort(key=lambda x: x.timestamp)
     
-    # 检测市场反应
-    market_reaction = _detect_market_reaction(
-        all_points_before, all_points_after, config
-    )
+    # 转换为 Pandas Series 进行优化计算
+    if all_points_before and all_points_after:
+        timestamps = pd.Series([p.timestamp for p in all_points_before + all_points_after])
+        prices = pd.Series([p.price for p in all_points_before + all_points_after])
+        
+        # 获取信号时的价格
+        price_at_signal = all_points_before[-1].price if all_points_before else all_points_after[0].price
+        
+        # 检测市场反应
+        market_reaction = _detect_market_move_optimized(
+            prices, timestamps, signal_time, price_at_signal, config
+        )
+    else:
+        market_reaction = {
+            "detected_at": None,
+            "direction": None,
+            "magnitude": None,
+            "method": "neutral",
+        }
     
     return EventTimeline(
         event_id=signal.event_id if hasattr(signal, 'event_id') else "unknown",
@@ -82,44 +235,8 @@ def build_event_timeline(
     )
 
 
-def _detect_market_reaction(
-    points_before: list[PricePoint],
-    points_after: list[PricePoint],
-    config: ReplayConfig,
-) -> dict:
-    """
-    检测市场反应。
-    
-    Returns:
-        {
-            "detected_at": datetime | None,
-            "direction": "up" | "down" | "neutral" | None,
-            "magnitude": float | None,
-        }
-    """
-    if not points_before or not points_after:
-        return {"detected_at": None, "direction": None, "magnitude": None}
-    
-    # 计算信号前的平均价格
-    baseline_price = sum(p.price for p in points_before[-20:]) / min(len(points_before), 20)
-    
-    # 在信号后查找第一个显著变动
-    for point in points_after:
-        move = (point.price - baseline_price) / baseline_price
-        
-        if abs(move) >= config.market_move_threshold:
-            direction = "up" if move > 0 else "down"
-            return {
-                "detected_at": point.timestamp,
-                "direction": direction,
-                "magnitude": round(abs(move), 4),
-            }
-    
-    return {"detected_at": None, "direction": "neutral", "magnitude": 0.0}
-
-
 def calculate_lead_time(
-    signal,
+    signal: Signal,
     timeline: EventTimeline,
     config: ReplayConfig = DEFAULT_REPLAY_CONFIG,
 ) -> int | None:

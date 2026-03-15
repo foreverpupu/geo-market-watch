@@ -9,7 +9,7 @@ from datetime import datetime
 from v2.config import ReplayConfig, DEFAULT_REPLAY_CONFIG
 from v2.domain.models import Signal, ReplayResult, EvaluationResult
 from v2.repositories.price_repository import PriceRepository, MockPriceRepository
-from v2.services.replay_core import build_event_timeline, calculate_lead_time
+from v2.services.replay_core import build_event_timeline_optimized, calculate_lead_time
 from v2.services.signal_usefulness import evaluate_signal_usefulness
 
 
@@ -50,8 +50,8 @@ def run_signal_replay(
     if price_repository is None:
         price_repository = MockPriceRepository()
     
-    # Step 1: 构建事件时间线
-    timeline = build_event_timeline(signal, symbols, price_repository, config, now)
+    # Step 1: 构建事件时间线（优化版）
+    timeline = build_event_timeline_optimized(signal, symbols, price_repository, config, now)
     
     # Step 2: 计算领先时间
     lead_time = calculate_lead_time(signal, timeline, config)
