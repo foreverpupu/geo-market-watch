@@ -291,6 +291,34 @@ def insert_notification(
 
 # Statistics
 
+def insert_watchlist_item(conn: sqlite3.Connection, event_id: str, company_name: str, ticker: str, sector: str) -> str:
+    """
+    Insert a watchlist item for an event.
+    
+    Args:
+        conn: Database connection
+        event_id: Event ID
+        company_name: Company name
+        ticker: Stock ticker
+        sector: Industry sector
+        
+    Returns:
+        watchlist_id
+    """
+    watchlist_id = generate_id()
+    conn.execute("""
+        INSERT INTO watchlist (watchlist_id, event_id, company_name, ticker, sector)
+        VALUES (?, ?, ?, ?, ?)
+    """, (watchlist_id, event_id, company_name, ticker, sector))
+    return watchlist_id
+
+
+def get_watchlist_by_event(conn: sqlite3.Connection, event_id: str) -> List[Dict[str, Any]]:
+    """Get watchlist items for an event."""
+    cursor = conn.execute("SELECT * FROM watchlist WHERE event_id = ?", (event_id,))
+    return [dict(row) for row in cursor.fetchall()]
+
+
 def get_stats(conn: sqlite3.Connection) -> Dict[str, Any]:
     """Get database statistics."""
     stats = {}
@@ -306,6 +334,9 @@ def get_stats(conn: sqlite3.Connection) -> Dict[str, Any]:
     
     cursor = conn.execute("SELECT COUNT(*) FROM notifications")
     stats['total_notifications'] = cursor.fetchone()[0]
+    
+    cursor = conn.execute("SELECT COUNT(*) FROM watchlist")
+    stats['total_watchlist_items'] = cursor.fetchone()[0]
     
     cursor = conn.execute("SELECT DISTINCT region FROM events")
     stats['regions'] = [row[0] for row in cursor.fetchall()]

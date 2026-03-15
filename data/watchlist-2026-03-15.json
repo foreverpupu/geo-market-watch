@@ -1,0 +1,33 @@
+[
+  {
+    "event_key": "middle-east|maritime-disruption|strait-of-hormuz-shipping-risk",
+    "watchlist": [
+      {"company_name": "ExxonMobil", "ticker": "XOM", "sector": "Energy"},
+      {"company_name": "Chevron", "ticker": "CVX", "sector": "Energy"},
+      {"company_name": "Shell", "ticker": "SHEL", "sector": "Energy"},
+      {"company_name": "TotalEnergies", "ticker": "TTE", "sector": "Energy"},
+      {"company_name": "Frontline", "ticker": "FRO", "sector": "Tanker Shipping"},
+      {"company_name": "Scorpio Tankers", "ticker": "STNG", "sector": "Tanker Shipping"}
+    ]
+  },
+  {
+    "event_key": "middle-east|energy-infrastructure-risk|iran-retaliation-threat",
+    "watchlist": [
+      {"company_name": "ExxonMobil", "ticker": "XOM", "sector": "Energy"},
+      {"company_name": "Chevron", "ticker": "CVX", "sector": "Energy"},
+      {"company_name": "Lockheed Martin", "ticker": "LMT", "sector": "Defense"},
+      {"company_name": "Raytheon", "ticker": "RTX", "sector": "Defense"},
+      {"company_name": "Northrop Grumman", "ticker": "NOC", "sector": "Defense"}
+    ]
+  },
+  {
+    "event_key": "middle-east|fertilizer-supply-chain|sulfur-supply-risk",
+    "watchlist": [
+      {"company_name": "Nutrien", "ticker": "NTR", "sector": "Fertilizer"},
+      {"company_name": "Mosaic", "ticker": "MOS", "sector": "Fertilizer"},
+      {"company_name": "CF Industries", "ticker": "CF", "sector": "Fertilizer"},
+      {"company_name": "Archer Daniels Midland", "ticker": "ADM", "sector": "Agriculture"},
+      {"company_name": "Bunge", "ticker": "BG", "sector": "Agriculture"}
+    ]
+  }
+]
