@@ -124,23 +124,32 @@ gmw-init-db --help
 
 ---
 
-## Quick Start (10-minute run)
+## Quick Start / How to Run
+
+The CLI is the only supported execution model for routine usage.
+
+Install the package:
 
 ```bash
-# 1. Initialize database
+pip install -e .
+```
+
+Initialize the database:
+
+```bash
 gmw-init-db --db data/geo_alpha.db
+```
 
-# 2. Seed with sample data
-gmw-seed-db --db data/geo_alpha.db --seed data/db-seed-events.json
+Run the main workflow:
 
-# 3. Query to verify
-gmw-query --db data/geo_alpha.db --list
+```bash
+gmw-agent --input data/intake.json
+```
 
-# 4. Run minimal example
-gmw-agent --input examples/minimal_event.json --memory data/dedupe-memory.json --output outputs/
+Query results:
 
-# 5. View results
-ls outputs/
+```bash
+gmw-query --stats
 ```
 
 ---
@@ -266,25 +275,43 @@ Output: LNG carrier long thesis, +15% return tracked
 
 ---
 
-## Architecture Overview
+## Architecture / The Engine
 
-```
-┌──────────────────────────────────────────────┐
-│      GEO MARKET WATCH ARCHITECTURE           │
-└──────────────────────────────────────────────┘
+`geo-market-watch` is a **local-first, deterministic, auditable intelligence workflow** for converting geopolitical events into structured market intelligence.
 
-DATA LAYER
-  Raw Signals → Event Cards → Database → Exports
+### Core Pipeline
 
-AGENT LAYER
-  News Intake → Dedupe → Scoring → Trigger → Output
+> **Raw Event → Normalization → Scoring → Trigger → Review → Performance Tracking**
 
-INTELLIGENCE LAYER
-  Event Understanding → Sector Exposure → Trade Ideas
+This pipeline represents a shift from black-box prediction to **auditable workflow**. Every transformation is logged, scored, and reviewable. LLMs are not autonomous decision-makers in this system; they are tools within a structured process that maintains human oversight at critical decision points.
 
-RESEARCH LAYER
-  Analyst Review → Approval Workflow → Performance Tracking
-```
+### Key Design Principles
+
+- **Local-First** — Data, state, and artifacts remain inspectable and under operator control
+- **Deterministic** — Core pipeline stages produce reproducible outputs given the same inputs, enabling testing and benchmarking
+- **Auditable** — Every judgment is traceable, inspectable, and replayable
+- **Human-in-the-Loop** — Analyst review gates critical decisions; no fully automated deployment
+- **Composable** — Use only the layers you need. Database without agent loop. Scoring without exposure mapping.
+
+### Typed Model Architecture
+
+Strongly typed dataclass models provide **unified contracts** across the pipeline:
+
+- **Testability**: Typed models enable unit testing without mocking complex dependencies
+- **Explainability**: Explicit field names and types make data flow transparent
+- **Multi-Agent Protocol**: Typed models serve as the communication protocol for future multi-agent workflows (v7.0)
+
+Example models:
+- `RawIntakeItem` → `NormalizedEvent` → `ScoreResult` → `TriggerResult` → `NotificationArtifact`
+
+### v7.0 Preview
+
+The next major version will introduce:
+- **Source Confidence** — Evidence quality assessment attached to intake items
+- **Fog of War** — Uncertainty state tracking for contested or evolving situations
+- **Mandatory Invalidation** — Explicit invalidation workflows with audit trails
+
+These features extend the typed model architecture to support more nuanced intelligence workflows while maintaining the core principles of auditability and human oversight.
 
 **Full architecture:** [docs/architecture/institutional-framework.md](docs/architecture/institutional-framework.md)
 
