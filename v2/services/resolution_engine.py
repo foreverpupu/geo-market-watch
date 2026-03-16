@@ -5,16 +5,19 @@ Resolution Engine
 """
 
 from datetime import datetime
-from typing import Optional
+
 from v2.config import ResolutionConfig
-from v2.domain.models import EventCandidate, CanonicalEvent, ResolutionDecision, ResolutionResult
 from v2.domain.enums import ResolutionDecisionType
+from v2.domain.models import EventCandidate, ResolutionDecision, ResolutionResult
 from v2.repositories.event_repository import EventRepository
 from v2.services.event_search import find_candidate_matches
-from v2.services.timeline_updater import create_new_event_from_candidate, update_existing_event_from_candidate
+from v2.services.timeline_updater import (
+    create_new_event_from_candidate,
+    update_existing_event_from_candidate,
+)
 
 
-def _should_reject_candidate(candidate: EventCandidate, config: ResolutionConfig) -> Optional[ResolutionDecision]:
+def _should_reject_candidate(candidate: EventCandidate, config: ResolutionConfig) -> ResolutionDecision | None:
     """
     检查是否应该拒绝候选事件。
     

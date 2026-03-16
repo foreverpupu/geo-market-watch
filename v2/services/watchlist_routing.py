@@ -5,10 +5,11 @@ Watchlist Routing
 """
 
 from datetime import datetime
-from v2.config import AnalystWorkflowConfig, DEFAULT_ANALYST_WORKFLOW_CONFIG
-from v2.domain.models import Signal, WatchlistEntry
+
+from v2.config import DEFAULT_ANALYST_WORKFLOW_CONFIG, AnalystWorkflowConfig
 from v2.domain.enums import WatchlistStatus
-from v2.repositories.watchlist_repository import WatchlistRepository, InMemoryWatchlistRepository
+from v2.domain.models import Signal, WatchlistEntry
+from v2.repositories.watchlist_repository import WatchlistRepository
 
 
 def route_signal_to_watchlist(

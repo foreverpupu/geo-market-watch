@@ -26,6 +26,13 @@ dependencies = [
     "python-dateutil>=2.8.0",
 ]
 
+[project.scripts]
+gmw-init-db = "geo_market_watch.scripts.init_db:main"
+gmw-query = "geo_market_watch.scripts.query:main"
+gmw-agent = "geo_market_watch.scripts.agent:main"
+gmw-seed-db = "geo_market_watch.scripts.seed_db:main"
+gmw-benchmark = "geo_market_watch.scripts.benchmark:main"
+
 [project.optional-dependencies]
 dev = [
     "pytest>=7.0.0",

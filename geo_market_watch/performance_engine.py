@@ -6,18 +6,10 @@ Tracks paper trading performance for approved trade ideas.
 
 import sqlite3
 import uuid
-from datetime import datetime, timezone
-from typing import Dict, Optional, Tuple, List
+from datetime import UTC, datetime
 from pathlib import Path
-import sys
 
-# Import lifecycle engine for event recording
-try:
-    from .lifecycle_engine import record_lifecycle_event
-except ImportError:
-    # Fallback for direct execution
-    sys.path.insert(0, str(Path(__file__).parent))
-    from lifecycle_engine import record_lifecycle_event
+from geo_market_watch.lifecycle_engine import record_lifecycle_event
 
 
 def get_db_connection(db_path: str) -> sqlite3.Connection:
@@ -37,7 +29,7 @@ def _parse_iso_time(time_str: str) -> datetime:
         raise ValueError(f"Invalid time format: {time_str}")
 
 
-def _validate_prices(entry_price: float, close_price: Optional[float] = None) -> Tuple[bool, str]:
+def _validate_prices(entry_price: float, close_price: float | None = None) -> tuple[bool, str]:
     """Validate price values."""
     if entry_price <= 0:
         return False, "Entry price must be positive"
@@ -46,7 +38,7 @@ def _validate_prices(entry_price: float, close_price: Optional[float] = None) ->
     return True, ""
 
 
-def _validate_times(entry_time: str, close_time: Optional[str] = None) -> Tuple[bool, str]:
+def _validate_times(entry_time: str, close_time: str | None = None) -> tuple[bool, str]:
     """Validate time values."""
     try:
         entry_dt = _parse_iso_time(entry_time)
@@ -104,7 +96,7 @@ def _classify_outcome(return_pct: float) -> str:
         return 'flat'
 
 
-def _is_approved_for_tracking(db_path: str, trade_idea_id: str) -> Tuple[bool, str, Optional[Dict]]:
+def _is_approved_for_tracking(db_path: str, trade_idea_id: str) -> tuple[bool, str, dict | None]:
     """Check if trade idea is approved for tracking."""
     try:
         conn = get_db_connection(db_path)
@@ -142,8 +134,8 @@ def start_tracking(
     trade_idea_id: str,
     entry_price: float,
     entry_time: str,
-    notes: Optional[str] = None
-) -> Tuple[bool, str]:
+    notes: str | None = None
+) -> tuple[bool, str]:
     """
     Start tracking performance for an approved trade idea.
     
@@ -183,7 +175,7 @@ def start_tracking(
         )
         existing = cursor.fetchone()
         
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(UTC).isoformat()
         
         if existing:
             # Update existing record only if not already tracking
@@ -236,8 +228,8 @@ def close_tracking(
     trade_idea_id: str,
     close_price: float,
     close_time: str,
-    notes: Optional[str] = None
-) -> Tuple[bool, str, Optional[Dict]]:
+    notes: str | None = None
+) -> tuple[bool, str, dict | None]:
     """
     Close tracking for a trade idea and compute performance.
     
@@ -302,7 +294,7 @@ def close_tracking(
         if perf.get('benchmark_return_pct') is not None:
             alpha_spread = return_pct - perf['benchmark_return_pct']
         
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(UTC).isoformat()
         
         # Update performance record
         cursor.execute(
@@ -351,7 +343,7 @@ def update_benchmark_return(
     db_path: str,
     trade_idea_id: str,
     benchmark_return_pct: float
-) -> Tuple[bool, str]:
+) -> tuple[bool, str]:
     """
     Update benchmark return for a tracked idea.
     
@@ -383,7 +375,7 @@ def update_benchmark_return(
         if row['return_pct'] is not None:
             alpha_spread = row['return_pct'] - benchmark_return_pct
         
-        now = datetime.now(timezone.utc).isoformat()
+        now = datetime.now(UTC).isoformat()
         
         cursor.execute(
             """
@@ -405,7 +397,7 @@ def update_benchmark_return(
         return False, f"Database error: {str(e)}"
 
 
-def recompute_performance(db_path: str, trade_idea_id: str) -> Optional[Dict]:
+def recompute_performance(db_path: str, trade_idea_id: str) -> dict | None:
     """
     Recompute performance metrics for a trade idea.
     
@@ -448,7 +440,7 @@ def recompute_performance(db_path: str, trade_idea_id: str) -> Optional[Dict]:
             if perf.get('benchmark_return_pct') is not None:
                 alpha_spread = return_pct - perf['benchmark_return_pct']
             
-            now = datetime.now(timezone.utc).isoformat()
+            now = datetime.now(UTC).isoformat()
             
             cursor.execute(
                 """
@@ -473,11 +465,11 @@ def recompute_performance(db_path: str, trade_idea_id: str) -> Optional[Dict]:
         conn.close()
         return perf
     
-    except sqlite3.Error as e:
+    except sqlite3.Error:
         return None
 
 
-def recompute_recent_performance(db_path: str, limit: int = 50) -> Dict:
+def recompute_recent_performance(db_path: str, limit: int = 50) -> dict:
     """
     Recompute performance for recent trade ideas.
     
@@ -525,7 +517,7 @@ def recompute_recent_performance(db_path: str, limit: int = 50) -> Dict:
         return {'error': str(e)}
 
 
-def get_performance_record(db_path: str, trade_idea_id: str) -> Optional[Dict]:
+def get_performance_record(db_path: str, trade_idea_id: str) -> dict | None:
     """
     Get performance record for a trade idea.
     
@@ -555,14 +547,14 @@ def get_performance_record(db_path: str, trade_idea_id: str) -> Optional[Dict]:
         
         return dict(row) if row else None
     
-    except sqlite3.Error as e:
+    except sqlite3.Error:
         return None
 
 
 def list_tracked_ideas(
     db_path: str,
-    status_filter: Optional[str] = None
-) -> List[Dict]:
+    status_filter: str | None = None
+) -> list[dict]:
     """
     List tracked trade ideas with performance summary.
     
@@ -605,7 +597,7 @@ def list_tracked_ideas(
         
         return [dict(row) for row in rows]
     
-    except sqlite3.Error as e:
+    except sqlite3.Error:
         return []
 
 

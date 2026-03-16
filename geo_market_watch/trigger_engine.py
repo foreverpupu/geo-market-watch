@@ -2,8 +2,9 @@
 Refactored trigger engine with extended decision structure.
 """
 
-from typing import List, Dict, Any, Optional
-from geo_market_watch.models import ScoreResult, TriggerResult, TriggerDecision, EscalationPriority
+from typing import Any
+
+from geo_market_watch.models import EscalationPriority, ScoreResult, TriggerResult
 
 
 class TriggerEngine:
@@ -20,7 +21,7 @@ class TriggerEngine:
         EscalationPriority.CRITICAL: (9, 10)
     }
     
-    def __init__(self, config: Optional[Dict[str, Any]] = None):
+    def __init__(self, config: dict[str, Any] | None = None):
         """
         Initialize trigger engine.
         
@@ -34,7 +35,7 @@ class TriggerEngine:
     def should_escalate(
         self,
         score_result: ScoreResult,
-        context: Optional[Dict[str, Any]] = None
+        context: dict[str, Any] | None = None
     ) -> TriggerResult:
         """
         Determine if event should trigger full analysis.
@@ -88,7 +89,7 @@ class TriggerEngine:
     def _determine_trigger_class(
         self,
         score_result: ScoreResult,
-        context: Dict[str, Any]
+        context: dict[str, Any]
     ) -> str:
         """Determine trigger classification."""
         category = context.get("category", "general")
@@ -102,7 +103,7 @@ class TriggerEngine:
         else:
             return f"{category}_monitor"
     
-    def get_config(self) -> Dict[str, Any]:
+    def get_config(self) -> dict[str, Any]:
         """Get current configuration."""
         return {
             "trigger_threshold": self.trigger_threshold,

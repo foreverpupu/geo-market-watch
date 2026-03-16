@@ -1,106 +1,35 @@
 #!/usr/bin/env python3
 """
-Geo Market Watch v6.3 — Review Trade Ideas CLI
+DEPRECATED: This script functionality has been moved to geo_market_watch package.
 
-Submit analyst reviews for trade ideas.
-
-Usage:
-    python scripts/review_trade_ideas.py \
-        --db data/geo_alpha.db \
-        --idea-id TRADE_ID \
-        --reviewer analyst1 \
-        --decision approve \
-        --confidence medium \
-        --notes "Energy price risk justified"
+Please use the official CLI or import from geo_market_watch directly.
 """
 
-import argparse
+import warnings
 import sys
-from pathlib import Path
 
-# Add parent directory to path for imports
-sys.path.insert(0, str(Path(__file__).parent.parent))
+warnings.warn(
+    "This script is deprecated. Import from geo_market_watch package instead.",
+    DeprecationWarning,
+    stacklevel=2
+)
 
-from engine.idea_review_engine import submit_review
+print("""
+This script has been deprecated.
 
+Please use one of the following:
+1. Official CLI commands:
+   - gmw-init-db
+   - gmw-query
+   - gmw-agent
+   - gmw-seed-db
+   - gmw-benchmark
 
-def main():
-    parser = argparse.ArgumentParser(
-        description="Submit analyst review for a trade idea",
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""
-Examples:
-    # Approve an idea
-    python scripts/review_trade_ideas.py --db data/geo_alpha.db \\
-        --idea-id TRADE_ID --reviewer amy --decision approve --confidence high
+2. Import from the package directly:
+   from geo_market_watch.idea_review_engine import get_ideas_for_review
+   etc.
 
-    # Reject with notes
-    python scripts/review_trade_ideas.py --db data/geo_alpha.db \\
-        --idea-id TRADE_ID --reviewer amy --decision reject \\
-        --notes "Insufficient risk/reward"
+See geo_market_watch/README.md for details.
+""")
 
-    # Monitor (no status change)
-    python scripts/review_trade_ideas.py --db data/geo_alpha.db \\
-        --idea-id TRADE_ID --reviewer amy --decision monitor
-        """
-    )
-    
-    parser.add_argument(
-        "--db",
-        required=True,
-        help="Path to the SQLite database"
-    )
-    parser.add_argument(
-        "--idea-id",
-        required=True,
-        help="Trade idea ID to review"
-    )
-    parser.add_argument(
-        "--reviewer",
-        required=True,
-        help="Name/ID of the reviewer"
-    )
-    parser.add_argument(
-        "--decision",
-        required=True,
-        choices=["approve", "monitor", "reject", "needs_revision"],
-        help="Review decision"
-    )
-    parser.add_argument(
-        "--confidence",
-        choices=["low", "medium", "high"],
-        help="Confidence level (optional)"
-    )
-    parser.add_argument(
-        "--notes",
-        help="Review notes (optional)"
-    )
-    
-    args = parser.parse_args()
-    
-    # Validate database exists
-    db_path = Path(args.db)
-    if not db_path.exists():
-        print(f"Error: Database not found: {args.db}")
-        sys.exit(1)
-    
-    # Submit review
-    success, message = submit_review(
-        db_path=str(db_path),
-        trade_idea_id=args.idea_id,
-        reviewer=args.reviewer,
-        decision=args.decision,
-        confidence=args.confidence,
-        notes=args.notes
-    )
-    
-    if success:
-        print(f"✓ {message}")
-        sys.exit(0)
-    else:
-        print(f"✗ Error: {message}")
-        sys.exit(1)
-
-
-if __name__ == "__main__":
-    main()
+sys.exit(1)

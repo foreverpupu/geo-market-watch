@@ -5,6 +5,7 @@ Signal Repository
 """
 
 from typing import Protocol
+
 from v2.domain.models import Signal
 
 

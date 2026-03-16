@@ -5,7 +5,8 @@ Event Repository
 """
 
 from datetime import datetime
-from typing import Protocol, Optional
+from typing import Protocol
+
 from v2.domain.models import CanonicalEvent
 
 
@@ -15,13 +16,13 @@ class EventRepository(Protocol):
     def list_recent_events(
         self,
         event_type: str,
-        region: Optional[str],
+        region: str | None,
         since: datetime,
     ) -> list[CanonicalEvent]:
         """列出最近的事件。"""
         ...
     
-    def get_event(self, event_id: str) -> Optional[CanonicalEvent]:
+    def get_event(self, event_id: str) -> CanonicalEvent | None:
         """获取单个事件。"""
         ...
     
@@ -47,7 +48,7 @@ class InMemoryEventRepository:
     def list_recent_events(
         self,
         event_type: str,
-        region: Optional[str],
+        region: str | None,
         since: datetime,
     ) -> list[CanonicalEvent]:
         """列出最近的事件，按 event_type 和 region 过滤。"""
@@ -69,7 +70,7 @@ class InMemoryEventRepository:
         
         return results
     
-    def get_event(self, event_id: str) -> Optional[CanonicalEvent]:
+    def get_event(self, event_id: str) -> CanonicalEvent | None:
         """获取单个事件。"""
         return self._events.get(event_id)
     

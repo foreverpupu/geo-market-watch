@@ -6,8 +6,8 @@ Replaces loose Dict[str, Any] passing with explicit, type-safe models.
 
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Optional, List, Dict, Any
 from enum import Enum
+from typing import Any
 
 
 class ScoreBand(Enum):
@@ -35,12 +35,12 @@ class RawIntakeItem:
     
     headline: str
     timestamp: datetime
-    source: Optional[str] = None
-    summary: Optional[str] = None
-    region: Optional[str] = None
-    category: Optional[str] = None
-    urls: List[str] = field(default_factory=list)
-    raw_metadata: Dict[str, Any] = field(default_factory=dict)
+    source: str | None = None
+    summary: str | None = None
+    region: str | None = None
+    category: str | None = None
+    urls: list[str] = field(default_factory=list)
+    raw_metadata: dict[str, Any] = field(default_factory=dict)
     
     def __post_init__(self):
         if not self.headline:
@@ -59,13 +59,13 @@ class NormalizedEvent:
     region: str
     category: str
     severity: str
-    summary: Optional[str] = None
-    source: Optional[str] = None
-    urls: List[str] = field(default_factory=list)
+    summary: str | None = None
+    source: str | None = None
+    urls: list[str] = field(default_factory=list)
     
     # Dedupe tracking
-    canonical_key: Optional[str] = None
-    source_url_hash: Optional[str] = None
+    canonical_key: str | None = None
+    source_url_hash: str | None = None
     
     def __post_init__(self):
         if not self.event_id:
@@ -80,7 +80,7 @@ class ScoreResult:
     
     value: float  # 0-10
     band: ScoreBand
-    breakdown: Dict[str, float] = field(default_factory=dict)
+    breakdown: dict[str, float] = field(default_factory=dict)
     reasoning: str = ""
     
     def __post_init__(self):
@@ -93,7 +93,7 @@ class TriggerResult:
     """Trigger decision from trigger engine."""
     
     trigger_full_analysis: bool
-    trigger_reasons: List[str] = field(default_factory=list)
+    trigger_reasons: list[str] = field(default_factory=list)
     trigger_class: str = ""
     escalation_priority: EscalationPriority = EscalationPriority.LOW
     
@@ -111,11 +111,11 @@ class NotificationArtifact:
     notification_type: str  # "monitor" or "full_analysis"
     headline: str
     content: str
-    sectors: List[str] = field(default_factory=list)
-    trade_ideas: List[Dict[str, Any]] = field(default_factory=list)
-    watchlist_items: List[Dict[str, Any]] = field(default_factory=list)
+    sectors: list[str] = field(default_factory=list)
+    trade_ideas: list[dict[str, Any]] = field(default_factory=list)
+    watchlist_items: list[dict[str, Any]] = field(default_factory=list)
     created_at: datetime = field(default_factory=datetime.now)
-    output_path: Optional[str] = None
+    output_path: str | None = None
 
 
 @dataclass
@@ -126,10 +126,10 @@ class DedupeRecord:
     first_seen_at: datetime
     last_seen_at: datetime
     occurrence_count: int = 1
-    headline_variants: List[str] = field(default_factory=list)
-    source_urls: List[str] = field(default_factory=list)
+    headline_variants: list[str] = field(default_factory=list)
+    source_urls: list[str] = field(default_factory=list)
     
-    def add_occurrence(self, headline: str, timestamp: datetime, source_url: Optional[str] = None):
+    def add_occurrence(self, headline: str, timestamp: datetime, source_url: str | None = None):
         self.last_seen_at = timestamp
         self.occurrence_count += 1
         if headline not in self.headline_variants:
@@ -144,7 +144,7 @@ class AgentRunSummary:
     
     run_id: str
     started_at: datetime
-    completed_at: Optional[datetime] = None
+    completed_at: datetime | None = None
     items_processed: int = 0
     items_normalized: int = 0
     items_deduped: int = 0
@@ -152,14 +152,14 @@ class AgentRunSummary:
     items_triggered: int = 0
     items_persisted: int = 0
     notifications_generated: int = 0
-    errors: List[str] = field(default_factory=list)
+    errors: list[str] = field(default_factory=list)
     
     @property
     def success(self) -> bool:
         return len(self.errors) == 0
     
     @property
-    def duration_seconds(self) -> Optional[float]:
+    def duration_seconds(self) -> float | None:
         if self.completed_at:
             return (self.completed_at - self.started_at).total_seconds()
         return None

@@ -5,8 +5,9 @@ Refactored intake normalizer with clear parse/validate/materialize steps.
 import hashlib
 import re
 from datetime import datetime
-from typing import Optional, Dict, Any
-from geo_market_watch.models import RawIntakeItem, NormalizedEvent
+from typing import Any
+
+from geo_market_watch.models import NormalizedEvent, RawIntakeItem
 
 
 class ParseError(Exception):
@@ -41,7 +42,7 @@ class IntakeNormalizer:
         "election": ["election", "vote", "poll", "political"],
     }
     
-    def __init__(self, current_time: Optional[datetime] = None):
+    def __init__(self, current_time: datetime | None = None):
         """
         Initialize normalizer.
         
@@ -50,7 +51,7 @@ class IntakeNormalizer:
         """
         self.current_time = current_time or datetime.now()
     
-    def normalize(self, raw: Dict[str, Any]) -> NormalizedEvent:
+    def normalize(self, raw: dict[str, Any]) -> NormalizedEvent:
         """
         Main entry: parse → validate → materialize.
         
@@ -73,7 +74,7 @@ class IntakeNormalizer:
         # Step 3: Materialize
         return self._materialize(parsed)
     
-    def _parse(self, raw: Dict[str, Any]) -> RawIntakeItem:
+    def _parse(self, raw: dict[str, Any]) -> RawIntakeItem:
         """Parse raw dict into RawIntakeItem."""
         try:
             # Parse timestamp
@@ -161,7 +162,7 @@ class IntakeNormalizer:
         words = normalized.split()[:10]
         return " ".join(words)
     
-    def _hash_urls(self, urls: list) -> Optional[str]:
+    def _hash_urls(self, urls: list) -> str | None:
         """Hash URLs for dedupe."""
         if not urls:
             return None

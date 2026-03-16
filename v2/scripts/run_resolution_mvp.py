@@ -5,11 +5,11 @@ Resolution MVP Runner
 """
 
 from datetime import datetime
+
 from v2.config import DEFAULT_RESOLUTION_CONFIG
-from v2.domain.models import EventCandidate
 from v2.repositories.event_repository import InMemoryEventRepository
-from v2.services.resolution_engine import resolve_candidate, apply_resolution
 from v2.services.candidate_builder import build_candidate_from_dict
+from v2.services.resolution_engine import apply_resolution, resolve_candidate
 
 
 def run_resolution_demo():

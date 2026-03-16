@@ -7,8 +7,8 @@ Provides reusable helper functions for database setup and CRUD operations.
 import sqlite3
 import uuid
 from datetime import datetime
-from typing import Dict, Any, List, Optional, Tuple
 from pathlib import Path
+from typing import Any
 
 from .database_models import CREATE_TABLES_SQL
 
@@ -59,7 +59,7 @@ def now_iso() -> str:
 
 # Event CRUD operations
 
-def insert_event(conn: sqlite3.Connection, event: Dict[str, Any]) -> str:
+def insert_event(conn: sqlite3.Connection, event: dict[str, Any]) -> str:
     """
     Insert a new event with raw data snapshot.
     
@@ -102,7 +102,7 @@ def insert_event(conn: sqlite3.Connection, event: Dict[str, Any]) -> str:
     return event_id
 
 
-def upsert_event(conn: sqlite3.Connection, event: Dict[str, Any]) -> str:
+def upsert_event(conn: sqlite3.Connection, event: dict[str, Any]) -> str:
     """
     Upsert an event (insert if new, update if exists).
     
@@ -164,21 +164,21 @@ def upsert_event(conn: sqlite3.Connection, event: Dict[str, Any]) -> str:
         return insert_event(conn, event)
 
 
-def get_event(conn: sqlite3.Connection, event_id: str) -> Optional[Dict[str, Any]]:
+def get_event(conn: sqlite3.Connection, event_id: str) -> dict[str, Any] | None:
     """Get event by ID."""
     cursor = conn.execute("SELECT * FROM events WHERE event_id = ?", (event_id,))
     row = cursor.fetchone()
     return dict(row) if row else None
 
 
-def get_event_by_key(conn: sqlite3.Connection, event_key: str) -> Optional[Dict[str, Any]]:
+def get_event_by_key(conn: sqlite3.Connection, event_key: str) -> dict[str, Any] | None:
     """Get event by event_key."""
     cursor = conn.execute("SELECT * FROM events WHERE event_key = ?", (event_key,))
     row = cursor.fetchone()
     return dict(row) if row else None
 
 
-def list_events(conn: sqlite3.Connection, limit: int = 100) -> List[Dict[str, Any]]:
+def list_events(conn: sqlite3.Connection, limit: int = 100) -> list[dict[str, Any]]:
     """List all events."""
     cursor = conn.execute(
         "SELECT * FROM events ORDER BY date_detected DESC LIMIT ?",
@@ -189,11 +189,11 @@ def list_events(conn: sqlite3.Connection, limit: int = 100) -> List[Dict[str, An
 
 def search_events(
     conn: sqlite3.Connection,
-    region: Optional[str] = None,
-    category: Optional[str] = None,
-    band: Optional[str] = None,
+    region: str | None = None,
+    category: str | None = None,
+    band: str | None = None,
     limit: int = 100
-) -> List[Dict[str, Any]]:
+) -> list[dict[str, Any]]:
     """Search events by filters."""
     query = "SELECT * FROM events WHERE 1=1"
     params = []
@@ -217,7 +217,7 @@ def search_events(
 
 # Related data operations
 
-def insert_source(conn: sqlite3.Connection, event_id: str, source: Dict[str, Any]) -> str:
+def insert_source(conn: sqlite3.Connection, event_id: str, source: dict[str, Any]) -> str:
     """Insert source for an event."""
     source_id = generate_id()
     conn.execute("""
@@ -233,7 +233,7 @@ def insert_source(conn: sqlite3.Connection, event_id: str, source: Dict[str, Any
     return source_id
 
 
-def insert_indicators(conn: sqlite3.Connection, event_id: str, indicators: Dict[str, int]) -> str:
+def insert_indicators(conn: sqlite3.Connection, event_id: str, indicators: dict[str, int]) -> str:
     """Insert indicators for an event."""
     indicator_id = generate_id()
     conn.execute("""
@@ -253,7 +253,7 @@ def insert_indicators(conn: sqlite3.Connection, event_id: str, indicators: Dict[
     return indicator_id
 
 
-def insert_flags(conn: sqlite3.Connection, event_id: str, flags: Dict[str, bool]) -> str:
+def insert_flags(conn: sqlite3.Connection, event_id: str, flags: dict[str, bool]) -> str:
     """Insert flags for an event."""
     flag_id = generate_id()
     conn.execute("""
@@ -277,7 +277,7 @@ def insert_notification(
     event_id: str,
     notification_type: str,
     content: str,
-    file_path: Optional[str] = None
+    file_path: str | None = None
 ) -> str:
     """Insert notification for an event."""
     notification_id = generate_id()
@@ -313,13 +313,13 @@ def insert_watchlist_item(conn: sqlite3.Connection, event_id: str, company_name:
     return watchlist_id
 
 
-def get_watchlist_by_event(conn: sqlite3.Connection, event_id: str) -> List[Dict[str, Any]]:
+def get_watchlist_by_event(conn: sqlite3.Connection, event_id: str) -> list[dict[str, Any]]:
     """Get watchlist items for an event."""
     cursor = conn.execute("SELECT * FROM watchlist WHERE event_id = ?", (event_id,))
     return [dict(row) for row in cursor.fetchall()]
 
 
-def get_stats(conn: sqlite3.Connection) -> Dict[str, Any]:
+def get_stats(conn: sqlite3.Connection) -> dict[str, Any]:
     """Get database statistics."""
     stats = {}
     
@@ -349,8 +349,8 @@ def get_stats(conn: sqlite3.Connection) -> Dict[str, Any]:
 
 if __name__ == "__main__":
     # Example usage
-    import tempfile
     import os
+    import tempfile
     
     with tempfile.TemporaryDirectory() as tmpdir:
         db_path = os.path.join(tmpdir, "test.db")

@@ -6,7 +6,7 @@ Candidate Builder
 
 import uuid
 from datetime import datetime
-from typing import Optional
+
 from v2.domain.models import EventCandidate
 from v2.services.entity_normalizer import normalize_entities
 

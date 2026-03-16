@@ -5,6 +5,7 @@ Triage 队列存储接口与实现。
 """
 
 from typing import Protocol
+
 from v2.domain.models import TriageQueueItem
 
 

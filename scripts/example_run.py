@@ -1,79 +1,44 @@
 #!/usr/bin/env python3
 """
-Geo Market Watch - Example Run
+Geo Market Watch — Example Run
 
-Demonstrates basic usage of scoring and trigger engines.
+Simple example of running the agent loop.
 """
 
 import sys
 from pathlib import Path
 
-# Add engine directory to path
-sys.path.insert(0, str(Path(__file__).parent.parent / "engine"))
-
-from scoring_engine import score_event
-from trigger_engine import evaluate_trigger
+from geo_market_watch.agent_loop import run_agent_loop, print_summary
 
 
 def main():
-    """Run example event through engines."""
+    """Run a simple example."""
+    intake_path = Path("data/intake-sample.json")
+    memory_path = Path("data/dedupe-memory.json")
     
-    # Example event: Red Sea shipping disruption
-    event = {
-        "event_title": "Red Sea shipping disruption",
-        "date_detected": "2024-01-12",
-        "region": "Middle East",
-        "category": "Maritime disruption",
-        "indicators": {
-            "physical_disruption": 1,
-            "transport_impact": 2,
-            "policy_sanctions": 0,
-            "market_transmission": 1,
-            "escalation_risk": 1
-        }
-    }
+    if not intake_path.exists():
+        print(f"Error: Intake file not found: {intake_path}")
+        print("Please create sample data first.")
+        return 1
     
-    print("=" * 60)
-    print("Geo Market Watch - Example Run")
-    print("=" * 60)
-    print()
+    print("Running Geo Market Watch Agent Loop...")
+    print(f"  Intake: {intake_path}")
+    print(f"  Memory: {memory_path}")
     
-    print(f"Event: {event['event_title']}")
-    print(f"Date: {event['date_detected']}")
-    print(f"Region: {event['region']}")
-    print()
-    
-    # Run scoring engine
-    print("Running Scoring Engine...")
-    score_result = score_event(event)
-    print(f"  Score: {score_result['score']}")
-    print(f"  Band: {score_result['band']}")
-    print()
-    
-    # Run trigger engine
-    print("Running Trigger Engine...")
-    trigger_data = {
-        "event_title": event["event_title"],
-        "score": score_result["score"],
-        "flags": {
-            "confirmed_supply_disruption": False,
-            "strategic_transport_disruption": False,
-            "major_sanctions_escalation": False,
-            "military_escalation": False
-        }
-    }
-    trigger_result = evaluate_trigger(trigger_data)
-    print(f"  Trigger Full Analysis: {trigger_result['trigger_full_analysis']}")
-    if trigger_result["reasons"]:
-        print(f"  Reasons: {', '.join(trigger_result['reasons'])}")
-    else:
-        print("  Reasons: None (score below threshold, no escalation flags)")
-    print()
-    
-    print("=" * 60)
-    print("Example complete!")
-    print("=" * 60)
+    try:
+        summary = run_agent_loop(
+            intake_path=str(intake_path),
+            dedupe_memory_path=str(memory_path),
+            output_dir="outputs"
+        )
+        
+        print_summary(summary)
+        return 0
+        
+    except Exception as e:
+        print(f"Error: {e}", file=sys.stderr)
+        return 1
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

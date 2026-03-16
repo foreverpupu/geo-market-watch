@@ -5,12 +5,11 @@ Provides filtered views and JSON snapshots for dashboard display.
 Includes performance tracking views.
 """
 
-import sqlite3
 import json
-from typing import List, Dict, Optional
+import sqlite3
 from pathlib import Path
 
-from .lifecycle_engine import get_active_ideas, get_ideas_by_status
+from .lifecycle_engine import get_active_ideas
 
 
 def get_db_connection(db_path: str) -> sqlite3.Connection:
@@ -20,7 +19,7 @@ def get_db_connection(db_path: str) -> sqlite3.Connection:
     return conn
 
 
-def get_approved_trade_ideas(db_path: str) -> List[Dict]:
+def get_approved_trade_ideas(db_path: str) -> list[dict]:
     """
     Get all approved trade ideas, sorted by conviction and recency.
     
@@ -58,11 +57,11 @@ def get_approved_trade_ideas(db_path: str) -> List[Dict]:
         
         return [dict(row) for row in rows]
     
-    except sqlite3.Error as e:
+    except sqlite3.Error:
         return []
 
 
-def get_pending_trade_ideas(db_path: str) -> List[Dict]:
+def get_pending_trade_ideas(db_path: str) -> list[dict]:
     """
     Get all pending review trade ideas, sorted by conviction and recency.
     
@@ -100,11 +99,11 @@ def get_pending_trade_ideas(db_path: str) -> List[Dict]:
         
         return [dict(row) for row in rows]
     
-    except sqlite3.Error as e:
+    except sqlite3.Error:
         return []
 
 
-def get_invalidated_trade_ideas(db_path: str) -> List[Dict]:
+def get_invalidated_trade_ideas(db_path: str) -> list[dict]:
     """
     Get all invalidated trade ideas, sorted by recency.
     
@@ -135,11 +134,11 @@ def get_invalidated_trade_ideas(db_path: str) -> List[Dict]:
         
         return [dict(row) for row in rows]
     
-    except sqlite3.Error as e:
+    except sqlite3.Error:
         return []
 
 
-def get_dashboard_snapshot(db_path: str) -> Dict:
+def get_dashboard_snapshot(db_path: str) -> dict:
     """
     Get a complete dashboard snapshot with all key views.
     
@@ -187,7 +186,7 @@ def export_dashboard_snapshot(db_path: str, output_path: str) -> bool:
         return False
 
 
-def get_idea_summary(db_path: str, trade_idea_id: str) -> Optional[Dict]:
+def get_idea_summary(db_path: str, trade_idea_id: str) -> dict | None:
     """
     Get a summary of a single trade idea with review and lifecycle info.
     
@@ -264,11 +263,11 @@ def get_idea_summary(db_path: str, trade_idea_id: str) -> Optional[Dict]:
         conn.close()
         return idea
     
-    except sqlite3.Error as e:
+    except sqlite3.Error:
         return None
 
 
-def get_performance_summary(db_path: str) -> Dict:
+def get_performance_summary(db_path: str) -> dict:
     """
     Get performance summary statistics.
     
@@ -346,7 +345,7 @@ def get_performance_summary(db_path: str) -> Dict:
         return {"error": str(e)}
 
 
-def get_tracked_ideas(db_path: str) -> List[Dict]:
+def get_tracked_ideas(db_path: str) -> list[dict]:
     """
     Get all tracked ideas with performance data.
     
@@ -390,11 +389,11 @@ def get_tracked_ideas(db_path: str) -> List[Dict]:
         
         return [dict(row) for row in rows]
     
-    except sqlite3.Error as e:
+    except sqlite3.Error:
         return []
 
 
-def get_closed_ideas(db_path: str) -> List[Dict]:
+def get_closed_ideas(db_path: str) -> list[dict]:
     """
     Get all closed tracked ideas.
     
@@ -434,7 +433,7 @@ def get_closed_ideas(db_path: str) -> List[Dict]:
         
         return [dict(row) for row in rows]
     
-    except sqlite3.Error as e:
+    except sqlite3.Error:
         return []
 
 

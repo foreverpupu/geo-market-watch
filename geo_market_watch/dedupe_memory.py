@@ -2,14 +2,14 @@
 Refactored dedupe memory with event-level approximate deduplication.
 """
 
-import json
 import hashlib
+import json
 import shutil
 from datetime import datetime, timedelta
-from pathlib import Path
-from typing import Optional, Dict, List, Tuple
 from difflib import SequenceMatcher
-from geo_market_watch.models import NormalizedEvent, DedupeRecord
+from pathlib import Path
+
+from geo_market_watch.models import DedupeRecord, NormalizedEvent
 
 
 class DedupeMemory:
@@ -37,7 +37,7 @@ class DedupeMemory:
         self.memory_path = Path(memory_path)
         self.similarity_threshold = similarity_threshold
         self.time_window = timedelta(hours=time_window_hours)
-        self._memory: Dict[str, DedupeRecord] = {}
+        self._memory: dict[str, DedupeRecord] = {}
         self._load()
     
     def _load(self) -> None:
@@ -47,7 +47,7 @@ class DedupeMemory:
             return
         
         try:
-            with open(self.memory_path, 'r', encoding='utf-8') as f:
+            with open(self.memory_path, encoding='utf-8') as f:
                 data = json.load(f)
             
             self._memory = {
@@ -92,8 +92,8 @@ class DedupeMemory:
     def check_duplicate(
         self,
         event: NormalizedEvent,
-        current_time: Optional[datetime] = None
-    ) -> Tuple[bool, str]:
+        current_time: datetime | None = None
+    ) -> tuple[bool, str]:
         """
         Check if event is a duplicate.
         
@@ -167,7 +167,7 @@ class DedupeMemory:
         content = f"{event.headline}:{event.timestamp.isoformat()}"
         return hashlib.md5(content.encode()).hexdigest()[:16]
     
-    def get_stats(self) -> Dict[str, int]:
+    def get_stats(self) -> dict[str, int]:
         """Get memory statistics."""
         return {
             "total_events": len(self._memory),

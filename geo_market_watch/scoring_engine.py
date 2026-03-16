@@ -2,8 +2,9 @@
 Refactored scoring engine with base scoring and policy adjustments separated.
 """
 
-from typing import Dict, Any, Optional
-from geo_market_watch.models import NormalizedEvent, ScoreResult, ScoreBand
+from typing import Any
+
+from geo_market_watch.models import NormalizedEvent, ScoreBand, ScoreResult
 
 
 class ScoringEngine:
@@ -39,7 +40,7 @@ class ScoringEngine:
         "low": -1
     }
     
-    def __init__(self, config: Optional[Dict[str, Any]] = None):
+    def __init__(self, config: dict[str, Any] | None = None):
         """
         Initialize scoring engine.
         
@@ -169,13 +170,13 @@ class ScoringEngine:
                 return band
         return ScoreBand.LOW
     
-    def _generate_reasoning(self, event: NormalizedEvent, breakdown: Dict[str, float]) -> str:
+    def _generate_reasoning(self, event: NormalizedEvent, breakdown: dict[str, float]) -> str:
         """Generate human-readable reasoning."""
         return self._generate_reasoning_from_breakdown(breakdown, event.category, event.severity)
     
     def _generate_reasoning_from_breakdown(
         self,
-        breakdown: Dict[str, float],
+        breakdown: dict[str, float],
         category: str = "",
         severity: str = ""
     ) -> str:
@@ -198,7 +199,7 @@ class ScoringEngine:
         
         return "; ".join(parts)
     
-    def get_band_thresholds(self) -> Dict[str, tuple]:
+    def get_band_thresholds(self) -> dict[str, tuple]:
         """Get current band thresholds."""
         return {
             band.value: (low, high)

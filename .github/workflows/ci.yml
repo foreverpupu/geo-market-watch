@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    
+    - name: Install package
+      run: pip install -e .
+    
+    - name: Run tests
+      run: pytest tests/ -v
+    
+    - name: CLI smoke checks
+      run: |
+        gmw-init-db --help
+        gmw-query --help
+        gmw-agent --help
+    
+    - name: Check for forbidden patterns
+      run: |
+        # Fail if any forbidden pattern is found
+        ! grep -r "sys.path.insert" --include="*.py" . | grep -v __pycache__
+        ! grep -r "from engine\." --include="*.py" . | grep -v __pycache__
+        ! grep -r "^import engine" --include="*.py" . | grep -v __pycache__
+        ! grep -r "geo_market_watch\.engine" --include="*.py" . | grep -v __pycache__

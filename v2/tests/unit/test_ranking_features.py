@@ -2,11 +2,12 @@
 Unit tests for ranking features.
 """
 
+from datetime import datetime
+
 import pytest
-from datetime import datetime, timedelta
 from v2.config import DEFAULT_RANKING_CONFIG
+from v2.domain.enums import EventPhase, EventStatus, ExposureChannel, ExposureDirection
 from v2.domain.models import CanonicalEvent, Exposure
-from v2.domain.enums import EventStatus, EventPhase, ExposureDirection, ExposureChannel
 from v2.services.ranking_features import build_ranking_features
 
 

@@ -4,9 +4,8 @@ Geo Market Watch v6.2 — Exposure Engine
 Deterministic mapping from geopolitical events to sector and company exposures.
 """
 
-from typing import Dict, List, Any, Optional
 import json
-
+from typing import Any
 
 # Deterministic sector mapping by event category
 SECTOR_MAP = {
@@ -73,7 +72,7 @@ COMPANY_UNIVERSE = {
 }
 
 
-def get_sector_exposure(event: Dict[str, Any]) -> Dict[str, Any]:
+def get_sector_exposure(event: dict[str, Any]) -> dict[str, Any]:
     """
     Generate sector exposure for an event.
     
@@ -117,7 +116,7 @@ def get_sector_exposure(event: Dict[str, Any]) -> Dict[str, Any]:
     }
 
 
-def get_company_exposure(event: Dict[str, Any]) -> List[Dict[str, Any]]:
+def get_company_exposure(event: dict[str, Any]) -> list[dict[str, Any]]:
     """
     Generate company exposure list for an event.
     
@@ -163,7 +162,7 @@ def get_company_exposure(event: Dict[str, Any]) -> List[Dict[str, Any]]:
     return companies
 
 
-def generate_trade_idea(event: Dict[str, Any], company: Dict[str, Any]) -> Dict[str, Any]:
+def generate_trade_idea(event: dict[str, Any], company: dict[str, Any]) -> dict[str, Any]:
     """
     Generate a trade idea for an event-company pair.
     
@@ -209,7 +208,7 @@ def generate_trade_idea(event: Dict[str, Any], company: Dict[str, Any]) -> Dict[
     }
 
 
-def build_sector_exposure_view(events: List[Dict[str, Any]], limit: int = 100) -> List[Dict[str, Any]]:
+def build_sector_exposure_view(events: list[dict[str, Any]], limit: int = 100) -> list[dict[str, Any]]:
     """Build sector exposure view for multiple events."""
     exposures = []
     for event in events[:limit]:
@@ -218,7 +217,7 @@ def build_sector_exposure_view(events: List[Dict[str, Any]], limit: int = 100) -
     return exposures
 
 
-def build_company_exposure_view(events: List[Dict[str, Any]], limit: int = 100) -> List[Dict[str, Any]]:
+def build_company_exposure_view(events: list[dict[str, Any]], limit: int = 100) -> list[dict[str, Any]]:
     """Build company exposure view for multiple events."""
     companies = []
     for event in events[:limit]:
@@ -227,7 +226,7 @@ def build_company_exposure_view(events: List[Dict[str, Any]], limit: int = 100) 
     return companies
 
 
-def build_trade_idea_view(events: List[Dict[str, Any]], limit: int = 100) -> List[Dict[str, Any]]:
+def build_trade_idea_view(events: list[dict[str, Any]], limit: int = 100) -> list[dict[str, Any]]:
     """Build trade idea view for multiple events."""
     ideas = []
     for event in events[:limit]:

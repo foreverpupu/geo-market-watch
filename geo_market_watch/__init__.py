@@ -3,11 +3,11 @@
 __version__ = "0.1.0"
 
 from geo_market_watch.models import (
-    RawIntakeItem,
     NormalizedEvent,
+    NotificationArtifact,
+    RawIntakeItem,
     ScoreResult,
     TriggerResult,
-    NotificationArtifact,
 )
 
 __all__ = [

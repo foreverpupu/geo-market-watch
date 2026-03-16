@@ -1,50 +1,27 @@
 #!/usr/bin/env python3
 """
-Geo Market Watch v6 — Initialize Database
+DEPRECATED: Use gmw-* CLI commands instead.
 
-Creates the Geo Alpha Database with all required tables.
+This script is kept for backward compatibility but will be removed in a future version.
+Please use the official CLI entry points:
+  - gmw-init-db
+  - gmw-query
+  - gmw-agent
+  - gmw-seed-db
+  - gmw-benchmark
 """
 
-import argparse
+import warnings
 import sys
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).parent.parent / "engine"))
+warnings.warn(
+    "This script is deprecated. Use 'gmw-init-db' CLI command instead.",
+    DeprecationWarning,
+    stacklevel=2
+)
 
-from database import init_database
-
-
-def main():
-    parser = argparse.ArgumentParser(
-        description='Initialize Geo Alpha Database',
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""
-Examples:
-  python scripts/init_database.py --db data/geo_alpha.db
-        """
-    )
-    
-    parser.add_argument(
-        '--db', '-d',
-        default='data/geo_alpha.db',
-        help='Path to database file (default: data/geo_alpha.db)'
-    )
-    
-    args = parser.parse_args()
-    
-    # Ensure directory exists
-    db_path = Path(args.db)
-    db_path.parent.mkdir(parents=True, exist_ok=True)
-    
-    try:
-        init_database(str(db_path))
-        print(f"✓ Database initialized: {db_path}")
-        print(f"  Tables created: events, sources, indicators, flags, notifications, watchlist")
-        return 0
-    except Exception as e:
-        print(f"✗ Error: {e}", file=sys.stderr)
-        return 1
-
+# Import and run the official CLI
+from geo_market_watch.scripts.init_db import main
 
 if __name__ == "__main__":
     sys.exit(main())

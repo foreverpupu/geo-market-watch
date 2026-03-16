@@ -4,10 +4,7 @@ Signal Explainer
 生成人类可读的评分解释文本。
 """
 
-from v2.domain.models import (
-    CanonicalEvent, RankingFeatureSet, SignalScoreBreakdown,
-    Exposure, Signal
-)
+from v2.domain.models import CanonicalEvent, Exposure, RankingFeatureSet, SignalScoreBreakdown
 
 
 def _get_top_features(features: RankingFeatureSet) -> list[tuple[str, float]]:

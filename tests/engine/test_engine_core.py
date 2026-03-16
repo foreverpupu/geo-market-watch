@@ -4,17 +4,16 @@ Engine Core Logic Tests
 Comprehensive tests for engine layer business logic.
 """
 
-import unittest
-import json
-import tempfile
 import os
+import tempfile
+import unittest
 from datetime import datetime
 
-from geo_market_watch.intake_normalizer import IntakeNormalizer
 from geo_market_watch.dedupe_memory import DedupeMemory
+from geo_market_watch.intake_normalizer import IntakeNormalizer
+from geo_market_watch.models import NormalizedEvent, ScoreResult, TriggerResult
 from geo_market_watch.scoring_engine import ScoringEngine
 from geo_market_watch.trigger_engine import TriggerEngine
-from geo_market_watch.models import NormalizedEvent, ScoreResult, TriggerResult
 
 
 class TestEventNormalization(unittest.TestCase):

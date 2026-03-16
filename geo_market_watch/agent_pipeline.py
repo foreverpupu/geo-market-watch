@@ -7,23 +7,22 @@ and composed independently.
 
 import json
 from datetime import datetime
-from typing import Dict, Any, List, Optional, Tuple
 from pathlib import Path
+from typing import Any
 
+from geo_market_watch.dedupe_memory import DedupeMemory
+from geo_market_watch.intake_normalizer import IntakeNormalizer
 from geo_market_watch.models import (
-    RawIntakeItem,
+    AgentRunSummary,
     NormalizedEvent,
     ScoreResult,
     TriggerResult,
-    AgentRunSummary,
 )
-from geo_market_watch.intake_normalizer import IntakeNormalizer
-from geo_market_watch.dedupe_memory import DedupeMemory
 from geo_market_watch.scoring_engine import ScoringEngine
 from geo_market_watch.trigger_engine import TriggerEngine
 
 
-def load_intake(intake_path: str) -> List[Dict[str, Any]]:
+def load_intake(intake_path: str) -> list[dict[str, Any]]:
     """
     Load raw intake items from JSON file.
     
@@ -37,7 +36,7 @@ def load_intake(intake_path: str) -> List[Dict[str, Any]]:
         FileNotFoundError: If file doesn't exist
         json.JSONDecodeError: If file contains invalid JSON
     """
-    with open(intake_path, 'r', encoding='utf-8') as f:
+    with open(intake_path, encoding='utf-8') as f:
         data = json.load(f)
     
     # Support both {items: [...]} and [...] formats
@@ -50,9 +49,9 @@ def load_intake(intake_path: str) -> List[Dict[str, Any]]:
 
 
 def normalize_events(
-    raw_items: List[Dict[str, Any]],
+    raw_items: list[dict[str, Any]],
     normalizer: IntakeNormalizer
-) -> Tuple[List[NormalizedEvent], List[str]]:
+) -> tuple[list[NormalizedEvent], list[str]]:
     """
     Normalize raw intake items into structured events.
     
@@ -77,10 +76,10 @@ def normalize_events(
 
 
 def dedupe_events(
-    events: List[NormalizedEvent],
+    events: list[NormalizedEvent],
     dedupe_memory: DedupeMemory,
-    current_time: Optional[datetime] = None
-) -> Tuple[List[NormalizedEvent], int, List[str]]:
+    current_time: datetime | None = None
+) -> tuple[list[NormalizedEvent], int, list[str]]:
     """
     Filter out duplicate events.
     
@@ -108,9 +107,9 @@ def dedupe_events(
 
 
 def score_events(
-    events: List[NormalizedEvent],
+    events: list[NormalizedEvent],
     scoring_engine: ScoringEngine
-) -> List[Tuple[NormalizedEvent, ScoreResult]]:
+) -> list[tuple[NormalizedEvent, ScoreResult]]:
     """
     Score all events.
     
@@ -131,9 +130,9 @@ def score_events(
 
 
 def trigger_events(
-    scored_events: List[Tuple[NormalizedEvent, ScoreResult]],
+    scored_events: list[tuple[NormalizedEvent, ScoreResult]],
     trigger_engine: TriggerEngine
-) -> List[Tuple[NormalizedEvent, ScoreResult, TriggerResult]]:
+) -> list[tuple[NormalizedEvent, ScoreResult, TriggerResult]]:
     """
     Evaluate triggers for scored events.
     
@@ -158,7 +157,7 @@ def trigger_events(
 
 
 def persist_events(
-    triggered_events: List[Tuple[NormalizedEvent, ScoreResult, TriggerResult]],
+    triggered_events: list[tuple[NormalizedEvent, ScoreResult, TriggerResult]],
     dedupe_memory: DedupeMemory
 ) -> int:
     """
@@ -178,9 +177,9 @@ def persist_events(
 
 
 def render_notifications(
-    triggered_events: List[Tuple[NormalizedEvent, ScoreResult, TriggerResult]],
-    output_dir: Optional[str] = None
-) -> List[Dict[str, Any]]:
+    triggered_events: list[tuple[NormalizedEvent, ScoreResult, TriggerResult]],
+    output_dir: str | None = None
+) -> list[dict[str, Any]]:
     """
     Render notification artifacts for triggered events.
     
@@ -231,8 +230,8 @@ def render_notifications(
 def run_pipeline(
     intake_path: str,
     dedupe_memory_path: str,
-    output_dir: Optional[str] = None,
-    current_time: Optional[datetime] = None
+    output_dir: str | None = None,
+    current_time: datetime | None = None
 ) -> AgentRunSummary:
     """
     Run the full agent pipeline.

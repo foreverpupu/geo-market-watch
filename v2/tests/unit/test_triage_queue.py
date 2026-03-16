@@ -2,13 +2,14 @@
 Unit tests for triage queue.
 """
 
-import pytest
 from datetime import datetime, timedelta
+
+import pytest
 from v2.config import DEFAULT_ANALYST_WORKFLOW_CONFIG
+from v2.domain.enums import SignalClass, TriageStatus
 from v2.domain.models import Signal
-from v2.domain.enums import TriageStatus, SignalClass
 from v2.repositories.triage_queue_repository import InMemoryTriageQueueRepository
-from v2.services.triage_queue import add_to_triage_queue, claim_signal, check_expired_items
+from v2.services.triage_queue import add_to_triage_queue, check_expired_items, claim_signal
 
 
 class TestAddToTriageQueue:

@@ -6,9 +6,10 @@ Step 5 orchestrator，统一执行回放和评估。
 
 import uuid
 from datetime import datetime
-from v2.config import ReplayConfig, DEFAULT_REPLAY_CONFIG
-from v2.domain.models import Signal, ReplayResult, EvaluationResult
-from v2.repositories.price_repository import PriceRepository, MockPriceRepository
+
+from v2.config import DEFAULT_REPLAY_CONFIG, ReplayConfig
+from v2.domain.models import EvaluationResult, ReplayResult, Signal
+from v2.repositories.price_repository import MockPriceRepository, PriceRepository
 from v2.services.replay_core import build_event_timeline_optimized, calculate_lead_time
 from v2.services.signal_usefulness import evaluate_signal_usefulness
 

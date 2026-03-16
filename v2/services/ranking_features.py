@@ -4,10 +4,11 @@ Ranking Features
 从 CanonicalEvent + Exposures 提取 ranking 所需特征。
 """
 
-from datetime import datetime, timedelta
-from v2.config import RankingConfig, DEFAULT_RANKING_CONFIG
+from datetime import datetime
+
+from v2.config import DEFAULT_RANKING_CONFIG, RankingConfig
+from v2.domain.enums import EventPhase, EventStatus, ExposureTargetType
 from v2.domain.models import CanonicalEvent, Exposure, NetExposureSummary, RankingFeatureSet
-from v2.domain.enums import ExposureTargetType, EventPhase, EventStatus
 
 
 def _get_severity_score(event: CanonicalEvent, config: RankingConfig) -> float:

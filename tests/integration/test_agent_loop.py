@@ -5,15 +5,13 @@ Tests the complete flow: intake → normalize → dedupe → score → trigger
 """
 
 import json
-import tempfile
 import os
+import tempfile
 from datetime import datetime
-from pathlib import Path
 
 import pytest
-
 from geo_market_watch.agent_loop import run_agent_loop
-from geo_market_watch.engine.agent_pipeline import load_intake
+from geo_market_watch.agent_pipeline import load_intake
 from geo_market_watch.models import AgentRunSummary
 
 

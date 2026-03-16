@@ -5,9 +5,10 @@ Ranking MVP Runner
 """
 
 from datetime import datetime
+
 from v2.config import DEFAULT_RANKING_CONFIG
+from v2.domain.enums import EventPhase, EventStatus, ExposureChannel, ExposureDirection
 from v2.domain.models import CanonicalEvent, Exposure
-from v2.domain.enums import EventStatus, EventPhase, ExposureDirection, ExposureChannel
 from v2.repositories.signal_repository import InMemorySignalRepository
 from v2.services.signal_engine import generate_signal_for_event
 

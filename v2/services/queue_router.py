@@ -4,9 +4,9 @@ Queue Router
 按分数、事件状态、冲突情况分配队列。
 """
 
-from v2.config import RankingConfig, DEFAULT_RANKING_CONFIG
+from v2.config import DEFAULT_RANKING_CONFIG, RankingConfig
+from v2.domain.enums import ExposureDirection, QueueType, SignalClass
 from v2.domain.models import CanonicalEvent, Exposure, NetExposureSummary
-from v2.domain.enums import QueueType, SignalClass, ExposureDirection
 
 
 def assign_signal_queue(

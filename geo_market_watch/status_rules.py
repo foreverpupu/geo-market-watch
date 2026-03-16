@@ -5,7 +5,6 @@ Defines allowed status transitions for trade ideas.
 Invalid transitions are rejected.
 """
 
-from typing import List, Set, Tuple
 
 # Valid analyst_status values
 ANALYST_STATUSES = {
@@ -54,7 +53,7 @@ LIFECYCLE_EVENTS = {
 
 # Allowed status transitions for analyst_status
 # Format: current_status -> {allowed_next_statuses}
-ANALYST_STATUS_TRANSITIONS: dict[str, Set[str]] = {
+ANALYST_STATUS_TRANSITIONS: dict[str, set[str]] = {
     "pending_review": {"approved", "rejected", "invalidated"},
     "approved": {"invalidated", "closed", "updated"},
     "rejected": set(),  # Terminal state - no transitions allowed
@@ -63,14 +62,14 @@ ANALYST_STATUS_TRANSITIONS: dict[str, Set[str]] = {
 }
 
 # Allowed status transitions for approval_status
-APPROVAL_STATUS_TRANSITIONS: dict[str, Set[str]] = {
+APPROVAL_STATUS_TRANSITIONS: dict[str, set[str]] = {
     "unreviewed": {"approved", "rejected"},
     "approved": {"rejected"},  # Can revoke approval
     "rejected": {"approved"}   # Can reconsider rejection
 }
 
 
-def validate_analyst_status_transition(old_status: str, new_status: str) -> Tuple[bool, str]:
+def validate_analyst_status_transition(old_status: str, new_status: str) -> tuple[bool, str]:
     """
     Validate if a transition from old_status to new_status is allowed.
     
@@ -93,7 +92,7 @@ def validate_analyst_status_transition(old_status: str, new_status: str) -> Tupl
     return True, ""
 
 
-def validate_approval_status_transition(old_status: str, new_status: str) -> Tuple[bool, str]:
+def validate_approval_status_transition(old_status: str, new_status: str) -> tuple[bool, str]:
     """
     Validate if a transition from old_status to new_status is allowed for approval_status.
     
@@ -116,14 +115,14 @@ def validate_approval_status_transition(old_status: str, new_status: str) -> Tup
     return True, ""
 
 
-def get_allowed_analyst_transitions(status: str) -> Set[str]:
+def get_allowed_analyst_transitions(status: str) -> set[str]:
     """Get all allowed transitions from a given analyst status."""
     if status not in ANALYST_STATUSES:
         return set()
     return ANALYST_STATUS_TRANSITIONS.get(status, set())
 
 
-def get_allowed_approval_transitions(status: str) -> Set[str]:
+def get_allowed_approval_transitions(status: str) -> set[str]:
     """Get all allowed transitions from a given approval status."""
     if status not in APPROVAL_STATUSES:
         return set()
@@ -152,21 +151,21 @@ def get_review_decision_mapping() -> dict[str, str]:
     }
 
 
-def validate_review_decision(decision: str) -> Tuple[bool, str]:
+def validate_review_decision(decision: str) -> tuple[bool, str]:
     """Validate if a review decision is valid."""
     if decision not in REVIEW_DECISIONS:
         return False, f"Invalid decision: {decision}. Must be one of: {REVIEW_DECISIONS}"
     return True, ""
 
 
-def validate_confidence(confidence: str) -> Tuple[bool, str]:
+def validate_confidence(confidence: str) -> tuple[bool, str]:
     """Validate if a confidence level is valid."""
     if confidence not in CONFIDENCE_LEVELS:
         return False, f"Invalid confidence: {confidence}. Must be one of: {CONFIDENCE_LEVELS}"
     return True, ""
 
 
-def validate_lifecycle_event(event_type: str) -> Tuple[bool, str]:
+def validate_lifecycle_event(event_type: str) -> tuple[bool, str]:
     """Validate if a lifecycle event type is valid."""
     if event_type not in LIFECYCLE_EVENTS:
         return False, f"Invalid lifecycle event: {event_type}. Must be one of: {LIFECYCLE_EVENTS}"

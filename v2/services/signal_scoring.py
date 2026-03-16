@@ -4,7 +4,7 @@ Signal Scoring
 实现线性打分公式。
 """
 
-from v2.config import RankingConfig, DEFAULT_RANKING_CONFIG
+from v2.config import DEFAULT_RANKING_CONFIG, RankingConfig
 from v2.domain.models import RankingFeatureSet, SignalScoreBreakdown
 
 

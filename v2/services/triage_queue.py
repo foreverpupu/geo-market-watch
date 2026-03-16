@@ -6,10 +6,13 @@ Triage 队列管理。
 
 import uuid
 from datetime import datetime, timedelta
-from v2.config import AnalystWorkflowConfig, DEFAULT_ANALYST_WORKFLOW_CONFIG
-from v2.domain.models import Signal, TriageQueueItem
+
+from v2.config import DEFAULT_ANALYST_WORKFLOW_CONFIG, AnalystWorkflowConfig
 from v2.domain.enums import TriageStatus
-from v2.repositories.triage_queue_repository import TriageQueueRepository, InMemoryTriageQueueRepository
+from v2.domain.models import Signal, TriageQueueItem
+from v2.repositories.triage_queue_repository import (
+    TriageQueueRepository,
+)
 
 
 def _generate_item_id() -> str:

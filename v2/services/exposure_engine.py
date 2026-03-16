@@ -4,16 +4,17 @@ Exposure Engine (Step 2a - Direct Rules Only)
 Step 2 主入口，当前仅实现 direct exposure rules。
 """
 
-from v2.config import ExposureConfig, DEFAULT_EXPOSURE_CONFIG
+from v2.config import DEFAULT_EXPOSURE_CONFIG, ExposureConfig
 from v2.domain.models import CanonicalEvent, ExposureResult
-from v2.repositories.exposure_repository import ExposureRepository, InMemoryExposureRepository
-from v2.services.exposure_rules import compute_direct_exposures
+from v2.repositories.exposure_repository import ExposureRepository
 from v2.services.exposure_aggregation import aggregate_exposures, summarize_net_exposures
+from v2.services.exposure_rules import compute_direct_exposures
 
 
 def _candidates_to_exposures(candidates, event_id: str) -> list:
     """将候选转换为 Exposure 对象（临时辅助函数）。"""
     import uuid
+
     from v2.domain.models import Exposure
     
     exposures = []

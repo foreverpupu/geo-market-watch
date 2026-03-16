@@ -2,8 +2,7 @@
 Unit tests for entity normalizer.
 """
 
-import pytest
-from v2.services.entity_normalizer import normalize_entity_name, normalize_entities
+from v2.services.entity_normalizer import normalize_entities, normalize_entity_name
 
 
 class TestNormalizeEntityName:

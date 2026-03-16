@@ -2,13 +2,17 @@
 Unit tests for watchlist routing.
 """
 
-import pytest
 from datetime import datetime
+
+import pytest
 from v2.config import DEFAULT_ANALYST_WORKFLOW_CONFIG
-from v2.domain.models import Signal
 from v2.domain.enums import WatchlistStatus
+from v2.domain.models import Signal
 from v2.repositories.watchlist_repository import InMemoryWatchlistRepository
-from v2.services.watchlist_routing import route_signal_to_watchlist, auto_route_high_priority_signals
+from v2.services.watchlist_routing import (
+    auto_route_high_priority_signals,
+    route_signal_to_watchlist,
+)
 
 
 class TestRouteSignalToWatchlist:

@@ -2,11 +2,12 @@
 Unit tests for event search.
 """
 
-import pytest
 from datetime import datetime, timedelta
+
+import pytest
 from v2.config import DEFAULT_RESOLUTION_CONFIG
-from v2.domain.models import EventCandidate, CanonicalEvent
-from v2.domain.enums import EventStatus, EventPhase
+from v2.domain.enums import EventPhase, EventStatus
+from v2.domain.models import CanonicalEvent, EventCandidate
 from v2.repositories.event_repository import InMemoryEventRepository
 from v2.services.event_search import find_candidate_matches
 

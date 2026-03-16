@@ -4,7 +4,7 @@ Signal Bucketing
 把分数映射为优先级档位。
 """
 
-from v2.config import RankingConfig, DEFAULT_RANKING_CONFIG
+from v2.config import DEFAULT_RANKING_CONFIG, RankingConfig
 from v2.domain.enums import SignalClass
 
 

@@ -4,12 +4,9 @@ Pipeline Regression Tests
 Tests core pipeline behavior beyond schema validation.
 """
 
-import unittest
 import json
-import sys
+import unittest
 from pathlib import Path
-
-sys.path.insert(0, str(Path(__file__).parent.parent / "engine"))
 
 
 class TestNormalization(unittest.TestCase):

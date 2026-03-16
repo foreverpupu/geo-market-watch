@@ -5,13 +5,16 @@ Exposure Aggregation
 """
 
 import uuid
-from dataclasses import dataclass, field
+
 from v2.config import ExposureConfig
+from v2.domain.enums import ExposureDirection, ExposureSourceType
 from v2.domain.models import (
-    CanonicalEvent, ExposureCandidate, Exposure,
-    ExposureTraceStep, NetExposureSummary
+    CanonicalEvent,
+    Exposure,
+    ExposureCandidate,
+    ExposureTraceStep,
+    NetExposureSummary,
 )
-from v2.domain.enums import ExposureSourceType, ExposureDirection
 
 
 def _generate_exposure_id() -> str:

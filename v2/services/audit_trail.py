@@ -5,10 +5,12 @@ Audit Trail
 """
 
 import uuid
-from datetime import datetime
-from v2.config import AnalystWorkflowConfig, DEFAULT_ANALYST_WORKFLOW_CONFIG
+
+from v2.config import DEFAULT_ANALYST_WORKFLOW_CONFIG, AnalystWorkflowConfig
 from v2.domain.models import AuditTrailEntry, ReviewAction
-from v2.repositories.audit_trail_repository import AuditTrailRepository, InMemoryAuditTrailRepository
+from v2.repositories.audit_trail_repository import (
+    AuditTrailRepository,
+)
 
 
 def _generate_entry_id() -> str:

@@ -2,13 +2,13 @@
 Unit tests for review actions.
 """
 
-import pytest
 from datetime import datetime
-from v2.config import DEFAULT_ANALYST_WORKFLOW_CONFIG
-from v2.domain.models import Signal, CanonicalEvent
-from v2.domain.enums import EventStatus, EventPhase, ReviewActionType
-from v2.repositories.review_actions_repository import InMemoryReviewActionsRepository
+
+import pytest
+from v2.domain.enums import EventPhase, EventStatus, ReviewActionType
+from v2.domain.models import CanonicalEvent, Signal
 from v2.repositories.event_repository import InMemoryEventRepository
+from v2.repositories.review_actions_repository import InMemoryReviewActionsRepository
 from v2.services.review_actions import log_review_action
 
 

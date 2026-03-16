@@ -6,18 +6,14 @@ Processes analyst review decisions and manages review workflow.
 
 import sqlite3
 import uuid
-from datetime import datetime, timezone
-from typing import List, Dict, Optional, Tuple
-from pathlib import Path
+from datetime import UTC, datetime
 
 from .status_rules import (
-    validate_review_decision,
-    validate_confidence,
+    get_review_decision_mapping,
     validate_analyst_status_transition,
-    validate_approval_status_transition,
-    get_review_decision_mapping
+    validate_confidence,
+    validate_review_decision,
 )
-from .lifecycle_engine import record_lifecycle_event
 
 
 def get_db_connection(db_path: str) -> sqlite3.Connection:
@@ -32,9 +28,9 @@ def submit_review(
     trade_idea_id: str,
     reviewer: str,
     decision: str,
-    confidence: Optional[str] = None,
-    notes: Optional[str] = None
-) -> Tuple[bool, str]:
+    confidence: str | None = None,
+    notes: str | None = None
+) -> tuple[bool, str]:
     """
     Submit an analyst review for a trade idea.
     
@@ -93,7 +89,7 @@ def submit_review(
         
         # Create review record
         review_id = str(uuid.uuid4())
-        created_at = datetime.now(timezone.utc).isoformat()
+        created_at = datetime.now(UTC).isoformat()
         
         cursor.execute(
             """
@@ -139,7 +135,7 @@ def submit_review(
         return False, f"Database error: {str(e)}"
 
 
-def get_reviews_for_idea(db_path: str, trade_idea_id: str) -> List[Dict]:
+def get_reviews_for_idea(db_path: str, trade_idea_id: str) -> list[dict]:
     """
     Get all reviews for a specific trade idea.
     
@@ -169,11 +165,11 @@ def get_reviews_for_idea(db_path: str, trade_idea_id: str) -> List[Dict]:
         
         return [dict(row) for row in rows]
     
-    except sqlite3.Error as e:
+    except sqlite3.Error:
         return []
 
 
-def get_pending_reviews(db_path: str) -> List[Dict]:
+def get_pending_reviews(db_path: str) -> list[dict]:
     """
     Get all trade ideas pending review.
     
@@ -204,11 +200,11 @@ def get_pending_reviews(db_path: str) -> List[Dict]:
         
         return [dict(row) for row in rows]
     
-    except sqlite3.Error as e:
+    except sqlite3.Error:
         return []
 
 
-def get_review_statistics(db_path: str) -> Dict:
+def get_review_statistics(db_path: str) -> dict:
     """
     Get review statistics across all trade ideas.
     
@@ -272,8 +268,8 @@ def get_review_statistics(db_path: str) -> Dict:
 def batch_review(
     db_path: str,
     reviewer: str,
-    reviews: List[Dict]
-) -> Tuple[int, List[str]]:
+    reviews: list[dict]
+) -> tuple[int, list[str]]:
     """
     Submit multiple reviews in a batch.
     
@@ -306,7 +302,7 @@ def batch_review(
     return success_count, errors
 
 
-def get_reviewer_activity(db_path: str, reviewer: Optional[str] = None) -> List[Dict]:
+def get_reviewer_activity(db_path: str, reviewer: str | None = None) -> list[dict]:
     """
     Get reviewer activity statistics.
     
@@ -356,7 +352,7 @@ def get_reviewer_activity(db_path: str, reviewer: Optional[str] = None) -> List[
         
         return [dict(row) for row in rows]
     
-    except sqlite3.Error as e:
+    except sqlite3.Error:
         return []
 
 

@@ -6,7 +6,6 @@ V2 Domain Models
 
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Optional
 
 
 @dataclass
@@ -17,13 +16,13 @@ class EventCandidate:
     title: str
     summary: str
     event_type: str
-    region: Optional[str]
+    region: str | None
     country_codes: list[str]
     entity_names: list[str]
     normalized_entities: list[str]
-    occurred_at: Optional[datetime]
+    occurred_at: datetime | None
     detected_at: datetime
-    embedding: Optional[list[float]] = None
+    embedding: list[float] | None = None
     metadata: dict = field(default_factory=dict)
 
 
@@ -34,17 +33,17 @@ class CanonicalEvent:
     cluster_id: str
     canonical_title: str
     event_type: str
-    region: Optional[str]
+    region: str | None
     country_codes: list[str]
     normalized_entities: list[str]
     first_seen_at: datetime
     last_seen_at: datetime
-    occurred_at_start: Optional[datetime]
-    occurred_at_end: Optional[datetime]
+    occurred_at_start: datetime | None
+    occurred_at_end: datetime | None
     status: str
     phase: str
     evidence_count: int
-    embedding: Optional[list[float]] = None
+    embedding: list[float] | None = None
     metadata: dict = field(default_factory=dict)
 
 
@@ -63,8 +62,8 @@ class ScoredEventMatch:
 class ResolutionDecision:
     """Resolution 决策结果。"""
     decision_type: str
-    matched_event_id: Optional[str]
-    matched_cluster_id: Optional[str]
+    matched_event_id: str | None
+    matched_cluster_id: str | None
     similarity_score: float
     entity_overlap_score: float
     time_score: float

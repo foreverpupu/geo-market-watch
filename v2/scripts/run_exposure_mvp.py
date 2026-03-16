@@ -5,9 +5,10 @@ Exposure MVP Runner (Step 2a - Direct Rules Only)
 """
 
 from datetime import datetime
+
 from v2.config import DEFAULT_EXPOSURE_CONFIG
+from v2.domain.enums import EventPhase, EventStatus
 from v2.domain.models import CanonicalEvent
-from v2.domain.enums import EventStatus, EventPhase
 from v2.repositories.exposure_repository import InMemoryExposureRepository
 from v2.services.exposure_engine import compute_event_exposures
 

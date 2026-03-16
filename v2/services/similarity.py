@@ -6,10 +6,9 @@ Similarity Scoring
 
 import math
 from datetime import datetime, timedelta
-from typing import Optional
 
 
-def cosine_similarity(vec_a: Optional[list[float]], vec_b: Optional[list[float]]) -> float:
+def cosine_similarity(vec_a: list[float] | None, vec_b: list[float] | None) -> float:
     """
     计算两个向量的余弦相似度。
     
@@ -75,7 +74,7 @@ def entity_overlap_score(a: list[str], b: list[str]) -> float:
 
 
 def time_window_score(
-    candidate_time: Optional[datetime],
+    candidate_time: datetime | None,
     event_last_seen: datetime,
     window_days: int,
 ) -> float:

@@ -6,10 +6,13 @@ Review Actions
 
 import uuid
 from datetime import datetime
-from v2.domain.models import ReviewAction, Signal, CanonicalEvent
-from v2.domain.enums import ReviewActionType, EventStatus
-from v2.repositories.review_actions_repository import ReviewActionsRepository, InMemoryReviewActionsRepository
+
+from v2.domain.enums import EventStatus, ReviewActionType
+from v2.domain.models import CanonicalEvent, ReviewAction, Signal
 from v2.repositories.event_repository import EventRepository
+from v2.repositories.review_actions_repository import (
+    ReviewActionsRepository,
+)
 
 
 def _generate_action_id() -> str:

@@ -2,11 +2,12 @@
 Unit tests for exposure rules.
 """
 
-import pytest
 from datetime import datetime
-from v2.config import ExposureConfig, DEFAULT_EXPOSURE_CONFIG
+
+import pytest
+from v2.config import DEFAULT_EXPOSURE_CONFIG
+from v2.domain.enums import EventPhase, EventStatus, ExposureChannel, ExposureDirection
 from v2.domain.models import CanonicalEvent
-from v2.domain.enums import EventStatus, EventPhase, ExposureDirection, ExposureChannel
 from v2.services.exposure_rules import compute_direct_exposures
 
 

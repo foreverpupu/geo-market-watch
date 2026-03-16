@@ -5,21 +5,25 @@ Ingests v5.5 agent loop outputs into the Geo Alpha Database.
 """
 
 import json
-import sys
 from pathlib import Path
-from typing import Dict, Any, List
+from typing import Any
 
-sys.path.insert(0, str(Path(__file__).parent))
-
-from database import connect_db, init_database, insert_event, insert_source
-from database import insert_indicators, insert_flags, insert_notification
+from geo_market_watch.database import (
+    connect_db,
+    init_database,
+    insert_event,
+    insert_flags,
+    insert_indicators,
+    insert_notification,
+    insert_source,
+)
 
 
 def ingest_agent_loop_output(
     db_path: str,
-    agent_output: Dict[str, Any],
-    notification_files: Dict[str, str] = None
-) -> List[str]:
+    agent_output: dict[str, Any],
+    notification_files: dict[str, str] = None
+) -> list[str]:
     """
     Ingest agent loop output into database.
     
@@ -72,12 +76,12 @@ def ingest_agent_loop_output(
             if notification_files and event_key in notification_files:
                 file_path = notification_files[event_key]
                 try:
-                    with open(file_path, 'r') as f:
+                    with open(file_path) as f:
                         content = f.read()
                     
                     notification_type = 'full_analysis' if event.get('trigger_full_analysis') else 'monitor'
                     insert_notification(conn, event_id, notification_type, content, file_path)
-                except IOError:
+                except OSError:
                     pass  # Skip if file can't be read
         
         conn.commit()
@@ -88,7 +92,7 @@ def ingest_agent_loop_output(
     return inserted_ids
 
 
-def ingest_json_events(db_path: str, json_path: str) -> List[str]:
+def ingest_json_events(db_path: str, json_path: str) -> list[str]:
     """
     Ingest events from JSON file into database.
     
@@ -99,7 +103,7 @@ def ingest_json_events(db_path: str, json_path: str) -> List[str]:
     Returns:
         List of inserted event IDs
     """
-    with open(json_path, 'r') as f:
+    with open(json_path) as f:
         data = json.load(f)
     
     # Handle both { "items": [...] } and [...] formats
@@ -147,8 +151,8 @@ def ingest_json_events(db_path: str, json_path: str) -> List[str]:
 
 if __name__ == "__main__":
     # Example usage
-    import tempfile
     import os
+    import tempfile
     
     with tempfile.TemporaryDirectory() as tmpdir:
         db_path = os.path.join(tmpdir, "geo_alpha.db")

@@ -3,6 +3,59 @@
 All notable changes to Geo Market Watch will be documented in this file.
 For a deep dive into the AI design philosophy and research logic behind these updates, please refer to our [Design Notes](docs/design-notes.md).
 
+## [v6.5] - 2026-03-16
+### Package Refactor Closure
+
+This release completes the engineering closure of the package refactor. No new features were added; this is purely architectural hygiene and consistency work.
+
+#### Package Structure
+- **Official Namespace** — All code now uses `geo_market_watch.*` namespace exclusively
+- **CLI Entry Points** — 5 official CLI commands added:
+  - `gmw-init-db` — Initialize database
+  - `gmw-query` — Query database
+  - `gmw-agent` — Run agent loop
+  - `gmw-seed-db` — Seed database with sample events
+  - `gmw-benchmark` — Run performance benchmark
+- **Clean Imports** — Removed all `sys.path.insert()` hacks and `from engine.*` imports
+
+#### Legacy Script Deprecation
+- All top-level scripts in `scripts/` directory are now deprecated
+- Scripts show deprecation warnings and redirect to official CLI
+- Legacy wrappers will be removed in a future version
+
+#### Documentation Updates
+- Root README.md updated to promote package-based workflow
+- CLI usage examples added
+- Python API examples added
+- Installation instructions updated to use `pip install -e .`
+
+#### Version Unification
+- Single version source: `geo_market_watch.__version__`
+- CLI and all outputs report consistent version
+
+#### Technical Debt Reduction
+- Removed 16 legacy script files with path manipulation
+- Consolidated CLI logic into `geo_market_watch/scripts/` package
+- All tests pass (37/37)
+
+#### Migration Guide
+**Old (deprecated):**
+```bash
+python scripts/init_database.py --db data/geo_alpha.db
+python scripts/query_database.py --db data/geo_alpha.db --list
+python scripts/run_agent_loop.py --input data/intake.json
+```
+
+**New (official):**
+```bash
+pip install -e .
+gmw-init-db --db data/geo_alpha.db
+gmw-query --db data/geo_alpha.db --list
+gmw-agent --input data/intake.json --memory data/dedupe.json
+```
+
+---
+
 ## [v6.4] - 2026-03-15
 ### Idea Performance Tracking
 

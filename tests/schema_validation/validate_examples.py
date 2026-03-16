@@ -30,8 +30,8 @@ from pathlib import Path
 from typing import Any
 
 try:
-    from referencing import Registry, Resource
     from jsonschema import Draft202012Validator
+    from referencing import Registry, Resource
 except ImportError as exc:
     print(
         "Missing dependency. Install with:\n"

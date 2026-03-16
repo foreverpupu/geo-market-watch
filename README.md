@@ -110,16 +110,15 @@ cd geo-market-watch
 python -m venv .venv
 source .venv/bin/activate  # Windows: .venv\Scripts\activate
 
-# 3. Install dependencies
-pip install -r requirements.txt
+# 3. Install package
+pip install -e .
 
 # 4. Verify installation
-python --version  # Should show 3.10+
-python scripts/init_database.py --help
+gmw-init-db --help
 ```
 
 **Dependency Notes:**
-- **Core scripts** (database, query, agent loop): Only need Python standard library + click
+- **Core package**: Only needs Python standard library + jsonschema + python-dateutil
 - **Schema validation**: Additional test dependencies in `tests/schema_validation/requirements.txt`
 - **LLM features**: Optional, install `openai` or `anthropic` packages as needed
 
@@ -129,23 +128,19 @@ python scripts/init_database.py --help
 
 ```bash
 # 1. Initialize database
-python scripts/init_database.py --db data/geo_alpha.db
+gmw-init-db --db data/geo_alpha.db
 
 # 2. Seed with sample data
-python scripts/seed_database.py \
-  --db data/geo_alpha.db \
-  --seed data/db-seed-events.json
+gmw-seed-db --db data/geo_alpha.db --seed data/db-seed-events.json
 
 # 3. Query to verify
-python scripts/query_database.py --db data/geo_alpha.db --list
+gmw-query --db data/geo_alpha.db --list
 
 # 4. Run minimal example
-python scripts/run_agent_loop.py \
-  --input examples/minimal_event.json \
-  --output outputs/
+gmw-agent --input examples/minimal_event.json --memory data/dedupe-memory.json --output outputs/
 
 # 5. View results
-cat outputs/notification.md
+ls outputs/
 ```
 
 ---
@@ -164,7 +159,7 @@ cat outputs/notification.md
 
 **Run:**
 ```bash
-python scripts/run_agent_loop.py --input examples/minimal_event.json
+gmw-agent --input examples/minimal_event.json --memory data/dedupe-memory.json
 ```
 
 **Outputs generated:**
@@ -194,7 +189,9 @@ Geo Market Watch includes a deterministic benchmark suite for validating analysi
 
 **Run benchmarks:**
 ```bash
-python tests/engine/test_engine_core.py
+pytest tests/
+# or
+gmw-benchmark --input data/intake-sample.json --memory data/dedupe-memory.json
 ```
 
 **Coverage:** 5 event categories, 20+ test assertions, deterministic validation
@@ -248,7 +245,7 @@ Output: LNG carrier long thesis, +15% return tracked
 **System Architecture**
 - [Overview](docs/architecture/system-overview.md) — Four-layer framework
 - [Institutional Framework](docs/architecture/institutional-framework.md) — Enterprise architecture
-- [Code Structure](docs/architecture/code-structure.md) — Engine vs scripts
+- [Code Structure](docs/architecture/code-structure.md) — Package structure
 - [State Machine](docs/architecture/state-machine.md) — Event lifecycle
 
 **Evaluation & Benchmarks**
@@ -299,12 +296,68 @@ Local SQLite database for event storage and analysis:
 
 ```bash
 # Initialize
-python scripts/init_database.py --db data/geo_alpha.db
+gmw-init-db --db data/geo_alpha.db
 
 # Query
-python scripts/query_database.py --db data/geo_alpha.db --list
+gmw-query --db data/geo_alpha.db --list
 
 # Schema: [docs/architecture/database-spec.md](docs/architecture/database-spec.md)
+```
+
+---
+
+## CLI Reference
+
+**Core Commands:**
+
+| Command | Purpose | Example |
+|---------|---------|---------|
+| `gmw-init-db` | Initialize database | `gmw-init-db --db data/geo_alpha.db` |
+| `gmw-query` | Query database | `gmw-query --db data/geo_alpha.db --stats` |
+| `gmw-agent` | Run agent loop | `gmw-agent --input data/intake.json --memory data/dedupe.json` |
+| `gmw-seed-db` | Seed database | `gmw-seed-db --db data/geo_alpha.db --seed data/seed.json` |
+| `gmw-benchmark` | Run benchmark | `gmw-benchmark --input data/intake.json --memory data/dedupe.json` |
+
+**Query Options:**
+```bash
+# List all events
+gmw-query --db data/geo_alpha.db --list
+
+# Show statistics
+gmw-query --db data/geo_alpha.db --stats
+
+# High-signal events only
+gmw-query --db data/geo_alpha.db --high-signal
+
+# Filter by region
+gmw-query --db data/geo_alpha.db --region "Middle East"
+
+# Performance data
+gmw-query --db data/geo_alpha.db --idea-performance
+```
+
+---
+
+## Python API
+
+Import and use programmatically:
+
+```python
+from geo_market_watch.agent_loop import run_agent_loop
+from geo_market_watch.database import connect_db, get_stats
+from geo_market_watch.models import RawIntakeItem
+
+# Run agent loop
+summary = run_agent_loop(
+    intake_path="data/intake.json",
+    dedupe_memory_path="data/dedupe.json",
+    output_dir="outputs"
+)
+
+# Query database
+conn = connect_db("data/geo_alpha.db")
+stats = get_stats(conn)
+print(f"Total events: {stats['total_events']}")
 ```
 
 ---
@@ -313,15 +366,17 @@ python scripts/query_database.py --db data/geo_alpha.db --list
 
 Human-in-the-loop for quality control:
 
-```bash
-# Review pending ideas
-python scripts/list_active_ideas.py --db data/geo_alpha.db --status pending_review
+```python
+# Review pending ideas (Python API)
+from geo_market_watch.dashboard_views import get_tracked_ideas
+from geo_market_watch.lifecycle_engine import get_active_ideas
 
-# Approve idea
-python scripts/approve_trade_idea.py --db data/geo_alpha.db --idea-id TRADE_ID
+# Get ideas for review
+ideas = get_active_ideas("data/geo_alpha.db", status="pending_review")
 
-# Track performance
-python scripts/start_idea_tracking.py --db data/geo_alpha.db --idea-id TRADE_ID
+# Approve and track (Python API)
+from geo_market_watch.idea_review_engine import approve_idea
+from geo_market_watch.performance_engine import start_tracking
 ```
 
 **Full workflow:** [docs/operations/analyst-workflow.md](docs/operations/analyst-workflow.md)
@@ -351,21 +406,50 @@ See [v6.x Roadmap](docs/product/roadmap-v6.md) for details.
 
 | Component | Python Version | Dependencies | Location |
 |-----------|---------------|--------------|----------|
-| Core scripts | 3.10+ | `requirements.txt` | Root directory |
+| Core package | 3.10+ | `pyproject.toml` | `geo_market_watch/` |
 | Schema validation | 3.10+ | `tests/schema_validation/requirements.txt` | Test subdirectory |
 | Engine tests | 3.10+ | Same as core | N/A |
 | LLM features | 3.10+ | Optional: `openai`, `anthropic` | Install as needed |
 
 **Minimal setup for core functionality:**
 ```bash
-pip install -r requirements.txt
+pip install -e .
 ```
 
 **Full setup for development:**
 ```bash
-pip install -r requirements.txt
+pip install -e .
 pip install -r tests/schema_validation/requirements.txt
 ```
+
+---
+
+## Local Validation
+
+Before submitting changes, run the same checks as CI:
+
+```bash
+# Install package
+pip install -e .
+
+# Run tests
+pytest tests/ -v
+
+# CLI smoke checks
+gmw-init-db --help
+gmw-query --help
+gmw-agent --help
+
+# Check for forbidden legacy patterns (should return no matches)
+grep -r "sys.path.insert" --include="*.py" . | grep -v __pycache__
+grep -r "from engine\." --include="*.py" . | grep -v __pycache__
+grep -r "^import engine" --include="*.py" . | grep -v __pycache__
+grep -r "geo_market_watch\.engine" --include="*.py" . | grep -v __pycache__
+```
+
+如果本地运行无输出，即为正常；CI 管道会对这些模式进行严格的硬失败检查。
+
+All checks should pass before submitting a PR.
 
 ---
 

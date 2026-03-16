@@ -2,11 +2,12 @@
 Unit tests for queue router.
 """
 
-import pytest
 from datetime import datetime
+
+import pytest
 from v2.config import DEFAULT_RANKING_CONFIG
-from v2.domain.models import CanonicalEvent, Exposure, NetExposureSummary
-from v2.domain.enums import EventStatus, EventPhase, SignalClass, QueueType, ExposureDirection
+from v2.domain.enums import EventPhase, EventStatus, ExposureDirection, QueueType, SignalClass
+from v2.domain.models import CanonicalEvent, NetExposureSummary
 from v2.services.queue_router import assign_signal_queue
 
 

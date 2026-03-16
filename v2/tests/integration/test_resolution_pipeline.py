@@ -2,13 +2,13 @@
 Integration test for resolution pipeline.
 """
 
-import pytest
 from datetime import datetime, timedelta
+
 from v2.config import DEFAULT_RESOLUTION_CONFIG
+from v2.domain.enums import ResolutionDecisionType
 from v2.repositories.event_repository import InMemoryEventRepository
 from v2.services.candidate_builder import build_candidates_from_list
-from v2.services.resolution_engine import resolve_candidate, apply_resolution
-from v2.domain.enums import ResolutionDecisionType
+from v2.services.resolution_engine import apply_resolution, resolve_candidate
 
 
 class TestResolutionPipeline:
@@ -133,8 +133,8 @@ class TestResolutionPipeline:
         config = DEFAULT_RESOLUTION_CONFIG
         
         # Create existing event
+        from v2.domain.enums import EventPhase, EventStatus
         from v2.domain.models import CanonicalEvent
-        from v2.domain.enums import EventStatus, EventPhase
         
         existing = CanonicalEvent(
             event_id="EVT_001",

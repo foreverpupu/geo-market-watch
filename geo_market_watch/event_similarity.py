@@ -5,8 +5,8 @@ Provides functions for computing similarity between events,
 primarily for deduplication purposes.
 """
 
-from typing import Set
 from difflib import SequenceMatcher
+
 from geo_market_watch.models import NormalizedEvent
 
 
@@ -122,7 +122,7 @@ def is_soft_duplicate(
     return similarity >= similarity_threshold
 
 
-def _tokenize(text: str) -> Set[str]:
+def _tokenize(text: str) -> set[str]:
     """
     Tokenize text into a set of words.
     
@@ -145,7 +145,7 @@ def _tokenize(text: str) -> Set[str]:
     return {w for w in words if w not in stop_words and len(w) > 2}
 
 
-def _jaccard_similarity(set_a: Set[str], set_b: Set[str]) -> float:
+def _jaccard_similarity(set_a: set[str], set_b: set[str]) -> float:
     """
     Calculate Jaccard similarity between two sets.
     

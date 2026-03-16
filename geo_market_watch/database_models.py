@@ -4,7 +4,6 @@ Geo Market Watch v6 — Database Models
 Defines the SQLite schema for the minimal Geo Alpha Database.
 """
 
-from typing import Dict, Any, List
 
 # SQL statements for table creation
 CREATE_TABLES_SQL = """
@@ -324,12 +323,12 @@ TABLE_SCHEMAS = {
 }
 
 
-def get_table_schema(table_name: str) -> Dict[str, str]:
+def get_table_schema(table_name: str) -> dict[str, str]:
     """Get schema for a specific table."""
     return TABLE_SCHEMAS.get(table_name, {})
 
 
-def list_tables() -> List[str]:
+def list_tables() -> list[str]:
     """List all table names."""
     return list(TABLE_SCHEMAS.keys())
 

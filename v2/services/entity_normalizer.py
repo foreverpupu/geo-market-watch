@@ -5,8 +5,6 @@ Entity Normalizer
 """
 
 import re
-from typing import List
-
 
 # 实体别名映射表
 ENTITY_ALIAS_MAP = {
@@ -47,7 +45,7 @@ def normalize_entity_name(name: str) -> str:
     return normalized
 
 
-def normalize_entities(names: List[str]) -> List[str]:
+def normalize_entities(names: list[str]) -> list[str]:
     """
     批量标准化实体名列表。
     

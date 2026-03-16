@@ -6,17 +6,21 @@ Step 3 orchestrator，统一生成 Signal。
 
 import uuid
 from datetime import datetime
-from v2.config import RankingConfig, DEFAULT_RANKING_CONFIG
+
+from v2.config import DEFAULT_RANKING_CONFIG, RankingConfig
 from v2.domain.models import (
-    CanonicalEvent, Exposure, NetExposureSummary,
-    Signal, SignalResult, RankingFeatureSet, SignalScoreBreakdown
+    CanonicalEvent,
+    Exposure,
+    NetExposureSummary,
+    Signal,
+    SignalResult,
 )
-from v2.repositories.signal_repository import SignalRepository, InMemorySignalRepository
-from v2.services.ranking_features import build_ranking_features
-from v2.services.signal_scoring import compute_signal_score
-from v2.services.signal_bucketing import classify_signal
+from v2.repositories.signal_repository import SignalRepository
 from v2.services.queue_router import assign_signal_queue
+from v2.services.ranking_features import build_ranking_features
+from v2.services.signal_bucketing import classify_signal
 from v2.services.signal_explainer import build_signal_summary
+from v2.services.signal_scoring import compute_signal_score
 
 
 def _generate_signal_id() -> str:

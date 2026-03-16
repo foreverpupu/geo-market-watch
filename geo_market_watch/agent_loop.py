@@ -6,17 +6,16 @@ This module now delegates to agent_pipeline for actual processing.
 """
 
 from datetime import datetime
-from typing import Optional
 
+from geo_market_watch.agent_pipeline import run_pipeline
 from geo_market_watch.models import AgentRunSummary
-from geo_market_watch.engine.agent_pipeline import run_pipeline
 
 
 def run_agent_loop(
     intake_path: str,
     dedupe_memory_path: str,
-    output_dir: Optional[str] = None,
-    current_time: Optional[datetime] = None
+    output_dir: str | None = None,
+    current_time: datetime | None = None
 ) -> AgentRunSummary:
     """
     Run the full agent loop.
@@ -75,8 +74,8 @@ def print_summary(summary: AgentRunSummary):
 
 if __name__ == "__main__":
     # Example usage
-    import os
     import json
+    import os
     import tempfile
     
     # Create sample intake file

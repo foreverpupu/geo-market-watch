@@ -2,16 +2,17 @@
 Unit tests for replay core (optimized).
 """
 
-import pytest
-import pandas as pd
 from datetime import datetime, timedelta
+
+import pandas as pd
+import pytest
 from v2.config import DEFAULT_REPLAY_CONFIG
 from v2.domain.models import Signal
 from v2.repositories.price_repository import MockPriceRepository
 from v2.services.replay_core import (
+    _detect_market_move_optimized,
     build_event_timeline_optimized,
     calculate_lead_time,
-    _detect_market_move_optimized,
 )
 
 

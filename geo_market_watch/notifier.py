@@ -4,10 +4,10 @@ Geo Market Watch v5.5 — Notifier
 Generates human-readable notifications for monitoring and handoff events.
 """
 
-from typing import Dict, Any
+from typing import Any
 
 
-def render_monitor_notification(event: Dict[str, Any]) -> str:
+def render_monitor_notification(event: dict[str, Any]) -> str:
     """
     Generate notification for monitor events (band = monitor, no trigger).
     
@@ -32,7 +32,7 @@ def render_monitor_notification(event: Dict[str, Any]) -> str:
         "",
         f"**Band:** {event.get('band', 'unknown')}",
         "",
-        f"**Trigger Full Analysis:** no",
+        "**Trigger Full Analysis:** no",
         "",
         f"**Summary:** {event.get('summary', 'No summary provided.')}",
         "",
@@ -43,7 +43,7 @@ def render_monitor_notification(event: Dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
-def render_full_analysis_notification(event: Dict[str, Any]) -> str:
+def render_full_analysis_notification(event: dict[str, Any]) -> str:
     """
     Generate notification for full analysis handoff events.
     
@@ -85,7 +85,7 @@ def render_full_analysis_notification(event: Dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
-def render_notification(event: Dict[str, Any]) -> str:
+def render_notification(event: dict[str, Any]) -> str:
     """
     Generate appropriate notification based on event trigger status.
     
@@ -103,7 +103,7 @@ def render_notification(event: Dict[str, Any]) -> str:
         return render_monitor_notification(event)
 
 
-def write_notification(event: Dict[str, Any], output_dir: str) -> str:
+def write_notification(event: dict[str, Any], output_dir: str) -> str:
     """
     Write notification to file.
     

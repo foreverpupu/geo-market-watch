@@ -6,12 +6,16 @@ Exposure Rules
 """
 
 import uuid
+
 from v2.config import ExposureConfig
-from v2.domain.models import CanonicalEvent, ExposureCandidate, ExposureTraceStep
 from v2.domain.enums import (
-    ExposureTargetType, ExposureDirection, ExposureChannel,
-    ExposureSourceType, ExposureHorizon
+    ExposureChannel,
+    ExposureDirection,
+    ExposureHorizon,
+    ExposureSourceType,
+    ExposureTargetType,
 )
+from v2.domain.models import CanonicalEvent, ExposureCandidate, ExposureTraceStep
 
 
 def _generate_exposure_id() -> str:

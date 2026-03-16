@@ -7,14 +7,12 @@ Supports invalidation, closure, and updates.
 
 import sqlite3
 import uuid
-from datetime import datetime, timezone
-from typing import List, Dict, Optional, Tuple
-from pathlib import Path
+from datetime import UTC, datetime
 
 from .status_rules import (
+    LIFECYCLE_EVENTS,
     validate_analyst_status_transition,
     validate_lifecycle_event,
-    LIFECYCLE_EVENTS
 )
 
 
@@ -29,8 +27,8 @@ def record_lifecycle_event(
     db_path: str,
     trade_idea_id: str,
     event_type: str,
-    reason: Optional[str] = None
-) -> Tuple[bool, str]:
+    reason: str | None = None
+) -> tuple[bool, str]:
     """
     Record a lifecycle event for a trade idea.
     
@@ -62,7 +60,7 @@ def record_lifecycle_event(
         
         # Create lifecycle event
         lifecycle_id = str(uuid.uuid4())
-        created_at = datetime.now(timezone.utc).isoformat()
+        created_at = datetime.now(UTC).isoformat()
         
         cursor.execute(
             """
@@ -85,7 +83,7 @@ def invalidate_trade_idea(
     db_path: str,
     trade_idea_id: str,
     reason: str
-) -> Tuple[bool, str]:
+) -> tuple[bool, str]:
     """
     Invalidate a trade idea.
     
@@ -121,7 +119,7 @@ def invalidate_trade_idea(
             return False, error
         
         # Update trade idea status
-        updated_at = datetime.now(timezone.utc).isoformat()
+        updated_at = datetime.now(UTC).isoformat()
         cursor.execute(
             """
             UPDATE trade_ideas 
@@ -154,7 +152,7 @@ def close_trade_idea(
     db_path: str,
     trade_idea_id: str,
     reason: str
-) -> Tuple[bool, str]:
+) -> tuple[bool, str]:
     """
     Close a trade idea.
     
@@ -190,7 +188,7 @@ def close_trade_idea(
             return False, error
         
         # Update trade idea status
-        updated_at = datetime.now(timezone.utc).isoformat()
+        updated_at = datetime.now(UTC).isoformat()
         cursor.execute(
             """
             UPDATE trade_ideas 
@@ -224,7 +222,7 @@ def update_trade_idea(
     trade_idea_id: str,
     update_reason: str,
     **updates
-) -> Tuple[bool, str]:
+) -> tuple[bool, str]:
     """
     Update a trade idea with changes and record the update event.
     
@@ -274,7 +272,7 @@ def update_trade_idea(
             return False, f"Cannot update trade idea in status: {current_status}"
         
         # Build update query
-        updated_at = datetime.now(timezone.utc).isoformat()
+        updated_at = datetime.now(UTC).isoformat()
         set_clause = ", ".join([f"{k} = ?" for k in valid_updates.keys()])
         values = list(valid_updates.values()) + [updated_at, trade_idea_id]
         
@@ -309,7 +307,7 @@ def update_trade_idea(
 def get_lifecycle_history(
     db_path: str,
     trade_idea_id: str
-) -> List[Dict]:
+) -> list[dict]:
     """
     Get the full lifecycle history for a trade idea.
     
@@ -339,11 +337,11 @@ def get_lifecycle_history(
         
         return [dict(row) for row in rows]
     
-    except sqlite3.Error as e:
+    except sqlite3.Error:
         return []
 
 
-def get_active_ideas(db_path: str) -> List[Dict]:
+def get_active_ideas(db_path: str) -> list[dict]:
     """
     Get all active (non-terminal) trade ideas.
     Dashboard priority: approved + high conviction first, then by created_at.
@@ -387,11 +385,11 @@ def get_active_ideas(db_path: str) -> List[Dict]:
         
         return [dict(row) for row in rows]
     
-    except sqlite3.Error as e:
+    except sqlite3.Error:
         return []
 
 
-def get_ideas_by_status(db_path: str, status: str) -> List[Dict]:
+def get_ideas_by_status(db_path: str, status: str) -> list[dict]:
     """
     Get trade ideas filtered by analyst status.
     
@@ -427,7 +425,7 @@ def get_ideas_by_status(db_path: str, status: str) -> List[Dict]:
         
         return [dict(row) for row in rows]
     
-    except sqlite3.Error as e:
+    except sqlite3.Error:
         return []
 
 

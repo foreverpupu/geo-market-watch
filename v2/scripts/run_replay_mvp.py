@@ -5,11 +5,12 @@ Replay & Evaluation MVP Runner
 """
 
 from datetime import datetime, timedelta
+
 from v2.config import DEFAULT_REPLAY_CONFIG
-from v2.domain.models import Signal, PricePoint
 from v2.domain.enums import SignalClass
+from v2.domain.models import Signal
 from v2.repositories.price_repository import MockPriceRepository
-from v2.services.replay_engine import run_signal_replay, run_batch_evaluation
+from v2.services.replay_engine import run_batch_evaluation, run_signal_replay
 
 
 def run_replay_demo():

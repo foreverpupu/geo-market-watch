@@ -2,11 +2,11 @@
 Integration test for exposure pipeline.
 """
 
-import pytest
 from datetime import datetime
+
 from v2.config import DEFAULT_EXPOSURE_CONFIG
+from v2.domain.enums import EventPhase, EventStatus, ExposureDirection
 from v2.domain.models import CanonicalEvent
-from v2.domain.enums import EventStatus, EventPhase, ExposureDirection
 from v2.repositories.exposure_repository import InMemoryExposureRepository
 from v2.services.exposure_engine import compute_event_exposures
 

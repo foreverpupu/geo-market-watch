@@ -1,6 +1,6 @@
-# Engine Layer
+# Geo Market Watch Package
 
-The engine module contains the core logic for processing geopolitical events into structured intelligence artifacts.
+The `geo_market_watch` package contains the core logic for processing geopolitical events into structured intelligence artifacts.
 
 It powers the event → analysis → monitoring pipeline used by Geo Market Watch.
 
@@ -8,7 +8,7 @@ It powers the event → analysis → monitoring pipeline used by Geo Market Watc
 
 ## Responsibilities
 
-The engine currently implements:
+The package currently implements:
 
 - **Event normalization** — Convert raw inputs to structured event cards
 - **Event deduplication** — Detect and filter duplicate events
@@ -21,9 +21,9 @@ The engine currently implements:
 
 ---
 
-## What the Engine Does NOT Do
+## What the Package Does NOT Do
 
-The engine intentionally does not include:
+The package intentionally does not include:
 
 - External news ingestion (RSS/API feeds)
 - Continuous scheduling (cron/background jobs)
@@ -51,12 +51,13 @@ These responsibilities are handled by external automation, CLI scripts, or orche
 | `exposure_engine.py` | Market mapping | `map_to_sectors()`, `map_to_companies()` |
 | `agent_loop.py` | Orchestration | `run_agent_loop()`, `process_event()` |
 | `notifier.py` | Output generation | `generate_notification()`, `format_output()` |
+| `scripts/` | CLI entry points | `gmw-init-db`, `gmw-query`, `gmw-agent`, etc. |
 
 ---
 
 ## Design Philosophy
 
-The engine focuses on **deterministic processing and structured outputs**, allowing higher-level automation or analyst workflows to build on top.
+The package focuses on **deterministic processing and structured outputs**, allowing higher-level automation or analyst workflows to build on top.
 
 ### Key Principles
 
@@ -68,12 +69,59 @@ The engine focuses on **deterministic processing and structured outputs**, allow
 
 ---
 
-## Usage Example
+## CLI Usage
+
+After installing the package (`pip install -e .`), use the official CLI commands:
+
+```bash
+# Initialize database
+gmw-init-db --db data/geo_alpha.db
+
+# Query database
+gmw-query --db data/geo_alpha.db --list
+gmw-query --db data/geo_alpha.db --stats
+gmw-query --db data/geo_alpha.db --high-signal
+
+# Run agent loop
+gmw-agent --input data/intake.json --memory data/dedupe.json --output outputs/
+
+# Seed database
+gmw-seed-db --db data/geo_alpha.db --seed data/seed-events.json
+
+# Run benchmark
+gmw-benchmark --input data/intake.json --memory data/dedupe.json
+```
+
+---
+
+## Python API Usage
+
+Import and use programmatically:
 
 ```python
-from engine.intake_normalizer import normalize_event
-from engine.scoring_engine import compute_score
-from engine.trigger_engine import should_escalate
+from geo_market_watch.agent_loop import run_agent_loop
+from geo_market_watch.database import connect_db, get_stats
+from geo_market_watch.models import RawIntakeItem
+
+# Run agent loop
+summary = run_agent_loop(
+    intake_path="data/intake.json",
+    dedupe_memory_path="data/dedupe.json",
+    output_dir="outputs"
+)
+
+# Query database
+conn = connect_db("data/geo_alpha.db")
+stats = get_stats(conn)
+print(f"Total events: {stats['total_events']}")
+```
+
+### Processing a Single Event
+
+```python
+from geo_market_watch.intake_normalizer import normalize_event
+from geo_market_watch.scoring_engine import compute_score
+from geo_market_watch.trigger_engine import should_escalate
 
 # Process an event
 raw_event = {"headline": "Red Sea shipping disruption..."}
@@ -90,16 +138,30 @@ if escalate:
 
 ## Testing
 
-Engine modules are designed for unit testing:
+Package modules are designed for unit testing:
 
 ```python
 # test_scoring.py
-from engine.scoring_engine import compute_score
+from geo_market_watch.scoring_engine import compute_score
 
 def test_shipping_disruption_score():
     event = {"category": "shipping", "severity": "high"}
     score = compute_score(event)
     assert 7 <= score <= 9  # Should be high
+```
+
+Run all tests:
+```bash
+pytest tests/
+```
+
+---
+
+## Version
+
+```python
+import geo_market_watch
+print(geo_market_watch.__version__)  # "0.1.0"
 ```
 
 ---

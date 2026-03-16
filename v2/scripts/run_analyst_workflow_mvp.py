@@ -5,14 +5,15 @@ Analyst Workflow MVP Runner
 """
 
 from datetime import datetime, timedelta
+
 from v2.config import DEFAULT_ANALYST_WORKFLOW_CONFIG
-from v2.domain.models import Signal, CanonicalEvent
-from v2.domain.enums import EventStatus, EventPhase, SignalClass, ReviewActionType
-from v2.repositories.triage_queue_repository import InMemoryTriageQueueRepository
-from v2.repositories.review_actions_repository import InMemoryReviewActionsRepository
+from v2.domain.enums import EventPhase, EventStatus, ReviewActionType, SignalClass
+from v2.domain.models import CanonicalEvent, Signal
 from v2.repositories.audit_trail_repository import InMemoryAuditTrailRepository
-from v2.repositories.watchlist_repository import InMemoryWatchlistRepository
 from v2.repositories.event_repository import InMemoryEventRepository
+from v2.repositories.review_actions_repository import InMemoryReviewActionsRepository
+from v2.repositories.triage_queue_repository import InMemoryTriageQueueRepository
+from v2.repositories.watchlist_repository import InMemoryWatchlistRepository
 from v2.services.analyst_workflow import manage_analyst_workflow
 from v2.services.triage_queue import check_expired_items
 

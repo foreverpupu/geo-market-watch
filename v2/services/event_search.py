@@ -5,14 +5,15 @@ Event Search
 """
 
 from datetime import datetime, timedelta
+
 from v2.config import ResolutionConfig, get_time_window_for_event_type
-from v2.domain.models import EventCandidate, CanonicalEvent, ScoredEventMatch
+from v2.domain.models import EventCandidate, ScoredEventMatch
 from v2.repositories.event_repository import EventRepository
 from v2.services.similarity import (
+    combined_match_score,
     cosine_similarity,
     entity_overlap_score,
     time_window_score,
-    combined_match_score,
 )
 
 

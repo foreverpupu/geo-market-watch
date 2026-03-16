@@ -4,12 +4,11 @@ Geo Market Watch v6.4 — Export Layer
 Handles export of dashboard and performance data to JSON and CSV.
 """
 
-import json
 import csv
+import json
 import sqlite3
-from pathlib import Path
-from typing import Dict, List, Optional
 from datetime import datetime
+from pathlib import Path
 
 
 def get_db_connection(db_path: str) -> sqlite3.Connection:
@@ -27,7 +26,7 @@ def _sanitize_for_csv(value) -> str:
     return text.replace('\n', ' ').replace('\r', ' ')
 
 
-def build_idea_performance_view(conn: sqlite3.Connection, limit: int = 100) -> List[Dict]:
+def build_idea_performance_view(conn: sqlite3.Connection, limit: int = 100) -> list[dict]:
     """
     Build comprehensive idea performance view.
     
@@ -79,7 +78,7 @@ def build_idea_performance_view(conn: sqlite3.Connection, limit: int = 100) -> L
     return [dict(row) for row in cursor.fetchall()]
 
 
-def build_performance_summary_view(conn: sqlite3.Connection) -> Dict:
+def build_performance_summary_view(conn: sqlite3.Connection) -> dict:
     """
     Build performance summary statistics.
     
@@ -150,7 +149,7 @@ def build_performance_summary_view(conn: sqlite3.Connection) -> Dict:
     return summary
 
 
-def build_closed_idea_performance_view(conn: sqlite3.Connection, limit: int = 100) -> List[Dict]:
+def build_closed_idea_performance_view(conn: sqlite3.Connection, limit: int = 100) -> list[dict]:
     """
     Build view of closed ideas with performance.
     
@@ -192,7 +191,7 @@ def build_closed_idea_performance_view(conn: sqlite3.Connection, limit: int = 10
     return [dict(row) for row in cursor.fetchall()]
 
 
-def export_to_json(data: Dict or List, output_path: str) -> bool:
+def export_to_json(data: dict or list, output_path: str) -> bool:
     """
     Export data to JSON file.
     
@@ -216,7 +215,7 @@ def export_to_json(data: Dict or List, output_path: str) -> bool:
         return False
 
 
-def export_to_csv(data: List[Dict], output_path: str) -> bool:
+def export_to_csv(data: list[dict], output_path: str) -> bool:
     """
     Export data to CSV file.
     
@@ -256,8 +255,8 @@ def export_to_csv(data: List[Dict], output_path: str) -> bool:
 def export_dashboard_data(
     db_path: str,
     output_dir: str,
-    timestamp: Optional[str] = None
-) -> Dict[str, bool]:
+    timestamp: str | None = None
+) -> dict[str, bool]:
     """
     Export all dashboard data to files.
     

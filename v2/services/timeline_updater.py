@@ -6,9 +6,9 @@ Timeline Updater
 
 import uuid
 from datetime import datetime
-from typing import Optional
-from v2.domain.models import EventCandidate, CanonicalEvent
-from v2.domain.enums import EventStatus, EventPhase
+
+from v2.domain.enums import EventPhase, EventStatus
+from v2.domain.models import CanonicalEvent, EventCandidate
 
 
 def _generate_event_id() -> str:
@@ -43,7 +43,7 @@ def _detect_phase_from_content(title: str, summary: str) -> str:
 def create_new_event_from_candidate(
     candidate: EventCandidate,
     now: datetime,
-    cluster_id: Optional[str] = None,
+    cluster_id: str | None = None,
 ) -> CanonicalEvent:
     """
     从候选事件创建新的规范化事件。

@@ -4,8 +4,9 @@ Price Repository
 价格数据存储接口与实现（模拟数据）。
 """
 
-from typing import Protocol
 from datetime import datetime, timedelta
+from typing import Protocol
+
 from v2.domain.models import PricePoint
 
 
@@ -43,8 +44,6 @@ class MockPriceRepository:
         end_time: datetime,
     ) -> list[PricePoint]:
         """获取价格数据（生成模拟数据）。"""
-        import random
-        import math
         
         # 如果没有该 symbol 的数据，生成模拟数据
         if symbol not in self._data:
@@ -70,7 +69,6 @@ class MockPriceRepository:
     ) -> list[PricePoint]:
         """生成模拟价格数据。"""
         import random
-        import math
         
         points = []
         current_time = start_time

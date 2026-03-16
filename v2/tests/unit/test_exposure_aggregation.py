@@ -2,11 +2,12 @@
 Unit tests for exposure aggregation.
 """
 
-import pytest
 from datetime import datetime
+
+import pytest
 from v2.config import DEFAULT_EXPOSURE_CONFIG
-from v2.domain.models import ExposureCandidate, ExposureTraceStep
 from v2.domain.enums import ExposureDirection, ExposureSourceType
+from v2.domain.models import ExposureCandidate, ExposureTraceStep
 from v2.services.exposure_aggregation import aggregate_exposures, summarize_net_exposures
 
 

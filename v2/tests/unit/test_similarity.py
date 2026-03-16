@@ -2,14 +2,14 @@
 Unit tests for similarity scoring.
 """
 
+from datetime import datetime
+
 import pytest
-import math
-from datetime import datetime, timedelta
 from v2.services.similarity import (
+    combined_match_score,
     cosine_similarity,
     entity_overlap_score,
     time_window_score,
-    combined_match_score,
 )
 
 

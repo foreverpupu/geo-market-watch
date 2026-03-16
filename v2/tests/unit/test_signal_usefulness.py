@@ -2,14 +2,15 @@
 Unit tests for signal usefulness metrics.
 """
 
-import pytest
 from datetime import datetime
+
+import pytest
 from v2.config import DEFAULT_REPLAY_CONFIG
-from v2.domain.models import Signal, EventTimeline, SignalUsefulnessMetrics
-from v2.domain.enums import SignalUsefulnessRating, EventTypeCategory
+from v2.domain.enums import EventTypeCategory, SignalUsefulnessRating
+from v2.domain.models import EventTimeline, Signal
 from v2.services.signal_usefulness import (
-    classify_event_category,
     calculate_usefulness_score,
+    classify_event_category,
     determine_usefulness_rating,
     evaluate_signal_usefulness,
 )
