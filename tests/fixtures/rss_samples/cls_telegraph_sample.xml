@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <generator>RSSHub</generator>
+    <title>电报 - 财联社</title>
+    <link href="https://www.cls.cn/telegraph"/>
+    
+    <entry>
+        <id>https://api3.cls.cn/share/article/2317394</id>
+        <title><![CDATA[财联社3月19日电，美联储主席鲍威尔表示，美联储目前处于有利位置，可以决定未来如何调整利率。]]></title>
+        <published>2026-03-18T18:37:09+00:00</published>
+        <link href="https://api3.cls.cn/share/article/2317394"/>
+        <content type="html"><![CDATA[财联社3月19日电，美联储主席鲍威尔表示，美联储目前处于有利位置，可以决定未来如何调整利率。]]></content>
+    </entry>
+    
+    <entry>
+        <id>https://api3.cls.cn/share/article/2317391</id>
+        <title><![CDATA[财联社3月19日电，美联储主席鲍威尔表示，能源价格上涨将推高整体通胀；现在判断中东局势对经济的全面影响还为时尚早。]]></title>
+        <published>2026-03-18T18:35:51+00:00</published>
+        <link href="https://api3.cls.cn/share/article/2317391"/>
+        <content type="html"><![CDATA[财联社3月19日电，美联储主席鲍威尔表示，能源价格上涨将推高整体通胀；现在判断中东局势对经济的全面影响还为时尚早。]]></content>
+    </entry>
+    
+    <entry>
+        <id>https://api3.cls.cn/share/article/2317386</id>
+        <title><![CDATA[财联社3月19日电，上期所原油期货2605合约夜盘收涨4.91%，报788.10元/桶。沪金夜盘收跌2.23%，沪银收跌4.44%。]]></title>
+        <published>2026-03-18T18:30:47+00:00</published>
+        <link href="https://api3.cls.cn/share/article/2317386"/>
+        <content type="html"><![CDATA[财联社3月19日电，上期所原油期货2605合约夜盘收涨4.91%，报788.10元/桶。沪金夜盘收跌2.23%，沪银收跌4.44%。]]></content>
+    </entry>
+    
+    <entry>
+        <id>https://api3.cls.cn/share/article/2317385</id>
+        <title><![CDATA[中国驻沙特大使馆：提醒在沙特中国公民注意安全]]></title>
+        <published>2026-03-18T18:26:03+00:00</published>
+        <link href="https://api3.cls.cn/share/article/2317385"/>
+        <content type="html"><![CDATA[【中国驻沙特大使馆：提醒在沙特中国公民注意安全】财联社3月19日电，据中国驻沙特大使馆，18日晚，沙特首都利雅得市区传出爆炸声，地区紧张局势有进一步升级可能。]]></content>
+    </entry>
+    
+    <entry>
+        <id>https://api3.cls.cn/share/article/2317380</id>
+        <title><![CDATA[A股收盘：沪指涨0.5% 科技股领涨]]></title>
+        <published>2026-03-18T17:30:00+00:00</published>
+        <link href="https://api3.cls.cn/share/article/2317380"/>
+        <content type="html"><![CDATA[今日A股三大指数集体收涨，半导体板块表现强势。]]></content>
+    </entry>
+</feed>
