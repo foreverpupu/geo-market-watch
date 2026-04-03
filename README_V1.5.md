@@ -6,7 +6,6 @@ This document defines the Phase 0 governance policy for `geo-market-watch`.
 
 Phase 0 is not a feature expansion phase. It is a **trustworthiness hardening phase**.
 
-The goal is to move `geo-market-watch` from a "smart but slippery analyst" toward a **high-trust geopolitical market radar** with explicit guardrails, observable failure modes, and auditable outputs.
 
 ---
 
@@ -101,17 +100,10 @@ unless they can be validated against the provided source context.
 
 ### 4.2 Fact / Stance Collapse
 Intercept any case where:
-- "threatened"
-- "claimed"
-- "signaled"
-- "reportedly considering"
-- "rumored"
-- "unconfirmed"
 
 is incorrectly rewritten as a confirmed fact.
 
 Example:
-- unacceptable: "Iran has fully closed the Strait"
 - acceptable only if source directly confirms closure with sufficient support
 
 ### 4.3 Unsupported Strong Assertions
@@ -190,7 +182,6 @@ This log should record at minimum:
 ### Hallucination Classification
 Every intercepted issue should be classified where possible as:
 
-#### Type A  --  Pure Hallucination
 The number / source / claim does not exist in the provided context.
 
 Examples:
@@ -198,7 +189,6 @@ Examples:
 - fabricated source attribution
 - fabricated event detail
 
-#### Type B  --  Logic Stretch
 A number or fact exists in source material, but the model incorrectly attaches it to:
 - the wrong conclusion
 - the wrong ticker
@@ -258,7 +248,6 @@ If no fresh confirming evidence arrives within the TTL:
 ### Purpose
 This prevents:
 - stale narratives persisting as live logic
-- yesterday's market explanation becoming today's hidden assumption
 - unrefreshed inference contaminating real-time decision support
 
 ---
@@ -281,7 +270,6 @@ A ticker may only appear if a valid macro channel exists between:
 3. the asset category
 4. the ticker itself
 
-No free-form "sounds related" mapping.
 
 ---
 
@@ -302,7 +290,6 @@ They may behave as:
 ### Required Logic
 Before generating a COIN-related observation, the system must classify the dominant transmission path.
 
-#### Path A  --  Risk-off / Liquidity Tightening
 Conflict increases:
 - macro uncertainty
 - liquidity stress
@@ -311,7 +298,6 @@ Conflict increases:
 Expected implication:
 - crypto-linked equities may trade down with broader risk assets
 
-#### Path B  --  Alternative / Payment Rail / Trust Disruption
 Conflict increases:
 - distrust in conventional rails
 - sanctions circumvention narratives
@@ -366,8 +352,6 @@ Operational target:
 When a core fact reverses, the system updates state instead of silently stacking narratives.
 
 Example:
-- "closure risk" -> "partial opening"
-- "escalation risk" -> "de-escalation signal"
 
 ### 12.4 Guard Trace Quality
 Every blocked payload must leave a usable trace in `Guard_Trace.log`.
@@ -426,4 +410,3 @@ The goal is to make the system more trustworthy.
 
 **Do not let the model sound more certain than the evidence allows.**
 
-If Phase 0 succeeds, `geo-market-watch` will stop behaving like a fluent storyteller and start behaving like a disciplined market sentry.
