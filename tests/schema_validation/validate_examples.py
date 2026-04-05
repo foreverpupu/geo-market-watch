@@ -5,10 +5,11 @@ Validate Geo Market Watch example JSON files against local JSON Schemas.
 Expected repository layout:
 
 repo/
-├── schemas/
-│   ├── event-object.json
-│   ├── watchlist-item.json
-│   └── analysis-output.json
+├── geo_market_watch/
+│   └── schemas/
+│       ├── event-object.json
+│       ├── watchlist-item.json
+│       └── analysis-output.json
 ├── examples/
 │   └── schema-examples/
 │       ├── event-object.sample.json
@@ -108,7 +109,7 @@ def validate_instance(
 
 def main() -> int:
     repo_root = Path(__file__).resolve().parents[2]
-    schema_dir = repo_root / "schemas"
+    schema_dir = repo_root / "geo_market_watch" / "schemas"
     examples_dir = repo_root / "examples" / "schema-examples"
 
     required_files = [
