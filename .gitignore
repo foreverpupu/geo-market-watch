@@ -81,3 +81,10 @@ artifacts/
 
 .mypy_cache/
 .ruff_cache/
+
+# =========================
+# Ignored directories
+# =========================
+data/
+exports/
+outputs/
