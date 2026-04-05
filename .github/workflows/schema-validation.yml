@@ -4,9 +4,8 @@ on:
   push:
     branches:
       - main
-      - master
-      - develop
   pull_request:
+    branches: [ main ]
 
 jobs:
   validate-schemas:
