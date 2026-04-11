@@ -91,3 +91,11 @@ data/runtime/
 data/dedupe-memory.json
 data/exports/outputs/
 outputs/
+
+# =========================
+# Temporary debug scripts
+# =========================
+
+debug_score.py
+generate_full_analysis.py
+run_first_test.py
