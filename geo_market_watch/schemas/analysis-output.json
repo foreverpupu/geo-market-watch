@@ -4,7 +4,7 @@
   "title": "Geo Market Watch Analysis Output",
   "description": "Top-level structured output for deep geopolitical market analysis.",
   "type": "object",
-  "additionalProperties": false,
+  "additionalProperties": true,
   "required": [
     "analysis_id",
     "generated_at",

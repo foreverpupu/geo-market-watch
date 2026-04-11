@@ -83,8 +83,11 @@ artifacts/
 .ruff_cache/
 
 # =========================
-# Ignored directories
+# Geo Market Watch runtime artifacts
 # =========================
-data/
-exports/
+
+artifacts/
+data/runtime/
+data/dedupe-memory.json
+data/exports/outputs/
 outputs/

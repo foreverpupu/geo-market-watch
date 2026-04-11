@@ -8,6 +8,9 @@
 
 ---
 
+## 正式入口
+本工具面向用户的正式使用统一通过 `gmw-*` 系列CLI命令，根目录下scripts/为开发工具脚本，仅供开发流程使用。
+
 ## What This Project Does
 
 Geo Market Watch converts complex geopolitical developments into **structured market intelligence** through a deterministic pipeline:
