@@ -4,7 +4,7 @@
   "title": "Geo Market Watch Watchlist Item",
   "description": "Structured watchlist item generated from geopolitical-to-market mapping.",
   "type": "object",
-  "additionalProperties": false,
+  "additionalProperties": true,
   "required": [
     "watchlist_id",
     "event_id",
@@ -198,11 +198,9 @@
   "$defs": {
     "triggerSignal": {
       "type": "object",
-      "additionalProperties": false,
+      "additionalProperties": true,
       "required": [
-        "signal_id",
         "description",
-        "signal_category",
         "observable"
       ],
       "properties": {
@@ -231,6 +229,11 @@
             "other"
           ]
         },
+        "signal_type": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
         "observable": {
           "type": "boolean"
         },
@@ -248,11 +251,9 @@
     },
     "invalidationCondition": {
       "type": "object",
-      "additionalProperties": false,
+      "additionalProperties": true,
       "required": [
-        "condition_id",
-        "description",
-        "severity"
+        "description"
       ],
       "properties": {
         "condition_id": {
@@ -264,6 +265,11 @@
           "type": "string",
           "minLength": 10,
           "maxLength": 1000
+        },
+        "condition_type": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
         },
         "severity": {
           "type": "string",
@@ -281,13 +287,17 @@
     },
     "indicator": {
       "type": "object",
-      "additionalProperties": false,
+      "additionalProperties": true,
       "required": [
-        "indicator_name",
         "indicator_type"
       ],
       "properties": {
         "indicator_name": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 200
+        },
+        "name": {
           "type": "string",
           "minLength": 2,
           "maxLength": 200
@@ -299,9 +309,11 @@
             "volume",
             "spread",
             "freight",
+            "freight_rate",
             "inventory",
             "production",
             "policy",
+            "policy_tracker",
             "sentiment",
             "other"
           ]
