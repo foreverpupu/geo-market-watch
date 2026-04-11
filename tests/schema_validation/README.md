@@ -24,9 +24,9 @@ The goal is to ensure that:
 The validation script checks the following files:
 
 ### Schemas
-- `schemas/event-object.json`
-- `schemas/watchlist-item.json`
-- `schemas/analysis-output.json`
+- `geo_market_watch/schemas/event-object.json`
+- `geo_market_watch/schemas/watchlist-item.json`
+- `geo_market_watch/schemas/analysis-output.json`
 
 ### Example payloads
 - `examples/schema-examples/event-object.sample.json`
@@ -62,15 +62,15 @@ Geo Market Watch Schema Validation
 ========================================
 
 Validating: examples/schema-examples/event-object.sample.json
-Against:    schemas/event-object.json
+Against:    geo_market_watch/schemas/event-object.json
 [PASS]
 
 Validating: examples/schema-examples/watchlist-item.sample.json
-Against:    schemas/watchlist-item.json
+Against:    geo_market_watch/schemas/watchlist-item.json
 [PASS]
 
 Validating: examples/schema-examples/analysis-output.sample.json
-Against:    schemas/analysis-output.json
+Against:    geo_market_watch/schemas/analysis-output.json
 [PASS]
 
 ========================================
@@ -111,7 +111,7 @@ while still allowing the project to evolve over time.
 ## When to run validation
 
 Run validation whenever you change any of the following:
-- files in schemas/
+- files in geo_market_watch/schemas/
 - files in examples/schema-examples/
 - output contracts in SKILL.md
 - agent output structure

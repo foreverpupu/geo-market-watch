@@ -66,6 +66,10 @@ class NormalizedEvent:
     # Dedupe tracking
     canonical_key: str | None = None
     source_url_hash: str | None = None
+    dedupe_hash: str | None = None  # Minimal dedupe key for fast lookup
+    
+    # Explainability metadata
+    normalization_explain: dict = field(default_factory=dict)  # category/region hit evidence
     
     def __post_init__(self):
         if not self.event_id:

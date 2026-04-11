@@ -5,10 +5,11 @@ Validate Geo Market Watch example JSON files against local JSON Schemas.
 Expected repository layout:
 
 repo/
-├── schemas/
-│   ├── event-object.json
-│   ├── watchlist-item.json
-│   └── analysis-output.json
+├── geo_market_watch/
+│   └── schemas/
+│       ├── event-object.json
+│       ├── watchlist-item.json
+│       └── analysis-output.json
 ├── examples/
 │   └── schema-examples/
 │       ├── event-object.sample.json

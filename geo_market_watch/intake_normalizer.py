@@ -121,17 +121,29 @@ class IntakeNormalizer:
         # Generate event ID
         event_id = self._generate_event_id(item)
         
-        # Infer region if not provided
-        region = item.region or self._infer_region(item.headline)
+        # Infer region if not provided (with explainability)
+        region_result = self._infer_region_with_explain(item.headline, item.region)
+        region = region_result["region"]
         
-        # Infer category if not provided
-        category = item.category or self._infer_category(item.headline)
+        # Infer category if not provided (with explainability)
+        category_result = self._infer_category_with_explain(item.headline, item.category)
+        category = category_result["category"]
         
         # Infer severity
         severity = self._infer_severity(item.headline)
         
         # Generate canonical key for dedupe
         canonical_key = self._generate_canonical_key(item)
+        
+        # Generate minimal dedupe hash
+        dedupe_hash = self._generate_dedupe_hash(item)
+        
+        # Build explainability metadata
+        normalization_explain = {
+            "region": region_result,
+            "category": category_result,
+            "severity": {"value": severity, "inferred": item.region is None or item.category is None},
+        }
         
         return NormalizedEvent(
             event_id=event_id,
@@ -144,7 +156,9 @@ class IntakeNormalizer:
             source=item.source,
             urls=item.urls,
             canonical_key=canonical_key,
-            source_url_hash=self._hash_urls(item.urls)
+            source_url_hash=self._hash_urls(item.urls),
+            dedupe_hash=dedupe_hash,
+            normalization_explain=normalization_explain,
         )
     
     def _generate_event_id(self, item: RawIntakeItem) -> str:
@@ -162,6 +176,14 @@ class IntakeNormalizer:
         words = normalized.split()[:10]
         return " ".join(words)
     
+    def _generate_dedupe_hash(self, item: RawIntakeItem) -> str:
+        """Generate minimal dedupe hash for fast lookup."""
+        # Combine headline (normalized) + source for uniqueness
+        normalized = re.sub(r'[^\w\s]', '', item.headline.lower())
+        normalized = re.sub(r'\s+', ' ', normalized).strip()
+        content = f"{normalized}:{item.source or 'unknown'}"
+        return hashlib.md5(content.encode()).hexdigest()[:16]
+    
     def _hash_urls(self, urls: list) -> str | None:
         """Hash URLs for dedupe."""
         if not urls:
@@ -170,19 +192,69 @@ class IntakeNormalizer:
     
     def _infer_region(self, headline: str) -> str:
         """Infer region from headline keywords."""
+        result = self._infer_region_with_explain(headline, None)
+        return result["region"]
+    
+    def _infer_region_with_explain(self, headline: str, provided_region: str | None) -> dict:
+        """Infer region with explainability metadata."""
+        if provided_region:
+            return {
+                "region": provided_region,
+                "source": "provided",
+                "matched_keywords": [],
+                "rule": None,
+            }
+        
         headline_lower = headline.lower()
         for region, keywords in self.REGION_KEYWORDS.items():
-            if any(kw in headline_lower for kw in keywords):
-                return region
-        return "Global"
+            matched = [kw for kw in keywords if kw in headline_lower]
+            if matched:
+                return {
+                    "region": region,
+                    "source": "inferred",
+                    "matched_keywords": matched,
+                    "rule": f"keyword_match:{region}",
+                }
+        
+        return {
+            "region": "Global",
+            "source": "default",
+            "matched_keywords": [],
+            "rule": "fallback:global",
+        }
     
     def _infer_category(self, headline: str) -> str:
         """Infer category from headline keywords."""
+        result = self._infer_category_with_explain(headline, None)
+        return result["category"]
+    
+    def _infer_category_with_explain(self, headline: str, provided_category: str | None) -> dict:
+        """Infer category with explainability metadata."""
+        if provided_category:
+            return {
+                "category": provided_category,
+                "source": "provided",
+                "matched_keywords": [],
+                "rule": None,
+            }
+        
         headline_lower = headline.lower()
         for category, keywords in self.CATEGORY_KEYWORDS.items():
-            if any(kw in headline_lower for kw in keywords):
-                return category
-        return "general"
+            matched = [kw for kw in keywords if kw in headline_lower]
+            if matched:
+                return {
+                    "category": category,
+                    "source": "inferred",
+                    "matched_keywords": matched,
+                    "rule": f"keyword_match:{category}",
+                }
+        
+        return {
+            "category": "general",
+            "source": "default",
+            "matched_keywords": [],
+            "rule": "fallback:general",
+        }
     
     def _infer_severity(self, headline: str) -> str:
         """Infer severity from headline language."""

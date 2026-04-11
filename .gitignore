@@ -63,6 +63,12 @@ Thumbs.db
 *.bak
 
 # =========================
+# Generated artifacts
+# =========================
+
+artifacts/
+
+# =========================
 # Local environment configs
 # =========================
 
@@ -83,4 +89,5 @@ Thumbs.db
 artifacts/
 data/runtime/
 data/dedupe-memory.json
+data/exports/outputs/
 outputs/
